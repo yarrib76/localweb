@@ -193,6 +193,11 @@
 
             ordenCant = document.getElementById("ordenesCant").value
             artiCant = document.getElementById("artiCant").value
+            $url = '/api/tiendanubesincroArticulos?id_corrida=' + id_corrida + "&" + 'store_id=' + store_id
+                    + "&" + 'conOrden=' + conOrden
+                    + "&" + 'ordenCant='+ ordenCant
+                    + "&" + 'artiCant='+ artiCant
+            console.log($url);
             $.ajax({
                 url: '/api/tiendanubesincroArticulos?id_corrida=' + id_corrida + "&" + 'store_id=' + store_id
                 + "&" + 'conOrden=' + conOrden
