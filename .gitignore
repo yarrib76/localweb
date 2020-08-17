@@ -7,7 +7,6 @@
 /bootstrap/compiled.php
 /node_modules
 /tests/logs/*
-/vendor
 /public/imagenes/articulos/*
 /public/importacion/*
 bower_components/
