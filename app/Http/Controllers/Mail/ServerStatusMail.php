@@ -21,7 +21,7 @@ class ServerStatusMail extends Controller
                 $mysqli = new mysqli("192.168.0.20", "yarrib76", "NetAcc10", "samira");
                 break;
             case 'viamoreapps':
-                $mysqli = new mysqli("192.168.0.11", "yarrib76", "NetAcc10", "samira");
+                $mysqli = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
                 break;
             case 'samiraweb':
                 $mysqli = new mysqli("10.10.10.150", "root", "NetAcc10", "samira");
