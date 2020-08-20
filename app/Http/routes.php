@@ -30,7 +30,7 @@ Route::get('/', function()
         return View::make('/home');
     }
 });
-
+//PP
 Route::get('auth/logout', 'Auth\AuthController@logout');
 
 Route::get('/reporteArticulo', 'Reporte\Articulo@index');
