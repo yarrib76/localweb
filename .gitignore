@@ -4,6 +4,7 @@
 .env.*.php
 .env.php
 .idea
+composer.lock
 /bootstrap/compiled.php
 /node_modules
 /tests/logs/*
