@@ -164,6 +164,7 @@ class ABMTiendaNubeNew extends Controller
                                      where id_provecomerce = "' . $id_corrida . '" and statusecomerce.status <> "' . $status . '"');
         }
         dd($statusEcomerce);
+        //P
         foreach ($statusEcomerce as $articulo){
             $resultado = $this->abmProductos($articulo->articulo,$articulo->product_id,$articulo->articulo_id,$articulo->e_id,$store_id,$conOrden, $articulo->images,$artiCant);
             if ($resultado == "ok"){
