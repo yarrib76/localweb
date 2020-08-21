@@ -132,7 +132,7 @@ class ABMTiendaNubeNew extends Controller
     }
 
     public function sincroArticulos(){
-        dd("Hola");
+        dd("Hola"); //p
         $id_corrida = Input::get('id_corrida');
         $store_id = Input::get('store_id');
         $conOrden = Input::get('conOrden');
