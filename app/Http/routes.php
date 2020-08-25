@@ -210,4 +210,7 @@ Route::group(['prefix' => 'api'],
         /*Elimina tabla Auto Replica*/
         Route::get('/deleteautosinctable', 'Api\Automation\ReplicaTN@delete');
 
+        /*Ordenes de compra*/
+        Route::get('/ordencompras', 'Api\OC\OrdenCompras@consulta');
+
     });

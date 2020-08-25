@@ -1,23 +1,18 @@
 <?php
 
-namespace Donatella\Http\Controllers\Articulo;
+namespace Donatella\Http\Controllers\Api\OC;
 
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
-class OrdenesCompras extends Controller
+class OrdenCompras extends Controller
 {
-    public function __construct()
+    public function consulta()
     {
-        $this->middleware('auth');
-        $this->middleware('role:Gerencia');
-    }
-    public function query()
-    {
-        return view('articulos.ordenescomprasv2');
         DB::statement("SET lc_time_names = 'es_ES'");
         $datos = DB::select('SELECT OrdenCompra, Articulo, Detalle, Cantidad, DATE_FORMAT(FechaCompra, "%d de %M %Y") as FechaCompra,
                                 FechaCompra as fechaParaOrden,
@@ -28,6 +23,6 @@ class OrdenesCompras extends Controller
                                 END as TipoOrden, Observaciones
                                 FROM samira.compras
                                 where TipoOrden IS NOT NULL;');
-        return view('articulos.ordenescompras', compact('datos'));
+        return Response::json($datos);
     }
 }
