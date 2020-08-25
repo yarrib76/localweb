@@ -17,6 +17,7 @@ class OrdenesCompras extends Controller
     }
     public function query()
     {
+        dd('Hola Mundo');
         DB::statement("SET lc_time_names = 'es_ES'");
         $datos = DB::select('SELECT OrdenCompra, Articulo, Detalle, Cantidad, DATE_FORMAT(FechaCompra, "%d de %M %Y") as FechaCompra,
                                 FechaCompra as fechaParaOrden,
