@@ -81,7 +81,6 @@
                 'method': "GET",
                 'contentType': 'application/json',
                 success : function(json) {
-                    console.log(json)
                     $('#reporte').DataTable({
                                 dom: 'Bfrtip',
                                 "autoWidth": false,
