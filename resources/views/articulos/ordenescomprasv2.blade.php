@@ -81,6 +81,7 @@
                 'method': "GET",
                 'contentType': 'application/json',
                 success : function(json) {
+                    console.log(json)
                     $('#reporte').DataTable({
                                 dom: 'Bfrtip',
                                 "autoWidth": false,
@@ -101,8 +102,6 @@
                             }
                     );
                     modal.style.display = "none";
-                    // When the finish process, open the modalFinish
-                    modalFinish.style.display = "block";
                 },
             })
         });
