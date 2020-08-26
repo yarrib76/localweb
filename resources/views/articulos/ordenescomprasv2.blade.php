@@ -24,6 +24,38 @@
             </div>
         </div>
     </div>
+    <style>
+        #myModal {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 11%;
+            height: 20%;
+            overflow-y: auto;
+        }
+        #myModalFinish {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 30%;
+            height: 50%;
+            overflow-y: auto;
+        }
+        #myModalError {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 30%;
+            height: 50%;
+            overflow-y: auto;
+        }
+    </style>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
 
 @stop
 @section('extra-javascript')
@@ -37,7 +69,13 @@
     <!-- DataTables -->
 
     <script type="text/javascript">
+        var modalFinish = document.getElementById('myModalFinish');
+        var modalError = document.getElementById('myModalError');
         $(document).ready( function () {
+            // Get the modal
+            var modal = document.getElementById('myModal');
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
             $.ajax({
                 'url': "/api/ordencompras",
                 'method': "GET",
@@ -62,6 +100,9 @@
                                 ]
                             }
                     );
+                    modal.style.display = "none";
+                    // When the finish process, open the modalFinish
+                    modalFinish.style.display = "block";
                 },
             })
         });
