@@ -37,9 +37,7 @@
     <!-- DataTables -->
 
     <script type="text/javascript">
-
         $(document).ready( function () {
-            var data;
             $.ajax({
                 'url': "/api/ordencompras",
                 'method': "GET",
@@ -51,6 +49,7 @@
                                 buttons: [
                                     'excel'
                                 ],
+                                order: [0,'desc'],
                                 "aaData": json,
                                 "columns": [
                                     { "data": "OrdenCompra" },
@@ -65,7 +64,6 @@
                     );
                 },
             })
-
-        } );
+        });
     </script>
 @stop

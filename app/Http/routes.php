@@ -30,7 +30,7 @@ Route::get('/', function()
         return View::make('/home');
     }
 });
-//PP
+
 Route::get('auth/logout', 'Auth\AuthController@logout');
 
 Route::get('/reporteArticulo', 'Reporte\Articulo@index');
@@ -50,6 +50,8 @@ Route::resource('articulos', 'Articulo\ArticulosController');
 Route::resource('cierreDiario', 'CierreDiario\CierreDiarioController');
 Route::resource('facturaWeb', 'CierreDiario\FacturaWebController');
 Route::resource('clientes', 'Cliente\ClientesController');
+
+Route::get('articuloedit/{nroArticulo}','Articulo\ArticulosController@edit');
 
 /*Pedidos*/
 Route::resource('pedidos', 'Pedido\PedidosController');
