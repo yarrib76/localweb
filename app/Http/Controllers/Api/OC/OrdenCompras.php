@@ -23,6 +23,7 @@ class OrdenCompras extends Controller
                                 END as TipoOrden, Observaciones
                                 FROM samira.compras
                                 where TipoOrden IS NOT NULL;');
+        ob_start('ob_gzhandler');
         return Response::json($datos);
     }
 }
