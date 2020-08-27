@@ -35,6 +35,7 @@ class ArticulosController extends Controller
      */
     public function index()
     {
+        /*
         $articulos = DB::Select ('SELECT Arti.Articulo as Articulo, Arti.Detalle as Detalle, Arti.ProveedorSKU as ProveedorSKU, Arti.Cantidad as Cantidad,
                                     sum(if(Control.estado = 1, pedidotemp.Cantidad,0)) as Pedido, repoArt.PrecioVenta as PrecioVenta, Arti.ImageName, Arti.Web
                                     FROM samira.articulos as Arti
@@ -46,7 +47,7 @@ class ArticulosController extends Controller
         /** Se cambia para incorpoar Cantidad en PedidosTemp
          * $articulos = Articulos::get()->load('repoArticulo');
         dd ($articulos); */
-        return view('articulos.reporte', compact('articulos'));
+        return view('articulos.reporte2');
 
     }
 

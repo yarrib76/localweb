@@ -52,6 +52,7 @@ Route::resource('facturaWeb', 'CierreDiario\FacturaWebController');
 Route::resource('clientes', 'Cliente\ClientesController');
 
 Route::get('articuloedit/{nroArticulo}','Articulo\ArticulosController@edit');
+Route::get('articulocreate','Articulo\ArticulosController@create');
 
 /*Pedidos*/
 Route::resource('pedidos', 'Pedido\PedidosController');
@@ -214,5 +215,8 @@ Route::group(['prefix' => 'api'],
 
         /*Ordenes de compra*/
         Route::get('/ordencompras', 'Api\OC\OrdenCompras@consulta');
+
+        /*AMB Articulos*/
+        Route::get('/abmarticulos', 'Api\Articulos\GetArticulos@consulta');
 
     });
