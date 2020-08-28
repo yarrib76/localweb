@@ -65,7 +65,7 @@
                 success : function(json) {
                     for ( var i=0, ien=json.length ; i<ien ; i++ ) {
                         json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
-                        + "<br/>" +  "<a href='/articulocreate' target='_blank' class = 'btn btn-primary'>Modificar</a>"
+                        + "<br/>" +  "<a href='/articuloedit/"+ json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
                     }
                     $('#reporte').DataTable({
                                 dom: 'Bfrtip',
