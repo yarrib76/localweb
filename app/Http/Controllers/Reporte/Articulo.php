@@ -28,6 +28,6 @@ class Articulo extends Controller
             $anio = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->year;
         }
         $articulos = Articulos::get();
-        return view('Reporte.buscar', compact('articulos', 'anio'));
+        return view('reporte.buscar', compact('articulos', 'anio'));
     }
 }
