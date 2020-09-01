@@ -109,8 +109,9 @@ class ABMTiendaNubeNew extends Controller
             'id_users' => auth()->user()->id,
             'fecha' => $fecha,
             'id_cliente' => $store_id,
-            'tiande' => $tienda
+            'tienda' => $tienda
         ]);
+
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
             foreach ($articulosTiendaNube->body as $articulo){

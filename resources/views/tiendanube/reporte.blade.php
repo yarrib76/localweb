@@ -14,6 +14,7 @@
                                 <th>Corrida</th>
                                 <th>Proveedor</th>
                                 <th>Nombre</th>
+                                <th>Tienda</th>
                                 <th>Fecha</th>
                                 <th>Total</th>
                                 <th>OK</th>
@@ -28,12 +29,13 @@
                                     <td>{{$provEcomerce->corrida}}</td>
                                     <td>{{$provEcomerce->proveedor}}</td>
                                     <td>{{$provEcomerce->nombre}}</td>
+                                    <td>{{$provEcomerce->tienda}}</td>
                                     <td>{{$provEcomerce->fecha}}</td>
                                     <td align="center"><span class="badge badge-success"><h5>{{$provEcomerce->total}}</h5></span></td>
                                     <td align="center"><span class="badge badge-success"><h5>{{$provEcomerce->ok}}</h5></span></td>
                                     <td align="center"><span class="badge badge-success"><h5>{{$provEcomerce->error}}</h5></span></td>
                                     <td align="center"><span class="badge badge-success"><h5>{{$provEcomerce->pending}}</h5></span></td>
-                                    <td><a href='/consultadetalladaecomerce/?id_corrida={{$provEcomerce->corrida}}&nombre={{$provEcomerce->nombre}}&proveedor={{$provEcomerce->proveedor}}' class = 'btn btn-primary'>Detalle</a></td>
+                                    <td><a href='/consultadetalladaecomerce/?id_corrida={{$provEcomerce->corrida}}&nombre={{$provEcomerce->nombre}}&proveedor={{$provEcomerce->proveedor}}&tienda={{$provEcomerce->tienda}}&id_cliente={{$provEcomerce->id_cliente}}' class = 'btn btn-primary'>Detalle</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

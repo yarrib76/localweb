@@ -19,7 +19,7 @@ class TiendaNube extends Controller
     }
     public function statusGeneral()
     {
-        $provEcomerces = DB::select ('SELECT ecomerce.id as corrida, ecomerce.proveedor, usuario.name as nombre, ecomerce.fecha,
+        $provEcomerces = DB::select ('SELECT ecomerce.id as corrida, ecomerce.proveedor, usuario.name as nombre, ecomerce.id_cliente,ecomerce.tienda, ecomerce.fecha,
                                     count(status) as total,
                                     SUM(CASE WHEN status.status = "OK" THEN 1 ELSE 0 END) as ok,
                                     SUM(CASE WHEN status.status <> "OK" and status.status <> "Pending" THEN 1 ELSE 0 END) as error,
@@ -36,6 +36,8 @@ class TiendaNube extends Controller
         $id_corrida = Input::get('id_corrida');
         $proveedor = Input::get('proveedor');
         $nombre_ejecutor = Input::get('nombre');
+        $id_cliente = Input::get('id_cliente');
+        $tienda = Input::get('tienda');
         $statusEcomerce = DB::select('SELECT statusecomerce.id as e_id, provecomerce.proveedor, usuario.name as nombre, statusecomerce.articulo,
                                      statusecomerce.status,
                                      statusecomerce.fecha, product_id, articulo_id, visible
@@ -43,7 +45,7 @@ class TiendaNube extends Controller
                                      inner join samira.provecomerce as provecomerce ON provecomerce.id = statusecomerce.id_provecomerce
                                      inner join samira.users as usuario ON usuario.id = provecomerce.id_users
                                      where id_provecomerce = "'.$id_corrida.'"');
-        return view('tiendanube.reportedetalladonew', compact('statusEcomerce','id_corrida','proveedor','nombre_ejecutor'));
+        return view('tiendanube.reportedetalladonew', compact('statusEcomerce','id_corrida','proveedor','nombre_ejecutor','id_cliente','tienda'));
 
     }
 }
