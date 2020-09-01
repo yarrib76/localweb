@@ -8,5 +8,5 @@ class ProvEcomerce extends Model
 {
     protected $table = 'provecomerce';
     public $timestamps = false;
-    protected $fillable = ['id','proveedor','id_users','fecha'];
+    protected $fillable = ['id','proveedor','id_users','fecha','id_cliente','tienda'];
 }

@@ -71,21 +71,25 @@ class ABMTiendaNubeNew extends Controller
             $access_token = 'a37bd246745b939c29e3fdd11b18cd356d1b87c4';
             $store_id = '972788';
             $appsName = 'SincroDemo (yarrib76@gmail.com)';
+            $tienda = 'Nacha';
         }
         if (Input::get('store_id') == '938857'){
             $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
             $store_id = '938857';
             $appsName = 'SincroApps (yarrib76@gmail.com)';
+            $tienda = 'Samira';
         }
         if (Input::get('store_id') == '963000'){
             $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
             $store_id = '963000';
             $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
+            $tienda = 'Donatella';
         }
         if (Input::get('store_id') == '1043936'){
             $access_token = '483b0e8c4eb5d65211002a5d1770281b7ea5e437';
             $store_id = '1043936';
             $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
+            $tienda = 'Viamore';
         }
 
         /*
@@ -103,7 +107,9 @@ class ABMTiendaNubeNew extends Controller
         $id_provEcomerce = ProvEcomerce::Create([
             'proveedor' => 'TiendaNube',
             'id_users' => auth()->user()->id,
-            'fecha' => $fecha
+            'fecha' => $fecha,
+            'id_cliente' => $store_id,
+            'tiande' => $tienda
         ]);
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
