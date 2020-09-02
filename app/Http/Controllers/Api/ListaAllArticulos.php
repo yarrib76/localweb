@@ -23,6 +23,7 @@ class ListaAllArticulos extends Controller
             return Response::json($articulo);
         }
         $articulos = Articulos::all();
+        ob_start('ob_gzhandler');
         return Response::json($articulos);
     }
 }
