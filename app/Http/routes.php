@@ -20,6 +20,14 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
+// Password reset link request routes...
+Route::get('password/email', 'Auth\PasswordController@getEmail');
+Route::post('password/email', 'Auth\PasswordController@postEmail');
+
+// Password reset routes...
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+Route::post('password/reset', 'Auth\PasswordController@postReset');
+
 // Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 Route::get('/', function()
@@ -31,8 +39,16 @@ Route::get('/', function()
     }
 });
 
-Route::get('auth/logout', 'Auth\AuthController@logout');
+Route::get('/home', function()
+{
+    if(Auth::guest()){
+        return View::make('/auth/login');
+    } else {
+        return View::make('/home');
+    }
+});
 
+Route::get('auth/logout', 'Auth\AuthController@logout');
 Route::get('/reporteArticulo', 'Reporte\Articulo@index');
 Route::get('/reporteArticuloProveedor', 'Reporte\ArticuloProveedores@query');
 Route::get('/dashboard', 'Reporte\Dashboard@reporte');

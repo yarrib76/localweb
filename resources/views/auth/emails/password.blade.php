@@ -1,0 +1,1 @@
+Ingresar al Link para cambiar la contraseña: {{ url('http://donalab.dyndns.org:8083/password/reset/'.$token) }}
