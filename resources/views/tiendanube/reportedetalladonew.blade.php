@@ -10,9 +10,12 @@
                     Donatella = 963000
                     Viamore = 1043936
                     -->
-                    <div class="panel-heading"><i>Corria en E-Comerce Nº {{$id_corrida}}, Proveedor: {{$proveedor}}, Nombre: {{$nombre_ejecutor}}</i>
+                    <div class="panel-heading"><i>Corria en E-Comerce Nº {{$id_corrida}}, Proveedor: {{$proveedor}}, Nombre: {{$nombre_ejecutor}}, Tienda: {{$tienda}}</i>
                         <button class="btn btn-primary" onclick="volver()"><i class="fa fa-arrow-left"></i></button>
-                        <!--Verifico en que local estoy para enviar el Codido correcto de Tienda Nube-->
+
+                        <button class="btn btn-primary" onclick="sincro('{{$id_cliente}}','{{$id_corrida}}')">Sincro</button>
+
+                        <!--Obsoleto
                         @if (substr(Request::url('http://donatella.dyndns.org'),0,27) == 'http://donatella.dyndns.org')
                             <button class="btn btn-primary" onclick="sincro('963000',{{$id_corrida}})">Sincro</button>
                         @elseif (substr(Request::url('http://samirasrl.dyndns.org'),0,27) == 'http://samirasrl.dyndns.org')
@@ -23,7 +26,7 @@
                             <button class="btn btn-primary" onclick="sincro('972788',{{$id_corrida}})">Sincro</button>
                         @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
                             <button class="btn btn-primary" onclick="sincro('972788',{{$id_corrida}})">Sincro</button>
-                        @endif
+                        @endif -->
                         <input type="checkbox" id="chkOrdenCompra" name="chkOrdenCompra1">
                         <label for="cars">Las ultimas
                             <select name="cantidad" id="ordenesCant" color = "blue">

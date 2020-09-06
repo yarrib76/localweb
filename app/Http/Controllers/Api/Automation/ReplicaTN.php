@@ -42,6 +42,7 @@ class ReplicaTN extends Controller
                                         inner join samira.provecomerce as provecomerce ON provecomerce.id = statusecomerce.id_provecomerce
                                         inner join samira.pedidotemp  as pedtemp ON pedtemp.Articulo = statusecomerce.articulo
                                         where id_provecomerce = (SELECT id FROM samira.provecomerce
+                                        where id_cliente = "'. $store_id .'"
                                         order by id desc limit 1)
                                         and pedtemp.Fecha = "'.$fecha.'"');
         foreach ($statusEcomerce as $articulo){
