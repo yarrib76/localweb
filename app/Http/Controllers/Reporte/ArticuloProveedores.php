@@ -53,8 +53,8 @@ class ArticuloProveedores extends Controller
                     ]);
                 }
             } */
-        $articulosProveedor = ReporteArtiulos::all();
+        // $articulosProveedor = ReporteArtiulos::all();
         $fecha = StatusReportes::all()[0]->Fecha;
-        return view('reporte.reportearticuloproveedor', compact('articulosProveedor','fecha'));
+        return view('reporte.reportearticuloproveedor_v2', compact('fecha'));
     }
 }

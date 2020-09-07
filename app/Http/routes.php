@@ -235,4 +235,7 @@ Route::group(['prefix' => 'api'],
         /*AMB Articulos*/
         Route::get('/abmarticulos', 'Api\Articulos\GetArticulos@consulta');
 
+        /*Reporte Articulo Proveedor*/
+        Route::get('/reporteArticuloProveedor', 'Api\Reportes\ArticuloProveedor@query');
+
     });

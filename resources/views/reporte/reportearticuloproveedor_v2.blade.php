@@ -29,34 +29,28 @@
 
                                 </tr>
                                 </thead>
-                                <tbody>
-                                @foreach($articulosProveedor as $articuloProveedor)
-                                    <tr>
-                                        <td>{{$articuloProveedor->Proveedor}}</td>
-                                        <td>{{$articuloProveedor->Pais}}</td>
-                                        <td>{{$articuloProveedor->Articulo}}</td>
-                                        <td>{{$articuloProveedor->Detalle}}</td>
-                                        <td>{{$articuloProveedor->Costo}}</td>
-                                        <td>{{$articuloProveedor->Ganancia}}</td>
-                                        <td>{{$articuloProveedor->Cantidad}}</td>
-                                        <td>{{$articuloProveedor->PrecioOrigen}}</td>
-                                        <td>{{$articuloProveedor->Moneda}}</td>
-                                        <td>{{$articuloProveedor->PrecioConvertido}}</td>
-                                        <td>{{$articuloProveedor->PrecioManual}}</td>
-                                        <td>{{$articuloProveedor->PrecioArgDolar}}</td>
-                                        <td>{{$articuloProveedor->PrecioArgenPesos}}</td>
-                                        <td>{{$articuloProveedor->PrecioVenta}}</td>
-                                        <td>{{$articuloProveedor->CotizacionDolar}}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
                             </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <style>
+        #myModal {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 11%;
+            height: 20%;
+            overflow-y: auto;
+        }
+    </style>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -71,15 +65,46 @@
     <script type="text/javascript">
 
         $(document).ready( function () {
-            $('#reporte').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: [
-                            'excel'
-                        ]
-                    }
-
-            );
-        } );
+            // Get the modal
+            var modal = document.getElementById('myModal');
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
+            $.ajax({
+                'url': "/api/reporteArticuloProveedor",
+                'method': "GET",
+                'contentType' : 'application/json',
+                success : function(json) {
+                    $('#reporte').DataTable({
+                                dom: 'Bfrtip',
+                                "autoWidth": false,
+                                buttons: [
+                                    'excel'
+                                ],
+                                order: [0,'desc'],
+                                "aaData": json,
+                                "columns": [
+                                    { "data": "Proveedor" },
+                                    { "data": "Pais" },
+                                    { "data": "Articulo" },
+                                    { "data": "Detalle" },
+                                    { "data": "Costo" },
+                                    { "data": "Ganancia" },
+                                    { "data": "Cantidad" },
+                                    { "data": "PrecioOrigen" },
+                                    { "data": "Moneda" },
+                                    { "data": "PrecioConvertido" },
+                                    { "data": "PrecioManual" },
+                                    { "data": "PrecioArgDolar" },
+                                    { "data": "PrecioArgenPesos" },
+                                    { "data": "PrecioVenta" },
+                                    { "data": "CotizacionDolar" }
+                                ]
+                            }
+                    );
+                    modal.style.display = "none";
+                }
+            })
+        });
 
         function refresh(){
             $('#refresh').html('<img src="refresh/loading.gif" height="42" width="42"> Cargando...');
