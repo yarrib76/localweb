@@ -40,7 +40,8 @@ class Editar extends Controller
             'PrecioOrigen' => $dato['PrecioOrigen'],
             'PrecioManual' => $dato['PrecioManual'],
             'Gastos' => $dato['Gastos'],
-            'Ganancia' => $dato['Ganancia']
+            'Ganancia' => $dato['Ganancia'],
+            'Cantidad' => $dato['Cantidad']
         ]);
         return $dato;
     }
