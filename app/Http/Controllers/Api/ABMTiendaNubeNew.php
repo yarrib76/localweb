@@ -68,7 +68,7 @@ class ABMTiendaNubeNew extends Controller
         Viamore = 1043936
         */
         if (Input::get('store_id') == '972788'){
-            $access_token = 'a37bd246745b939c29e3fdd11b18cd356d1b87c4';
+            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
             $store_id = '972788';
             $appsName = 'SincroDemo (yarrib76@gmail.com)';
             $tienda = 'Nacha';
@@ -195,7 +195,7 @@ class ABMTiendaNubeNew extends Controller
         Viamore = 1043936
         */
         if ($store_id == '972788'){
-            $access_token = 'a37bd246745b939c29e3fdd11b18cd356d1b87c4';
+            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
             //   $store_id = '972788';
             $appsName = 'SincroDemo (yarrib76@gmail.com)';
         }
