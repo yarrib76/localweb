@@ -2,6 +2,7 @@
 
 namespace Donatella\Http\Controllers\TiendaNube;
 
+use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
 use Donatella\Http\Controllers\ProveedorEcomerce\TiendaNube;
 use Donatella\Models\ControlPedidos;
@@ -37,12 +38,15 @@ class Ordenes extends Controller
 
     public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas)
     {
+        // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
                 $crearPedido = $this->verificarOrgen($orden->number);
-                if ($crearPedido){
+                // dd(date('Y-m-d',strtotime($orden->created_at)));
+                $fecha = date('Y-m-d',strtotime($orden->created_at));
+                if ($crearPedido && ($fecha >= '2020-09-10')){
                     echo ('Se puede Crear Orden' . $orden->number .  "," );
                 }
             }
