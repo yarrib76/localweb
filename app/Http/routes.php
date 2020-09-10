@@ -78,6 +78,10 @@ Route::get('procesados', 'Pedido\PanelController@procesados');
 Route::get('empaquetados', 'Pedido\PanelController@empaquetados');
 Route::get('cancelados', 'Pedido\PanelController@cancelados');
 Route::get('todos', 'Pedido\PanelController@todos');
+Route::get('asignaciongeneral','Pedido\AsignacionGeneral@inbox');
+Route::get('asignaciongeneral/query','Pedido\AsignacionGeneral@query');
+Route::get('asignaciongeneral/vendedoras','Pedido\AsignacionGeneral@vendedoras');
+Route::post('asignaciongeneral/update','Pedido\AsignacionGeneral@update');
 
 
 /*BI*/
