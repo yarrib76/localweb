@@ -55,7 +55,7 @@ class Ordenes extends Controller
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
-    Esta informaci�n la urilizo en el FOR para solicitar todas las pag�nas que tienen los art�culos*/
+    Esta informacion la urilizo en el FOR para solicitar todas las paginas que tienen los articulos*/
     public function obtengoCantConsultas($api,$cantidadPorPaginas)
     {
         $query = $api->get("orders?page=1&per_page=1");
@@ -63,8 +63,8 @@ class Ordenes extends Controller
         return $cantidadConsultas;
     }
 
-    /*La funcio�n verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
-    Si devuelve true, se puede crear un pedido porque no existe ning�no con ese # de orden
+    /*La funcioon verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
+    Si devuelve true, se puede crear un pedido porque no existe ninguno con ese # de orden
     Si devuelve false, no se puede crear ya que hay un pedido con ese # de orden */
     private function verificarOrgen($nroOrden)
     {
