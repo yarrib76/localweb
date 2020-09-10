@@ -47,7 +47,7 @@ class Ordenes extends Controller
                 // dd(date('Y-m-d',strtotime($orden->created_at)));
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= '2020-09-10')){
-                    echo ('Se puede Crear Orden' . $orden->number .  "," );
+                    echo ('Se puede Crear la Orden' . $orden->number .  "," );
                 }
             }
             return Response::json("ok");
@@ -55,7 +55,7 @@ class Ordenes extends Controller
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
-    Esta información la urilizo en el FOR para solicitar todas las pagínas que tienen los artículos*/
+    Esta informaciï¿½n la urilizo en el FOR para solicitar todas las pagï¿½nas que tienen los artï¿½culos*/
     public function obtengoCantConsultas($api,$cantidadPorPaginas)
     {
         $query = $api->get("orders?page=1&per_page=1");
@@ -63,8 +63,8 @@ class Ordenes extends Controller
         return $cantidadConsultas;
     }
 
-    /*La funcioón verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
-    Si devuelve true, se puede crear un pedido porque no existe ningúno con ese # de orden
+    /*La funcioï¿½n verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
+    Si devuelve true, se puede crear un pedido porque no existe ningï¿½no con ese # de orden
     Si devuelve false, no se puede crear ya que hay un pedido con ese # de orden */
     private function verificarOrgen($nroOrden)
     {
