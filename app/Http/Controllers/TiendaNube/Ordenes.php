@@ -29,6 +29,8 @@ class Ordenes extends Controller
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
+
+        dd('Clase en pausa para servidores productivos');
         $cantidadPorPaginas = 200;
         $store_id = Input::get('store_id');
         $tnConnect = new TnubeConnect();
