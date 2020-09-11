@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\Api\Automation;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
+use Donatella\Ayuda\TnubeConnect;
 use Donatella\Models\Articulos;
 use Donatella\Models\StatusEcomerceSinc;
 use Donatella\Models\StatusEcommerceaAtoSinc;
@@ -33,7 +34,8 @@ class ReplicaTN extends Controller
         $countError = 0;
         $countCheck = 0;
         $respuesta=[];
-        $connection = $this->getConnectionTN($store_id);
+        $tnConnect = new TnubeConnect();
+        $connection = $tnConnect->getConnectionTN($store_id);
         $fecha = date("Y-m-d");
         $statusEcomerce = DB::select('SELECT id_provecomerce, statusecomerce.articulo,
                                         statusecomerce.status,
@@ -135,41 +137,7 @@ class ReplicaTN extends Controller
         }
         return 0;
     }
-
-    public function getConnectionTN($store_id)
-    {
-        //$store_id = 0;
-        /*Verifica con que tienda tiene que sincronizar:
-        Demo Nacha = 972788
-        Samira SRL = 938857
-        Donatella = 963000
-        Viamore = 1043936
-        */
-        $connetion=[];
-        if ($store_id == '972788'){
-            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
-            //   $store_id = '972788';
-            $appsName = 'SincroDemo (yarrib76@gmail.com)';
-        }
-        if ($store_id == '938857'){
-            $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-            //    $store_id = '938857';
-            $appsName = 'SincroApps (yarrib76@gmail.com)';
-        }
-        if ($store_id == '963000'){
-            $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
-            //    $store_id = '963000';
-            $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
-        }
-        if ($store_id == '1043936'){
-            $access_token = '483b0e8c4eb5d65211002a5d1770281b7ea5e437';
-            //    $store_id = '1043936';
-            $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
-        }
-        $connetion[0]= ['access_token' => $access_token,'appsName' => $appsName];
-        return $connetion;
-    }
-
+    
     public function delete()
     {
         DB::select('TRUNCATE TABLE statusecommerceautosinc');
