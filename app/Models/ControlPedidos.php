@@ -8,7 +8,7 @@ class ControlPedidos extends Model
 {
     protected $table = 'controlpedidos';
     public $timestamps = false;
-    protected $fillable = ['nroPedido','Vendedora','Fecha','Estado','Total', 'OrdenWeb','ultactualizacion'];
+    protected $fillable = ['nroPedido','Vendedora','Fecha','Estado','Total', 'OrdenWeb','ultactualizacion','local','totalweb','cajera','id_cliente'];
 
     public function clientes()
     {

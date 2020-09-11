@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\TiendaNube;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
+use Donatella\Http\Controllers\Api\GeneraNroPedidos;
 use Donatella\Http\Controllers\ProveedorEcomerce\TiendaNube;
 use Donatella\Models\Clientes;
 use Donatella\Models\ControlPedidos;
@@ -35,25 +36,25 @@ class Ordenes extends Controller
         $connect = $tnConnect->getConnectionTN($store_id);
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
         $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
-        $result = $this->getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas);
+        $result = $this->getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$connect[0]['tienda']);
         return $result;
     }
 
-    public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas)
+    public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$tienda)
     {
-
+        $fechaInicio = '2020-09-09';
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
                 // dd($orden);
-                $crearPedido = $this->verificarOrgen($orden->number);
+                $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
-                if ($crearPedido && ($fecha >= '2020-09-10')){
+                if ($crearPedido && ($fecha >= $fechaInicio)){
                     echo ('Se puede Crear la Orden' . $orden->number .  "," );
                     $cliente_id = $this->verificarCliente($orden);
-                    $this->crearPedido($cliente_id,$orden);
+                    $this->crearControlPedido($cliente_id,$orden,$tienda);
                 }
             }
             return Response::json("ok");
@@ -72,9 +73,10 @@ class Ordenes extends Controller
     /*La funcioon verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
     Si devuelve true, se puede crear un pedido porque no existe ninguno con ese # de orden
     Si devuelve false, no se puede crear ya que hay un pedido con ese # de orden */
-    private function verificarOrgen($nroOrden)
+    private function verificarOrgen($nroOrden,$tienda)
     {
-        $pedido = ControlPedidos::where('ordenWeb',$nroOrden)->get();
+        $pedido = ControlPedidos::where('ordenWeb',$nroOrden)
+                                  ->where('local',$tienda)->get();
         if ($pedido->isEmpty()) {
             return true;
         }else {
@@ -121,16 +123,32 @@ class Ordenes extends Controller
 
     private function getProvincia_id ($provincia){
         $id = Provincias::where('nombre',$provincia)->get();
-        if ($id){
+        if (!$id->isEmpty()){
             return $id[0]->id;
         }else {
             return 1;
         }
     }
 
-    private function crearPedido($cliente_id,$orden){
-        dd($cliente_id);
+    private function crearControlPedido($cliente_id,$orden,$tienda){
+        $nroPedido = $this->getNroPedido();
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
-        
+        ControlPedidos::create([
+            'nroPedido' => $nroPedido['nroPedido'],
+            'id_cliente' => $cliente_id,
+            'Vendedora' => 'PAGINA ',
+            'Fecha' => $fecha,
+            'Total' => 0,
+            'OrdenWeb' => $orden->number,
+            'cajera' => 'ReplicaTN',
+            'totalweb' => $orden->total,
+            'local' => $tienda
+        ]);
+    }
+
+    private function getNroPedido(){
+        $generaNroPedido = new GeneraNroPedidos();
+        $nroPedido = $generaNroPedido->Generar();
+        return $nroPedido;
     }
 }
