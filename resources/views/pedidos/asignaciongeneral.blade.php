@@ -131,6 +131,9 @@
                     {title: "Cliente", field: "cliente", sortable: true, width: 300, headerFilter:"input"},
                     {title: "Vendedora", field: "vendedora", width: 200, editor:"select", editorParams:paramLookup},
                     {title: "OrdenWeb", field: "ordenweb", sortable: true, width: 110},
+                    {title: "Total", field: "total", sortable: true, width: 110},
+                    {title: "TotalWeb", field: "totalweb", sortable: true, width: 110},
+                    {title: "Local", field: "local", sortable: true, width: 110},
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({
