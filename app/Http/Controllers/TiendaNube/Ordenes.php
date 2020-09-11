@@ -24,12 +24,11 @@ class Ordenes extends Controller
     public function main()
     {
         /*
-        $code = '7a1ae9c219ddbc8661353b6f6e39f1c33f874cd0';
-        $auth = new Auth(1358, 'WcuW5hyGiiPPqpnC5OEVOmg0r7oDjUcvlIXLEphoAanRFVd5');
+        $code = 'c74fa5dfc4370499b938589b4703735430f47fb1';
+        $auth = new Auth(1233, 'kCgxm8YTleY2q2IEWyOu6equExOMOBmdzl80HR3Zvhpk4eSr');
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
-
         $cantidadPorPaginas = 200;
         $store_id = Input::get('store_id');
         $tnConnect = new TnubeConnect();

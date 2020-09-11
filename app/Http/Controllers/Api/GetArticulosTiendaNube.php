@@ -3,6 +3,7 @@
 namespace Donatella\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use Donatella\Ayuda\TnubeConnect;
 use Donatella\Models\NewArtiTN;
 use Donatella\Models\ProvEcomerce;
 use Donatella\Models\StatusEcomerceSinc;
@@ -44,18 +45,6 @@ class GetArticulosTiendaNube extends Controller
         dd($store_info);
         */
 
-        /*
-         * Datos de Acceso para Viamore
-            "store_id" => 1043936
-            "access_token" => "483b0e8c4eb5d65211002a5d1770281b7ea5e437"
-            "scope" => "write_products"
-         */
-
-        /* Datos de Acceso para Demo Nacha
-            "store_id" => 972788
-            "access_token" => "a37bd246745b939c29e3fdd11b18cd356d1b87c4"
-            "scope" => "write_products"
-         */
         //La cantidad de produtos por página
         $cantidadPorPaginas = 200;
 
@@ -66,37 +55,13 @@ class GetArticulosTiendaNube extends Controller
         Donatella = 963000
         Viamore = 1043936
         */
-        if (Input::get('store_id') == '972788'){
-            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
-            $store_id = '972788';
-            $appsName = 'SincroDemo (yarrib76@gmail.com)';
-        }
-        if (Input::get('store_id') == '938857'){
-            $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-            $store_id = '938857';
-            $appsName = 'SincroApps (yarrib76@gmail.com)';
-        }
-        if (Input::get('store_id') == '963000'){
-            $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
-            $store_id = '963000';
-            $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
-        }
-        if (Input::get('store_id') == '1043936'){
-            $access_token = '483b0e8c4eb5d65211002a5d1770281b7ea5e437';
-            $store_id = '1043936';
-            $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
-        }
-
-        /*
-        //Datos para la conexión Samira SRL
-        $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-        $store_id = '938857'; */
-
-
+        $store_id = Input::get('store_id');
+        $tnConnect = new TnubeConnect();
+        $connect = $tnConnect->getConnectionTN($store_id);
 
         //Trunco la tabla
         DB::select('truncate table samira.newartitn');
-        $api = new API($store_id, $access_token, $appsName);
+        $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
         // $query = $api->get("products/39750826");
         // dd($query);
         $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
