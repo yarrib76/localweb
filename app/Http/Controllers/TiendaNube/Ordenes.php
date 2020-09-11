@@ -30,7 +30,6 @@ class Ordenes extends Controller
         dd($store_info);
         */
 
-        dd('Clase en pausa para servidores productivos');
         $cantidadPorPaginas = 200;
         $store_id = Input::get('store_id');
         $tnConnect = new TnubeConnect();
