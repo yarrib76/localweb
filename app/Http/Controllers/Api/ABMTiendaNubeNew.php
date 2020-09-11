@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
+use Donatella\Ayuda\TnubeConnect;
 use Donatella\Models\Articulos;
 use Donatella\Models\ProvEcomerce;
 use Donatella\Models\StatusEcomerceSinc;
@@ -67,49 +68,18 @@ class ABMTiendaNubeNew extends Controller
         Donatella = 963000
         Viamore = 1043936
         */
-        if (Input::get('store_id') == '972788'){
-            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
-            $store_id = '972788';
-            $appsName = 'SincroDemo (yarrib76@gmail.com)';
-            $tienda = 'Nacha';
-        }
-        if (Input::get('store_id') == '938857'){
-            $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-            $store_id = '938857';
-            $appsName = 'SincroApps (yarrib76@gmail.com)';
-            $tienda = 'Samira';
-        }
-        if (Input::get('store_id') == '963000'){
-            $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
-            $store_id = '963000';
-            $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
-            $tienda = 'Donatella';
-        }
-        if (Input::get('store_id') == '1043936'){
-            $access_token = '483b0e8c4eb5d65211002a5d1770281b7ea5e437';
-            $store_id = '1043936';
-            $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
-            $tienda = 'Viamore';
-        }
+        $store_id = Input::get('store_id');
+        $tnConnect = new TnubeConnect();
+        $connect = $tnConnect->getConnectionTN($store_id);
 
-        /*
-        //Datos para la conexión Samira SRL
-        $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-        $store_id = '938857'; */
-
-        /*
-        $access_token = 'a37bd246745b939c29e3fdd11b18cd356d1b87c4';
-        $store_id = '972788';
-        $appsName = 'SincroDemo (yarrib76@gmail.com)';
-        */
-        $api = new API($store_id, $access_token, $appsName);
+        $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
         $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
         $id_provEcomerce = ProvEcomerce::Create([
             'proveedor' => 'TiendaNube',
             'id_users' => auth()->user()->id,
             'fecha' => $fecha,
             'id_cliente' => $store_id,
-            'tienda' => $tienda
+            'tienda' => $connect[0]['tienda']
         ]);
 
         for ($i = 1; $i <= $cantidadConsultas; $i++){
@@ -194,26 +164,8 @@ class ABMTiendaNubeNew extends Controller
         Donatella = 963000
         Viamore = 1043936
         */
-        if ($store_id == '972788'){
-            $access_token = '3f2d77c28ce3bfc9df48fc7f34e43549220d7379';
-            //   $store_id = '972788';
-            $appsName = 'SincroDemo (yarrib76@gmail.com)';
-        }
-        if ($store_id == '938857'){
-            $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
-            //    $store_id = '938857';
-            $appsName = 'SincroApps (yarrib76@gmail.com)';
-        }
-        if ($store_id == '963000'){
-            $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
-            //    $store_id = '963000';
-            $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
-        }
-        if ($store_id == '1043936'){
-            $access_token = '483b0e8c4eb5d65211002a5d1770281b7ea5e437';
-            //    $store_id = '1043936';
-            $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
-        }
+        $tnConnect = new TnubeConnect();
+        $connect = $tnConnect->getConnectionTN($store_id);
 
         /*   $sku = Input::get('sku');
            $product_id_TN = Input::get('product_id_tn');
@@ -223,7 +175,7 @@ class ABMTiendaNubeNew extends Controller
 
         $statusEcommerceSinc = StatusEcomerceSinc::where('id',$ecommerce_id);
         if ($statusEcommerceSinc->get()[0]->status <> 'OK'){
-            $api = new API($store_id, $access_token, $appsName);
+            $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
             $articuloLocal = Articulos::where('Articulo',$sku)->get();
             $precioAydua = new Precio();
             if (!$articuloLocal->isEmpty()){
