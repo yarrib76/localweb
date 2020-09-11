@@ -160,11 +160,11 @@ class MapaController extends Controller
                     break;
                 case "Chubut": $datoConvertido[$i] = ["Provincia" => "chubut", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
-                case "Crdoba": $datoConvertido[$i] = ["Provincia" => "cordoba", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
+                case "Córdoba": $datoConvertido[$i] = ["Provincia" => "cordoba", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
                 case "Corrientes": $datoConvertido[$i] = ["Provincia" => "corrientes", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
-                case "Entre Ros": $datoConvertido[$i] = ["Provincia" => "entrerios", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
+                case "Entre Ríos": $datoConvertido[$i] = ["Provincia" => "entrerios", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
                 case "Formosa": $datoConvertido[$i] = ["Provincia" => "formosa", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
@@ -178,9 +178,9 @@ class MapaController extends Controller
                     break;
                 case "Misiones": $datoConvertido[$i] = ["Provincia" => "misiones", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
-                case "Neuqun": $datoConvertido[$i] = ["Provincia" => "neuquen", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
+                case "Neuquén": $datoConvertido[$i] = ["Provincia" => "neuquen", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
-                case "Ro Negro": $datoConvertido[$i] = ["Provincia" => "rionegro", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
+                case "Río Negro": $datoConvertido[$i] = ["Provincia" => "rionegro", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
                 case "Salta": $datoConvertido[$i] = ["Provincia" => "salta", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
@@ -196,7 +196,7 @@ class MapaController extends Controller
                     break;
                 case "Tierra del Fuego": $datoConvertido[$i] = ["Provincia" => "tierradelfuego", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
-                case "Tucumn": $datoConvertido[$i] = ["Provincia" => "tucuman", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
+                case "Tucumán": $datoConvertido[$i] = ["Provincia" => "tucuman", "Total" => $dato->Total, "Prov_id" => $dato->Prov_id];
                     break;
             }
             $i++;

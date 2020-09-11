@@ -7,6 +7,8 @@ use Donatella\Ayuda\TnubeConnect;
 use Donatella\Http\Controllers\ProveedorEcomerce\TiendaNube;
 use Donatella\Models\Clientes;
 use Donatella\Models\ControlPedidos;
+use Donatella\Models\NroPedidos;
+use Donatella\Models\Provincias;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
@@ -45,12 +47,13 @@ class Ordenes extends Controller
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
-                dd($orden);
+                // dd($orden);
                 $crearPedido = $this->verificarOrgen($orden->number);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= '2020-09-10')){
                     echo ('Se puede Crear la Orden' . $orden->number .  "," );
-                    $id_cliente = $this->verificarCliente($orden);
+                    $cliente_id = $this->verificarCliente($orden);
+                    $this->crearPedido($cliente_id,$orden);
                 }
             }
             return Response::json("ok");
@@ -85,25 +88,49 @@ class Ordenes extends Controller
     private function verificarCliente($orden){
         $cliente = Clientes::where('mail',$orden->customer->email)->get();
         if ($cliente->isEmpty()){
-            $id_cliente = $this->crearCliente($orden->customer);
+            $cliente_id = $this->crearCliente($orden->customer);
+            return $cliente_id;
         }else {
-            return false;
+            return $cliente[0]->id_clientes;
         }
     }
 
     private function crearCliente($datos){
-        dd($datos);
-        Clientes::create([
-            "Nombre" => Input::get('Nombre'),
-            "Apellido" => Input::get('Apellido'),
-            "Apodo" => Input::get('Apodo'),
-            "Direccion" => Input::get('Direccion'),
-            "Mail" => Input::get('Mail'),
-            "Telefono" => Input::get('Telefono'),
-            "Cuit" => Input::get('Cuit'),
-            "Localidad" => Input::get('Localidad'),
-            "Provincia" => Input::get('Provincia'),
-            "Id_provincia" => Input::get('Provincia_id')
+        $id_Provincia = $this->getProvincia_id($datos->billing_province);
+        $nombre = (substr($datos->name, 0, strrpos($datos->name, ' ') + 0));
+        $apellido = (substr($datos->name, strrpos($datos->name, ' ') + 1, strlen($datos->name) + 1));
+        $direccion = ($datos->default_address->address . " " . $datos->default_address->number);
+        $email = $datos->email;
+        $telefono = ($datos->phone);
+        $dni_cuit = ($datos->identification);
+        $ciudad = ($datos->default_address->city);
+        $cliente_id = Clientes::create([
+            "Nombre" => $nombre,
+            "Apellido" => $apellido,
+            "Apodo" => "",
+            "Direccion" => $direccion,
+            "Mail" => $email,
+            "Telefono" => $telefono,
+            "Cuit" => $dni_cuit,
+            "Localidad" => $ciudad,
+            "Provincia" => "",
+            "Id_provincia" => $id_Provincia
         ]);
+        return $cliente_id->id;
+    }
+
+    private function getProvincia_id ($provincia){
+        $id = Provincias::where('nombre',$provincia)->get();
+        if ($id){
+            return $id[0]->id;
+        }else {
+            return 1;
+        }
+    }
+
+    private function crearPedido($cliente_id,$orden){
+        dd($cliente_id);
+        $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
+        
     }
 }
