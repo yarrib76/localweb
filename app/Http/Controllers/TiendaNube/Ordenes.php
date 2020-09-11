@@ -5,6 +5,7 @@ namespace Donatella\Http\Controllers\TiendaNube;
 use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
 use Donatella\Http\Controllers\ProveedorEcomerce\TiendaNube;
+use Donatella\Models\Clientes;
 use Donatella\Models\ControlPedidos;
 use Illuminate\Http\Request;
 
@@ -38,16 +39,18 @@ class Ordenes extends Controller
 
     public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas)
     {
+
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
+                dd($orden);
                 $crearPedido = $this->verificarOrgen($orden->number);
-                // dd(date('Y-m-d',strtotime($orden->created_at)));
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= '2020-09-10')){
                     echo ('Se puede Crear la Orden' . $orden->number .  "," );
+                    $id_cliente = $this->verificarCliente($orden);
                 }
             }
             return Response::json("ok");
@@ -74,5 +77,33 @@ class Ordenes extends Controller
         }else {
             return false;
         }
+    }
+
+    /*La funcioon verifica si existe el cliente, verificando el mail y devuelve si se puede crear o un nuevo cliente.
+    Si devuelve true, se puede crear el cliente porque no existe ninguno con ese mail
+    Si devuelve false, no se puede crear ya que hay un cliente con esa direccion de mail */
+    private function verificarCliente($orden){
+        $cliente = Clientes::where('mail',$orden->customer->email)->get();
+        if ($cliente->isEmpty()){
+            $id_cliente = $this->crearCliente($orden->customer);
+        }else {
+            return false;
+        }
+    }
+
+    private function crearCliente($datos){
+        dd($datos);
+        Clientes::create([
+            "Nombre" => Input::get('Nombre'),
+            "Apellido" => Input::get('Apellido'),
+            "Apodo" => Input::get('Apodo'),
+            "Direccion" => Input::get('Direccion'),
+            "Mail" => Input::get('Mail'),
+            "Telefono" => Input::get('Telefono'),
+            "Cuit" => Input::get('Cuit'),
+            "Localidad" => Input::get('Localidad'),
+            "Provincia" => Input::get('Provincia'),
+            "Id_provincia" => Input::get('Provincia_id')
+        ]);
     }
 }
