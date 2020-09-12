@@ -21,6 +21,10 @@ use TiendaNube\Auth;
 
 class Ordenes extends Controller
 {
+    public function index()
+    {
+        return view('tiendanube.orden.reporte');
+    }
     public function main()
     {
         /*
@@ -29,10 +33,9 @@ class Ordenes extends Controller
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
-
         $cantidadPorPaginas = 10;
-        $fecha_min = '2020-09-09';
-        $fecha_max = '2020-09-09';
+        $fecha_min = Input::get('fecha_min');
+        $fecha_max = Input::get('fecha_max');
         $store_id = Input::get('store_id');
         $tnConnect = new TnubeConnect();
         $connect = $tnConnect->getConnectionTN($store_id);
@@ -44,33 +47,66 @@ class Ordenes extends Controller
 
     public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$tienda,$fecha_min,$fecha_max)
     {
+        $count = 0;
+        $listaOrdenes = [];
         $fechaInicio = '2020-08-09';
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
-            // dd($ordenesTiendaNube->body);
+            //  dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
                 // dd($orden);
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= $fechaInicio)){
-                    echo ('Se puede Crear la Orden' . $orden->number .  "," );
-                    $cliente_id = $this->verificarCliente($orden);
-                    $this->crearControlPedido($cliente_id,$orden,$tienda);
-                }
-                echo ('Se puede Crear la Orden' . $orden->number .  "," );
+                    /*
 
+                    */
+                    if ($orden->customer->default_address->locality){
+                        $localidad = $orden->customer->default_address->locality;
+                    }else {
+                        $localidad = $orden->customer->default_address->city;
+                    }
+                    $listaOrdenes[$count] = ['Nombre' => (substr($orden->customer->name, 0, strrpos($orden->customer->name, ' ') + 0))
+                                            ,'Apellido' => substr($orden->customer->name, strrpos($orden->customer->name, ' ') + 1, strlen($orden->customer->name) + 1)
+                                            ,'Mail' => $orden->customer->email
+                                            ,'Direccion' => ($orden->customer->default_address->address . " " . $orden->customer->default_address->number)
+                                            ,'Telefono' => $orden->customer->phone
+                                            ,'Cuit' => $orden->customer->identification
+                                            ,'Provincia' => $orden->customer->billing_province
+                                            ,'Localidad' => $localidad
+                                            ,'OrdenWeb' => $orden->number
+                                            ,'TotalWeb' => $orden->total];
+                    $count++;
+                }
             }
         }
-        return Response::json("ok");
+        // return json_encode($listaOrdenes, JSON_UNESCAPED_UNICODE);
+        return Response::json($listaOrdenes);
+    }
+
+    public function nuevoPedido(){
+
+        $ordenes = (Input::get('ordenes'));
+        foreach ($ordenes as $orden){
+            $cliente_id = $this->verificarCliente($orden);
+            echo 'Clientea ' . $cliente_id . ',';
+            // $this->crearControlPedido($cliente_id,$orden,$tienda);
+        }
+
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
     Esta informacion la urilizo en el FOR para solicitar todas las paginas que tienen los articulos*/
     public function obtengoCantConsultas($api,$cantidadPorPaginas,$fecha_min,$fecha_max)
     {
-        $query = $api->get("orders?page=1&per_page=1&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
-        $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
+        try {
+            $query = $api->get("orders?page=1&per_page=1&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
+            $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
+        }catch (API\Exception $e){
+            //Si no hay resultado, para que no de error la consulta se pasa $cantidadConsultas = 0
+            $cantidadConsultas = 0;
+        }
         return $cantidadConsultas;
     }
 
@@ -92,9 +128,9 @@ class Ordenes extends Controller
     Si devuelve true, se puede crear el cliente porque no existe ninguno con ese mail
     Si devuelve false, no se puede crear ya que hay un cliente con esa direccion de mail */
     private function verificarCliente($orden){
-        $cliente = Clientes::where('mail',$orden->customer->email)->get();
+        $cliente = Clientes::where('mail',$orden['Mail'])->get();
         if ($cliente->isEmpty()){
-            $cliente_id = $this->crearCliente($orden->customer);
+            $cliente_id = $this->crearCliente($orden);
             return $cliente_id;
         }else {
             return $cliente[0]->id_clientes;
@@ -102,23 +138,16 @@ class Ordenes extends Controller
     }
 
     private function crearCliente($datos){
-        $id_Provincia = $this->getProvincia_id($datos->billing_province);
-        $nombre = (substr($datos->name, 0, strrpos($datos->name, ' ') + 0));
-        $apellido = (substr($datos->name, strrpos($datos->name, ' ') + 1, strlen($datos->name) + 1));
-        $direccion = ($datos->default_address->address . " " . $datos->default_address->number);
-        $email = $datos->email;
-        $telefono = ($datos->phone);
-        $dni_cuit = ($datos->identification);
-        $ciudad = ($datos->default_address->city);
+        $id_Provincia = $this->getProvincia_id($datos['Provincia']);
         $cliente_id = Clientes::create([
-            "Nombre" => $nombre,
-            "Apellido" => $apellido,
+            "Nombre" => $datos['Nombre'],
+            "Apellido" => $datos['Apellido'],
             "Apodo" => "",
-            "Direccion" => $direccion,
-            "Mail" => $email,
-            "Telefono" => $telefono,
-            "Cuit" => $dni_cuit,
-            "Localidad" => $ciudad,
+            "Direccion" => $datos['Direccion'],
+            "Mail" => $datos['Mail'],
+            "Telefono" => $datos['Telefono'],
+            "Cuit" => $datos['Cuit'],
+            "Localidad" => $datos['Localidad'],
             "Provincia" => "",
             "Id_provincia" => $id_Provincia
         ]);

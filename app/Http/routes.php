@@ -133,6 +133,11 @@ Route::get('/vistaExportaExcel', 'Api\GetArticulosTiendaNube@vistaExportaExcel')
 //Exporta a Excel la tabla NewArtiTN
 Route::get('downloadExcel/{type}', 'Api\GetArticulosTiendaNube@downloadExcel');
 
+/*Ordenes Tienda Nube*/
+Route::get('/ordenestiendanube','TiendaNube\Ordenes@index');
+Route::get('/importarordenes','TiendaNube\Ordenes@main');
+Route::get('/crearpedido','TiendaNube\Ordenes@nuevoPedido');
+
 /*Reporte Vendedores */
 Route::get('/reportevendedoras', 'Reporte\Vendedoras@pedidos');
 Route::get('/pedidosAsignados', 'Reporte\Vendedoras@asignados');
@@ -146,7 +151,7 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
-Route::get('/orders','TiendaNube\Ordenes@main');
+
 
 /*Mail*/
 Route::get('/serverStatusMail','Mail\ServerStatusMail@serverStatusMail');
