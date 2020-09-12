@@ -30,22 +30,24 @@ class Ordenes extends Controller
         dd($store_info);
         */
 
-        $cantidadPorPaginas = 200;
+        $cantidadPorPaginas = 10;
+        $fecha_min = '2020-09-09';
+        $fecha_max = '2020-09-09';
         $store_id = Input::get('store_id');
         $tnConnect = new TnubeConnect();
         $connect = $tnConnect->getConnectionTN($store_id);
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
-        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
-        $result = $this->getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$connect[0]['tienda']);
+        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas,$fecha_min,$fecha_max);
+        $result = $this->getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$connect[0]['tienda'],$fecha_min,$fecha_max);
         return $result;
     }
 
-    public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$tienda)
+    public function getOrdenes($api,$cantidadConsultas,$cantidadPorPaginas,$tienda,$fecha_min,$fecha_max)
     {
-        $fechaInicio = '2020-09-09';
+        $fechaInicio = '2020-08-09';
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
-            $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas");
+            $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
                 // dd($orden);
@@ -56,16 +58,18 @@ class Ordenes extends Controller
                     $cliente_id = $this->verificarCliente($orden);
                     $this->crearControlPedido($cliente_id,$orden,$tienda);
                 }
+                echo ('Se puede Crear la Orden' . $orden->number .  "," );
+
             }
-            return Response::json("ok");
         }
+        return Response::json("ok");
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
     Esta informacion la urilizo en el FOR para solicitar todas las paginas que tienen los articulos*/
-    public function obtengoCantConsultas($api,$cantidadPorPaginas)
+    public function obtengoCantConsultas($api,$cantidadPorPaginas,$fecha_min,$fecha_max)
     {
-        $query = $api->get("orders?page=1&per_page=1");
+        $query = $api->get("orders?page=1&per_page=1&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
     }
