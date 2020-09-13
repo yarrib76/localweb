@@ -91,6 +91,7 @@ class Ordenes extends Controller
         foreach ($ordenes as $orden){
             $cliente_id = $this->verificarCliente($orden);
             echo 'Clientea ' . $cliente_id . ',';
+            //prueba
             // $this->crearControlPedido($cliente_id,$orden,$tienda);
         }
 
