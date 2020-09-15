@@ -112,6 +112,13 @@
                     <li class="divider"></li>
                     <li><a href="/consultaecomerce"> Panel </a></li>
                     <li><a href="/autosinc"> Replica Automatica </a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Ordenes Tienda Nube</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/ordenestiendanube"> Replica Ordenes TN </a></li>
+                            <li><a href="/asignaciongeneral"> Asignacion Pedidos </a></li>
+                        </ul>
+                    </li>
                     <li><a href="/tiendanubeGetArticulosInbox"> Exportar Articulos A Excel </a></li>
                 </ul>
             </li>

@@ -112,7 +112,8 @@
 <script type="text/javascript">
     var modalError = document.getElementById('myModalError');
     var proveedor;
-
+    fechaInicio = document.getElementById("FechaInicio").valueAsDate = new Date();
+    fechaFin = document.getElementById("FechaFin").valueAsDate = new Date();
     //Asigno DataTable para que exista vacìa
     table1 =  $('#reporteViamore').DataTable({
                 dom: 'Bfrtip',

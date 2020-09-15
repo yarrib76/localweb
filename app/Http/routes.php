@@ -136,7 +136,7 @@ Route::get('downloadExcel/{type}', 'Api\GetArticulosTiendaNube@downloadExcel');
 /*Ordenes Tienda Nube*/
 Route::get('/ordenestiendanube','TiendaNube\Ordenes@index');
 Route::get('/importarordenes','TiendaNube\Ordenes@main');
-Route::get('/crearpedido','TiendaNube\Ordenes@nuevoPedido');
+Route::post('/crearpedido','TiendaNube\Ordenes@nuevoPedido');
 
 /*Reporte Vendedores */
 Route::get('/reportevendedoras', 'Reporte\Vendedoras@pedidos');

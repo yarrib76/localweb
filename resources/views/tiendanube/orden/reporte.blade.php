@@ -25,6 +25,8 @@
                             <option>Viamore</option>
                         @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
                             <option>Viamore</option>
+                            <option>Samira</option>
+                            <option>Donatella</option>
                         @endif
                     </select>
                     <button class="btn btn-primary" onclick="verificar()"><span class="glyphicon glyphicon-refresh"></span></button>
@@ -39,6 +41,7 @@
                                 <th>Localidad</th>
                                 <th>Provincia</th>
                                 <th>TotalWeb</th>
+                                <th>Tienda</th>
                             </tr>
                             </thead>
                         </table>
@@ -54,7 +57,7 @@
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
-            width: 11%;
+            width: 8%;
             height: 20%;
             overflow-y: auto;
         }
@@ -107,6 +110,8 @@
     var modalError = document.getElementById('myModalError');
     var ordenInsert;
     var table;
+    document.getElementById('Fecha_min').valueAsDate = new Date();
+    document.getElementById('Fecha_max').valueAsDate = new Date();
     function verificar() {
         eliminarTabla()
         var fecha_min = document.getElementById("Fecha_min").value;
@@ -137,7 +142,6 @@
                 'contentType': 'application/json',
                 success : function(json) {
                     ordenInsert = json
-                    console.log(ordenInsert)
                    table = $('#reporte').DataTable({
                                 dom: 'Bfrtip',
                                 "autoWidth": false,
@@ -154,6 +158,7 @@
                                     { "data": "Localidad" },
                                     { "data": "Provincia" },
                                     { "data": "TotalWeb" },
+                                    { "data": "Tienda" },
                                 ]
                             }
                     );
@@ -164,54 +169,24 @@
     }
 
     function crearPedidos() {
+        var modal = document.getElementById('myModal');
+        // When the user clicks the button, open the modal
+        modal.style.display = "block";
+        var prueba =  JSON.stringify(ordenInsert)
+        console.log(prueba);
         $.ajax({
             'url': "crearpedido",
-            data: { ordenes : ordenInsert},
-            'method': "GET",
-            'contentType': 'application/json',
+            'method': 'post',
+            data: {ordenes: prueba  },
             success: function (json) {
-
+                modal.style.display = "none";
             }
         })
+        table.clear().draw()
     }
     function cerrarError(){
         //close the modal
         modalError.style.display = "none";
-    }
-
-    function sincroArt(){
-        var selectLocal = document.getElementById("select");
-        selectLocal = selectLocal.options[selectLocal.selectedIndex].text
-        // Get the modal
-        var modal = document.getElementById('myModal');
-        // When the user clicks the button, open the modal
-        modal.style.display = "block";
-        var count = 0;
-        for (i = 0; i < artInsert.length; i++ ){
-            $.ajax({
-                url: $url + 'Articulo=' + artInsert[i].Articulo
-                + "&" + 'Detalle=' + artInsert[i].Detalle
-                + "&" + 'ProveedorSKU=' + artInsert[i].ProveedorSKU
-                + "&" + 'PrecioOrigen=' + artInsert[i].PrecioOrigen
-                + "&" + 'PrecioConvertido=' + artInsert[i].PrecioConvertido
-                + "&" + 'Moneda=' + artInsert[i].Moneda
-                + "&" + 'Proveedor=' + artInsert[i].Proveedor,
-                dataType: "json",
-                success: function (json) {
-                },
-                error: function (json){
-                    count++;
-                    //El IF lo utilizo para poder finalizar el proceso. Esta en el error porque una vez dado de alta
-                    //el articulo sale por error (no se por que je).
-                    //Cuando count tiene la misma cantidad de articulos a insertar artInsert.length, cierra el gif
-                    if (count == artInsert.length ){
-                        console.log(count);
-                        modal.style.display = "none";
-                        location.reload();
-                    }
-                }
-            })
-        }
     }
     function eliminarTabla(){
         if(typeof table != "undefined"){

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Response;
 
 class AsignacionGeneral extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
     public function inbox()
     {
         return view('pedidos.asignaciongeneral', compact('vendedoras'));

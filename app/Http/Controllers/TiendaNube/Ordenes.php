@@ -21,6 +21,11 @@ use TiendaNube\Auth;
 
 class Ordenes extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
     public function index()
     {
         return view('tiendanube.orden.reporte');
@@ -53,7 +58,7 @@ class Ordenes extends Controller
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
-            //  dd($ordenesTiendaNube->body);
+            // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
                 // dd($orden);
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
@@ -76,7 +81,8 @@ class Ordenes extends Controller
                                             ,'Provincia' => $orden->customer->billing_province
                                             ,'Localidad' => $localidad
                                             ,'OrdenWeb' => $orden->number
-                                            ,'TotalWeb' => $orden->total];
+                                            ,'TotalWeb' => $orden->total
+                                            ,'Tienda' =>$tienda];
                     $count++;
                 }
             }
@@ -88,13 +94,12 @@ class Ordenes extends Controller
     public function nuevoPedido(){
 
         $ordenes = (Input::get('ordenes'));
+        $ordenes = json_decode($ordenes);
         foreach ($ordenes as $orden){
             $cliente_id = $this->verificarCliente($orden);
-            echo 'Clientea ' . $cliente_id . ',';
-            //prueba
-            // $this->crearControlPedido($cliente_id,$orden,$tienda);
+            $this->crearControlPedido($cliente_id,$orden);
         }
-
+        return Response::json(['ok']);
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
@@ -129,7 +134,7 @@ class Ordenes extends Controller
     Si devuelve true, se puede crear el cliente porque no existe ninguno con ese mail
     Si devuelve false, no se puede crear ya que hay un cliente con esa direccion de mail */
     private function verificarCliente($orden){
-        $cliente = Clientes::where('mail',$orden['Mail'])->get();
+        $cliente = Clientes::where('mail',$orden->Mail)->get();
         if ($cliente->isEmpty()){
             $cliente_id = $this->crearCliente($orden);
             return $cliente_id;
@@ -139,16 +144,16 @@ class Ordenes extends Controller
     }
 
     private function crearCliente($datos){
-        $id_Provincia = $this->getProvincia_id($datos['Provincia']);
+        $id_Provincia = $this->getProvincia_id($datos->Provincia);
         $cliente_id = Clientes::create([
-            "Nombre" => $datos['Nombre'],
-            "Apellido" => $datos['Apellido'],
+            "Nombre" => $datos->Nombre,
+            "Apellido" => $datos->Apellido,
             "Apodo" => "",
-            "Direccion" => $datos['Direccion'],
-            "Mail" => $datos['Mail'],
-            "Telefono" => $datos['Telefono'],
-            "Cuit" => $datos['Cuit'],
-            "Localidad" => $datos['Localidad'],
+            "Direccion" => $datos->Direccion,
+            "Mail" => $datos->Mail,
+            "Telefono" => $datos->Telefono,
+            "Cuit" => $datos->Cuit,
+            "Localidad" => $datos->Localidad,
             "Provincia" => "",
             "Id_provincia" => $id_Provincia
         ]);
@@ -164,7 +169,7 @@ class Ordenes extends Controller
         }
     }
 
-    private function crearControlPedido($cliente_id,$orden,$tienda){
+    private function crearControlPedido($cliente_id,$orden){
         $nroPedido = $this->getNroPedido();
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         ControlPedidos::create([
@@ -173,10 +178,10 @@ class Ordenes extends Controller
             'Vendedora' => 'PAGINA ',
             'Fecha' => $fecha,
             'Total' => 0,
-            'OrdenWeb' => $orden->number,
+            'OrdenWeb' => $orden->OrdenWeb,
             'cajera' => 'ReplicaTN',
-            'totalweb' => $orden->total,
-            'local' => $tienda
+            'totalweb' => $orden->TotalWeb,
+            'local' => $orden->Tienda
         ]);
     }
 

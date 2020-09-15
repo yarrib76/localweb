@@ -126,6 +126,9 @@
 
        $("#example-table").tabulator({
                 height: "550px",
+           initialSort:[
+               {column:"nropedido", dir:"desc"}, //sort by this first
+           ],
                 columns: [
                     {title: "Pedido", field: "nropedido", sortable: true, width: 115},
                     {title: "Cliente", field: "cliente", sortable: true, width: 300, headerFilter:"input"},
@@ -133,7 +136,7 @@
                     {title: "OrdenWeb", field: "ordenweb", sortable: true, width: 110},
                     {title: "Total", field: "total", sortable: true, width: 110},
                     {title: "TotalWeb", field: "totalweb", sortable: true, width: 110},
-                    {title: "Local", field: "local", sortable: true, width: 110},
+                    {title: "Local", field: "local", sortable: true, width: 145},
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({
