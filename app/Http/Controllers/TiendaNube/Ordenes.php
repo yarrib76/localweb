@@ -56,7 +56,7 @@ class Ordenes extends Controller
     {
         $count = 0;
         $listaOrdenes = [];
-        $fechaInicio = '2020-09-17';
+        $fechaInicio = '2020-09-16';
         // $fechaActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
         for ($i = 1; $i <= $cantidadConsultas; $i++) {
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
