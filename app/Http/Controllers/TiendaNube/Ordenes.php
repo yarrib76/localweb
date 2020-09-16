@@ -32,12 +32,14 @@ class Ordenes extends Controller
     }
     public function main()
     {
+
         /*
-        $code = 'c74fa5dfc4370499b938589b4703735430f47fb1';
-        $auth = new Auth(1233, 'kCgxm8YTleY2q2IEWyOu6equExOMOBmdzl80HR3Zvhpk4eSr');
+        $code = '42b3e8fcb7cbe29cd907e5b820046225cf2d3ade';
+        $auth = new Auth(1065, 'u4BhJl1PUAjtXzYj5pcUkPpkz0feOwIRBhbcfdVM9pTccRXL');
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
+
         $cantidadPorPaginas = 10;
         $fecha_min = Input::get('fecha_min');
         $fecha_max = Input::get('fecha_max');

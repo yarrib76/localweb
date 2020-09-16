@@ -48,7 +48,7 @@ class TnubeConnect
             $tienda = 'Samira';
         }
         if ($store_id == '963000'){
-            $access_token = '00b27bb0c34a6cab2c1d4edc0792051b50b91f9e';
+            $access_token = '81cdc25af292e5cd931891e2b3ef6683b895ec71';
             //    $store_id = '963000';
             $appsName = 'SincoAppsDonatella (yarrib76@gmail.com)';
             $tienda = 'Donatella';
