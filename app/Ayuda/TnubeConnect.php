@@ -42,7 +42,7 @@ class TnubeConnect
             $tienda = 'Nacha';
         }
         if ($store_id == '938857'){
-            $access_token = '101d4ea2e9fe7648ad05112274a5922acf115d37';
+            $access_token = '9d4e7d6c96a5256904d289d6425b969c043bd1cf';
             //    $store_id = '938857';
             $appsName = 'SincroApps (yarrib76@gmail.com)';
             $tienda = 'Samira';

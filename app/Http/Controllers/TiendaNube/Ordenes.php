@@ -34,8 +34,8 @@ class Ordenes extends Controller
     {
 
         /*
-        $code = '42b3e8fcb7cbe29cd907e5b820046225cf2d3ade';
-        $auth = new Auth(1065, 'u4BhJl1PUAjtXzYj5pcUkPpkz0feOwIRBhbcfdVM9pTccRXL');
+        $code = '41adb708b6ec1c0a0bffca99bb0f0d4cb45603fe';
+        $auth = new Auth(1056, 'gZck3RgyMZTA5YWGOXwrxqDG4pK10nKNJ1Ha2VaI62PwBFFC');
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
