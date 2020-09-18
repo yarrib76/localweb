@@ -40,7 +40,7 @@ class Ordenes extends Controller
         dd($store_info);
         */
 
-        $cantidadPorPaginas = 10;
+        $cantidadPorPaginas = 3;
         $fecha_min = Input::get('fecha_min');
         $fecha_max = Input::get('fecha_max');
         $store_id = Input::get('store_id');
