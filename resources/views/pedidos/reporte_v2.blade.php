@@ -31,6 +31,7 @@
                                     <th>Factura</th>
                                     <th>Total</th>
                                     <th>OrdenWeb</th>
+                                    <th>TotalWeb</th>
                                     <th>Transporte</th>
                                     <th>Estado</th>
                                     <th>Accion</th>
@@ -51,6 +52,7 @@
                                         @else
                                             <td>Sin Orden</td>
                                         @endif
+                                        <td>{{$pedido->totalweb}}</td>
                                         <td>{{$pedido->transporte}}</td>
                                         @if($pedido->estado == 0 and $pedido->empaquetado == 1)
                                             <td bgcolor="#87CEFA">Empaquetado</td>
