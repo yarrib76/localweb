@@ -38,7 +38,7 @@ class Vendedoras extends Controller
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
-                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte
+                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
@@ -56,7 +56,7 @@ class Vendedoras extends Controller
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
-                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte
+                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
@@ -74,7 +74,7 @@ class Vendedoras extends Controller
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
-                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte
+                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
@@ -91,7 +91,7 @@ class Vendedoras extends Controller
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
-                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte
+                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
