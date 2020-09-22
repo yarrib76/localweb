@@ -620,7 +620,7 @@
                     posicionTable = this.rowIndex
                     //Me vijo el valor que tiene la fila en el cambio webSku y se lo asigno al Input
                     //que esta en el model con el ID WebSku
-                    newTransporte = reporte.rows[posicionTable].cells[7].innerHTML
+                    newTransporte = reporte.rows[posicionTable].cells[8].innerHTML
                     document.getElementById("Transporte").value = newTransporte
                 }
             }
