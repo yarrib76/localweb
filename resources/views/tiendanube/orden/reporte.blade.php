@@ -114,10 +114,8 @@
     document.getElementById('Fecha_max').valueAsDate = new Date();
     function verificar() {
         eliminarTabla()
-        // var fecha_min = document.getElementById("Fecha_min").value;
+        var fecha_min = document.getElementById("Fecha_min").value;
         var fecha_max = document.getElementById("Fecha_max").value;
-        var today = moment().format('YYYY-MM-DD');
-        $('#Fecha_min').val(today);
         var selectLocal = document.getElementById("select");
         selectLocal = selectLocal.options[selectLocal.selectedIndex].text
         if (selectLocal == "Seleccionar un Local") {
