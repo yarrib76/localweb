@@ -633,7 +633,7 @@
                     modal.style.display = "none";
                     //El "json" es la respuesta del valor que se cambio pot la API del webSky
                     //Luego se lo cargo a la tabla en le posición "posicionTable"
-                    reporte.rows[posicionTable].cells[7].innerHTML = json ;
+                    reporte.rows[posicionTable].cells[8].innerHTML = json ;
                 }
             });
         }
