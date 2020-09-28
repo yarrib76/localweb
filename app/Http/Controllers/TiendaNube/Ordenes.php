@@ -66,9 +66,7 @@ class Ordenes extends Controller
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= $fechaInicio)){
-                    /*
-
-                    */
+                    /* Verifico si el cambo localidad esta lleno, si es así utilizo ese campo del form, de lo contrario utilizo city*/
                     if ($orden->customer->default_address->locality){
                         $localidad = $orden->customer->default_address->locality;
                     }else {
@@ -119,8 +117,8 @@ class Ordenes extends Controller
     }
 
     /*La funcioon verifica si existe un pedido con el # de orden que llega y devuelve si se puede crear o un nuevo pedido.
-    Si devuelve true, se puede crear un pedido porque no existe ninguno con ese # de orden
-    Si devuelve false, no se puede crear ya que hay un pedido con ese # de orden */
+    Si devuelve true, se puede crear un pedido porque no existe ninguno con ese # de orden y en ese local (la verificación del local es por la fusión de Samira y Donatella
+    Si devuelve false, no se puede crear ya que hay un pedido con ese # de orden y en ese local*/
     private function verificarOrgen($nroOrden,$tienda)
     {
         $pedido = ControlPedidos::where('ordenWeb',$nroOrden)
