@@ -13,7 +13,7 @@ class OrdenesCompras extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Gerencia,Caja,Ventas');
+        $this->middleware('role:Gerencia,Caja');
     }
     public function query()
     {
