@@ -9,7 +9,7 @@
                     </div>
                     <div class="panel-body">
                         <div>
-                      <!--      Seleccionar Columnas:
+                      <!--      Seleccionar Columnas :
                             <a class="toggle-vis" data-column="0">NroPedido</a> -
                             <a class="toggle-vis" data-column="1">Cliente</a> -
                             <a class="toggle-vis" data-column="2">Fecha</a> -
