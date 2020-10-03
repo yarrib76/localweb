@@ -229,6 +229,8 @@ Route::group(['prefix' => 'api'],
 
         /*Pedidos - Transporte*/
         Route::get('/transortePedido', 'Api\TransportePedido@modificarTransporte');
+        /*Pedidos - Instancia*/
+        Route::get('/instanciaPedidos', 'Api\InstanciaPedido@modificoInstanciaPedido');
 
         /*Articulos Mas Vendidos*/
         Route::get('/artimasvendidos', 'Api\GetArtiMasVendidos@listaArticulos');

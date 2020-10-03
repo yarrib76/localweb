@@ -33,6 +33,7 @@
                                     <th>OrdenWeb</th>
                                     <th>TotalWeb</th>
                                     <th>Transporte</th>
+                                    <th>Instancia</th>
                                     <th>Estado</th>
                                     <th>Accion</th>
                                 </tr>
@@ -54,6 +55,13 @@
                                         @endif
                                         <td>{{$pedido->totalweb}}</td>
                                         <td>{{$pedido->transporte}}</td>
+                                        @if ($pedido->instancia == 0)
+                                            <td>Pendiente</td>
+                                        @elseif($pedido->instancia == 1)
+                                            <td>Iniciado</td>
+                                        @elseif($pedido->instancia == 2)
+                                            <td>Finalizado</td>
+                                        @endif
                                         @if($pedido->estado == 0 and $pedido->empaquetado == 1)
                                             <td bgcolor="#87CEFA">Empaquetado</td>
                                             <td><button type="button" value="botonVer" class="btn btn-info" onclick="cargoTablaPopup({{$pedido->nropedido}});"><i class="fa fa-eye"></i></button>
@@ -87,8 +95,13 @@
                                                 @else
                                                     <button id="botonSinComent" value="Comentario" class="btn btn-success" onclick="comentario({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');"><i class="fa fa-book"></i></button>
                                                 @endif
-                                            <button type="button" id="botonEncuesta" class="btn btn-info" onclick="encuesta({{$pedido->nropedido}});"><i class="fa fa-facebook-square"></i></button>
-                                        </td>
+                                            @if($pedido->instancia == 0)
+                                                <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},1,{{$a}});">Inicio</button>
+                                                <button type="button" id="botonInstanciaFin{{$a}}" style="display:none" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
+                                            @elseif($pedido->instancia == 1)
+                                                 <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
+                                            @endif
+                                            </td>
                                         @else
                                             <td bgcolor="#FF0000">Cancelado</td>
                                             <td><button type="button" id="botonVer" class="btn btn-info" onclick="cargoTablaPopup({{$pedido->nropedido}});"><i class="fa fa-eye"></i></button>
@@ -618,7 +631,7 @@
                 rows[i].onclick = function() {
                     //Paso a la variable la fila seleccionada
                     posicionTable = this.rowIndex
-                    //Me vijo el valor que tiene la fila en el cambio webSku y se lo asigno al Input
+                    //Me fijo el valor que tiene la fila en el cambio webSku y se lo asigno al Input
                     //que esta en el model con el ID WebSku
                     newTransporte = reporte.rows[posicionTable].cells[8].innerHTML
                     document.getElementById("Transporte").value = newTransporte
@@ -640,6 +653,47 @@
         function refresh (){
             location.reload();
         }
+
+
+        function cambioInstancia (nroPedido,instancia,posicionBoton){
+            var rows = document.getElementById('reporte').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (i = 0; i < rows.length; i++) {
+                rows[i].onclick = function() {
+                    //Paso a la variable la fila seleccionada
+                    posicionTable = this.rowIndex
+                }
+            }
+            $.ajax({
+                url: 'api/instanciaPedidos?nroPedido=' + nroPedido + '&&instancia=' + instancia,
+                dataType: "json",
+                success: function (json) {
+                    modal.style.display = "none";
+                    //El "json" es la respuesta del valor que se cambio pot la API del webSky
+                    //Luego se lo cargo a la tabla en le posición "posicionTable"
+                    reporte.rows[posicionTable].cells[9].innerHTML = json;
+                    if (json == 'Iniciado'){
+                        document.getElementById("botonInstanciaFin" + posicionBoton).style.display = 'block'
+                        document.getElementById("botonInstancia" + posicionBoton).style.display = 'none'
+                    }else {
+                        if (document.getElementById("botonInstanciaFin" + posicionBoton) != null){
+                            document.getElementById("botonInstanciaFin" + posicionBoton).disabled = true
+                        } else {
+                            document.getElementById("botonInstancia" + posicionBoton).disabled = true
+                        }
+                    }
+
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+        //Descontinuado
         var modalEncuesta = document.getElementById('myModalEncuesta');
         var nroPedidoEncuesta;
         function encuesta(nroPedido){
@@ -663,6 +717,8 @@
             }
             $(".modal-content h4").html("Pedido Nº:" + nroPedido);
         }
+
+        //Descontinuado
         function guardarEncuesta(){
             var isCheckedFace = document.getElementById('facebook').checked;
             var isCheckedInstagram = document.getElementById('instagram').checked;
