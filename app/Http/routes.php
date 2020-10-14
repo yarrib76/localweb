@@ -152,6 +152,7 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
 
+Route::get('/compraauto', 'Articulo\CompraAuto@inicio');
 
 /*Mail*/
 Route::get('/serverStatusMail','Mail\ServerStatusMail@serverStatusMail');
