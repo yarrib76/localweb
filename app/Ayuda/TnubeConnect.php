@@ -59,6 +59,14 @@ class TnubeConnect
             $appsName = 'SincoAppsViamore (yarrib76@gmail.com)';
             $tienda = 'Viamore';
         }
+
+        if ($store_id == '1379491'){
+            $access_token = 'addbd218f3cd7b03cd46b8cb318b472ddbd34c84';
+            //    $store_id = '1043936';
+            $appsName = 'SincroDemo (yarrib76@gmail.com)';
+            $tienda = 'LabLocal';
+        }
+
         $connetion[0]= ['access_token' => $access_token,'appsName' => $appsName,'tienda' => $tienda];
         return $connetion;
     }
