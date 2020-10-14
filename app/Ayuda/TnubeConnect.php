@@ -64,7 +64,7 @@ class TnubeConnect
             $access_token = 'addbd218f3cd7b03cd46b8cb318b472ddbd34c84';
             //    $store_id = '1043936';
             $appsName = 'SincroDemo (yarrib76@gmail.com)';
-            $tienda = 'LabLocal';
+            $tienda = 'LabLocales';
         }
 
         $connetion[0]= ['access_token' => $access_token,'appsName' => $appsName,'tienda' => $tienda];
