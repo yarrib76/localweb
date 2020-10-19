@@ -152,7 +152,8 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
 
-Route::get('/compraauto', 'Articulo\CompraAuto@inicio');
+Route::get('/compraautomail', 'Articulo\CompraAuto@inicio');
+Route::get('/compraauto', 'Articulo\CompraAuto@index');
 
 /*Mail*/
 Route::get('/serverStatusMail','Mail\ServerStatusMail@serverStatusMail');
@@ -247,6 +248,7 @@ Route::group(['prefix' => 'api'],
 
         /*AMB Articulos*/
         Route::get('/abmarticulos', 'Api\Articulos\GetArticulos@consulta');
+        Route::get('/compraauto', 'Api\Articulos\CompraAuto@consulta');
 
         /*Reporte Articulo Proveedor*/
         Route::get('/reporteArticuloProveedor', 'Api\Reportes\ArticuloProveedor@query');

@@ -12,6 +12,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CompraAuto extends Controller
 {
+    public function index ()
+    {
+        return view('articulos.compraauto');
+    }
     public function inicio()
     {
         $data = $this->consultaBase();
