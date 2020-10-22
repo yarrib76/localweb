@@ -16,6 +16,7 @@ class ServerStatusMail extends Controller
     public function serverStatusMail()
     {
 
+        //Las IP son de los servidores secundarios
         switch (gethostname()){
             case 'vagrant':
                 $mysqli = new mysqli("192.168.0.20", "yarrib76", "NetAcc10", "samira");
