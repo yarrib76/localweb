@@ -98,36 +98,7 @@
    <script>
        var modal = document.getElementById('myModal');
        $(document).ready( function () {
-           $.ajax({
-               'url': "/api/compraauto",
-               'method': "GET",
-               'contentType': 'application/json',
-               success : function(json) {
-                   for ( var i=0, ien=json.length ; i<ien ; i++ ) {
-                       json[i]['Accion'] = "<button class='btn btn-primary' id='agregarArtCompAuto" + i + "' onclick='agregarArtCompraauto(" + json[i]['Articulo'] + ", " + i +" )'>Agregar </button>"
-                   }
-                   $('#reporte').DataTable({
-                               dom: 'Bfrtip',
-                               "autoWidth": false,
-                               buttons: [
-                                   'excel'
-                               ],
-                               order: [0,'desc'],
-                               "aaData": json,
-                               "columns": [
-                                   { "data": "Articulo" },
-                                   { "data": "Detalle" },
-                                   { "data": "ProveedorSKU" },
-                                   { "data": "Cantidad" },
-                                   { "data": "Pedido" },
-                                   { "data": "PrecioVenta" },
-                                   { "data": "Accion" }
-                               ]
-                           }
-                   );
-                   modal.style.display = "none";
-               },
-           })
+           llenarTablaTabulador()
         } );
 
        //custom max min header filter
@@ -211,19 +182,13 @@
                 height: "550px",
                 fitColumns: true,
                 columns: [
-                    {title: "Articulo", field: "Articulo", sortable: true, width: 115},
-                    {title: "Detalle", field: "Detalle", sortable: true, width: 300, headerFilter:"input"},
-                    {title: "Qty", field: "Cantidad", sortable: true, width: 65, editable:true, editor:"number"},
-                    {title: "P.Origen", field: "PrecioOrigen", sortable: false,sorter: "number", editable:true, width:100, editor:"number"},
-                    {title: "P.Convertido", field: "PrecioConvertido",sorter: "number", width:120, editable:true, editor:"number"},
-                    {title: "Precio Manual", field: "PrecioManual",sorter: "number", width:130, editable:true, editor:"number"},
-                    {title: "Gastos", field: "Gastos",sorter: "number", editable:true, editor:"number"},
-                    {title: "Ganancia", field: "Ganancia",sorter: "number", editable:true, width:100 , editor:"number"},
-                    {title: "Moneda", field: "Moneda"},
+                    {title: "Articulo", field: "Articulo", sortable: true, width: 300},
+                    {title: "Detalle", field: "Detalle", sortable: true, width: 500, headerFilter:"input"},
+                    {title: "Alerta", field: "cant_alerta", editor:"number"},
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({
-                        url: "/editargeneral/update",
+                        url: "api/compraauto/editar",
                         data: cell.getRow().getData(),
                         type: "post"
                     })
@@ -231,6 +196,7 @@
             });
 
        function buscarArticulos(){
+           cargarTablaArticulos()
            // Get the <span> element that closes the modal
            var span = document.getElementsByClassName("close")[0];
 
@@ -240,6 +206,7 @@
            // When the user clicks on <span> (x), close the modal
            span.onclick = function() {
                modal.style.display = "none";
+               llenarTablaTabulador()
            }
 
            // When the user clicks anywhere outside of the modal, close it
@@ -251,10 +218,56 @@
        }
 
        //La función agrega el articulo a la lista de los artículos de Compra automática
-       function agregarArtCompraauto(articulo, nroColumna){
+       function agregarArtCompraauto(nroArticulo, nroColumna){
            document.getElementById("agregarArtCompAuto" + nroColumna).disabled = true
+           $.ajax({
+               'url': "/api/compraauto_agregar?nroArticulo=" + nroArticulo,
+               'method': "GET",
+               'contentType': 'application/json',
+               success : function(json) {
+               }
+           })
        }
 
+
+       function cargarTablaArticulos(){
+           eliminarTabla()
+           $.ajax({
+               'url': "/api/compraauto",
+               'method': "GET",
+               'contentType': 'application/json',
+               success : function(json) {
+                   for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+                       json[i]['Accion'] = "<button class='btn btn-primary' id='agregarArtCompAuto" + i + "' onclick='agregarArtCompraauto(" + json[i]['Articulo'] + ", " + i +" )'>Agregar </button>"
+                   }
+                   table = $('#reporte').DataTable({
+                               dom: 'Bfrtip',
+                               "autoWidth": false,
+                               buttons: [
+                                   'excel'
+                               ],
+                               order: [0,'desc'],
+                               "aaData": json,
+                               "columns": [
+                                   { "data": "Articulo" },
+                                   { "data": "Detalle" },
+                                   { "data": "ProveedorSKU" },
+                                   { "data": "Cantidad" },
+                                   { "data": "Pedido" },
+                                   { "data": "PrecioVenta" },
+                                   { "data": "Accion" }
+                               ]
+                           }
+                   );
+               },
+           })
+       }
+
+       function eliminarTabla(){
+           if(typeof table != "undefined"){
+               table.destroy()
+           }
+       }
 
        function seleccionarProveedor(nombreProveedor){
            llenarTabla(nombreProveedor)
@@ -263,9 +276,9 @@
            modal.style.display = "none";
        }
 
-       function llenarTabla(nombreProveedor) {
+       function llenarTablaTabulador(nombreProveedor) {
            console.log(nombreProveedor)
-           $("#example-table").tabulator("setData", '/editargeneral/query', {Proveedor: nombreProveedor});
+           $("#example-table").tabulator("setData", '/api/compraauto_llenarTabulador', {Proveedor: nombreProveedor});
        }
        $(window).resize(function () {
            $("#example-table").tabulator("redraw");

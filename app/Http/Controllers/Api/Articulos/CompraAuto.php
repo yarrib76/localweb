@@ -2,11 +2,15 @@
 
 namespace Donatella\Http\Controllers\Api\Articulos;
 
+use Donatella\Http\Controllers\Reporte\Articulo;
+use Donatella\Models\Articulos;
+use Donatella\Models\CompraAutoDB;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
 class CompraAuto extends Controller
@@ -23,5 +27,31 @@ class CompraAuto extends Controller
                                     group by Arti.Articulo');
         ob_start('ob_gzhandler');
         return Response::json($articulos);
+    }
+
+    public function llenarTablaTabulador()
+    {
+        $articulos = DB::select('select compraAuto.articulo as Articulo, arti.Detalle as Detalle, cant_alerta from samira.compraautomatica as compraAuto
+                                 inner join samira.articulos as arti on compraAuto.articulo = arti.articulo');
+        ob_start('ob_gzhandler');
+        return Response::json($articulos);
+    }
+    public function agregarArticulo()
+    {
+        $nroArticulo = Input::get('nroArticulo');
+        $articulo = Articulos::where('articulo', $nroArticulo);
+        CompraAutoDB::create([
+            'articulo' => $nroArticulo
+        ]);
+        $articulo->update([
+            'CompraAuto' => 1
+        ]);
+    }
+
+    public function editarUmbralAlerta()
+    {
+        $articulo = Input::get('Articulo');
+        $umbralAlerta = Input::get('cant_alerta');
+        DB::select('update samira.compraAutomatica set cant_alerta   = "'. $umbralAlerta . '" where articulo = "'. $articulo .'"');
     }
 }

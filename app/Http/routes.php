@@ -249,6 +249,9 @@ Route::group(['prefix' => 'api'],
         /*AMB Articulos*/
         Route::get('/abmarticulos', 'Api\Articulos\GetArticulos@consulta');
         Route::get('/compraauto', 'Api\Articulos\CompraAuto@consulta');
+        Route::get('/compraauto_llenarTabulador', 'Api\Articulos\CompraAuto@llenarTablaTabulador');
+        Route::get('/compraauto_agregar', 'Api\Articulos\CompraAuto@agregarArticulo');
+        Route::post('/compraauto/editar', 'Api\Articulos\CompraAuto@editarUmbralAlerta');
 
         /*Reporte Articulo Proveedor*/
         Route::get('/reporteArticuloProveedor', 'Api\Reportes\ArticuloProveedor@query');
