@@ -188,8 +188,8 @@ class ABMTiendaNubeNew extends Controller
                     $cantidad = ($articuloLocal[0]->Cantidad - $articuloEnPedidos[0]->Cantidad);
                 }else $cantidad = $articuloLocal[0]->Cantidad;
                 try {
-                    //Ferifica es la replica corresponde a articulos que esten en una orden de compras
-                    if ($conOrden == 1 and $images == 1) {
+                    //Verifica si la replica corresponde a articulos que esten en una orden de compras, si tiene imagen
+                    if ($conOrden == 1 and $images == 1 and $cantidad >= $artiCant) {
                         // dd($articulo_id_TN);
                         $response = $api->put("products/$product_id_TN", [
                             'published' => true
