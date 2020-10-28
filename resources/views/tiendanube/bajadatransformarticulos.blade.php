@@ -14,7 +14,7 @@
                     {{$store_id = '938857'}}
                     <option>Selecciona un Local</option>
                     @if (substr(Request::url('http://donatella.dyndns.org'),0,27) == 'http://donatella.dyndns.org')
-                        <option>Samira</option>
+                        <option>Donatella</option>
                         <option>Viamore</option>
                     @elseif (substr(Request::url('http://samirasrl.dyndns.org'),0,27) == 'http://samirasrl.dyndns.org')
                         <option>Donatella</option>
