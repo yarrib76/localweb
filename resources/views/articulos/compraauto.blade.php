@@ -6,8 +6,10 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Seleccione Articulo<label id="agregar" class="btn btn-primary" onclick="buscarArticulos();"><i class="fa fa-user"></i></label><label id="artiuclo"></label>
                     </div>
-                    <div class="panel-body">
-                        <div id="example-table"></div>
+                    <div id="eliminar-arti" class="panel-body">
+                        <button onclick="eliminarArticulosTabulator()">Eliminar</button>
+                        <div id="example-table">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,6 +36,7 @@
             </table>
         </div>
     </div>
+
 <style>
     body {font-family: Arial, Helvetica, sans-serif;}
     /* The Modal (background) */
@@ -97,6 +100,7 @@
 
    <script>
        var modal = document.getElementById('myModal');
+       var articulosSeleccionados;
        $(document).ready( function () {
            llenarTablaTabulador()
         } );
@@ -181,6 +185,8 @@
        $("#example-table").tabulator({
                 height: "550px",
                 fitColumns: true,
+                selectable:true, //make rows selectable
+                index:"Articulo",
                 columns: [
                     {title: "Articulo", field: "Articulo", sortable: true, width: 300},
                     {title: "Detalle", field: "Detalle", sortable: true, width: 500, headerFilter:"input"},
@@ -192,8 +198,21 @@
                         data: cell.getRow().getData(),
                         type: "post"
                     })
-                }
+                },
+               rowSelectionChanged:function(data, rows){
+                   //update selected row counter on selection change
+                   articulosSeleccionados = data;
+                   console.log(data)
+               },
             });
+
+       function eliminarArticulosTabulator(){
+           console.log(articulosSeleccionados[0]['Articulo'])
+           // console.log(articulosSeleccionados)
+           $("#example-table").tabulator("deleteRow", articulosSeleccionados[0]['Articulo']);
+           articulosSeleccionados.splice(0,articulosSeleccionados.length)
+           console.log(articulosSeleccionados)
+       }
 
        function buscarArticulos(){
            cargarTablaArticulos()
