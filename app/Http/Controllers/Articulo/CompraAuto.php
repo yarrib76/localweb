@@ -7,11 +7,17 @@ use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompraAuto extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia');
+    }
     public function index ()
     {
         return view('articulos.compraauto');
@@ -25,7 +31,7 @@ class CompraAuto extends Controller
     }
 
     private function envioMail()
-    {
+        {
         $data = array('Prueba'=>'1','Prueba'=>'2');
         Mail::send('mail.envioMail',$data,function($message){
             $message->to('yarrib76@gmail.com')->subject
@@ -49,7 +55,10 @@ class CompraAuto extends Controller
 
     private function consultaBase()
     {
-        $data = Articulos::where('Proveedor','Pacha')->get()->toArray();
+        $data = DB::select('SELECT Arti.Articulo, Arti.Detalle, Arti.Cantidad, compAuto.cant_alerta as Umbral, Arti.Proveedor FROM samira.compraautomatica as compAuto
+                            INNER JOIN samira.articulos as Arti ON Arti.Articulo = CompAuto.Articulo
+                            having compAuto.cant_alerta >= Arti.Cantidad');
+        $data = json_decode(json_encode($data), true);
         return $data;
     }
 }

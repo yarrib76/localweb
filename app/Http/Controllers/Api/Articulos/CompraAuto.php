@@ -54,4 +54,11 @@ class CompraAuto extends Controller
         $umbralAlerta = Input::get('cant_alerta');
         DB::select('update samira.compraAutomatica set cant_alerta   = "'. $umbralAlerta . '" where articulo = "'. $articulo .'"');
     }
+
+    public function eliminarArticulo()
+    {
+        $articulo = Input::get('Articulo');
+        DB::select('delete from samira.compraAutomatica where articulo = "'. $articulo .'"');
+        DB::select('update samira.articulos  set CompraAuto   = 0 where articulo = "'. $articulo .'"');
+    }
 }

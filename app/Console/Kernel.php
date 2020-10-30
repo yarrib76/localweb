@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
          Commands\ReporteArticuloProveedor::class,
          Commands\StatusMail::class,
          Commands\AutoSincTN::class,
+         Commands\CompraAuto::class,
     ];
 
     /**

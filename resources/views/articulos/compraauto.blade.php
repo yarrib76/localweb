@@ -6,10 +6,8 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Seleccione Articulo<label id="agregar" class="btn btn-primary" onclick="buscarArticulos();"><i class="fa fa-user"></i></label><label id="artiuclo"></label>
                     </div>
-                    <div id="eliminar-arti" class="panel-body">
-                        <button onclick="eliminarArticulosTabulator()">Eliminar</button>
-                        <div id="example-table">
-                        </div>
+                    <div id="example-table">
+                    </div>
                     </div>
                 </div>
             </div>
@@ -36,7 +34,12 @@
             </table>
         </div>
     </div>
-
+    <div id="myModalCarga" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
 <style>
     body {font-family: Arial, Helvetica, sans-serif;}
     /* The Modal (background) */
@@ -60,7 +63,7 @@
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 50%;
+        width: 80%;
         overflow-y: auto;
     }
     /* The Close Button */
@@ -81,6 +84,14 @@
     #example-table{
         width:100%;
         font-family:sans-serif;
+    }
+    #myModalCarga {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        width: 15%;
+        height: 25%;
+        overflow-y: auto;
     }
 </style>
 
@@ -185,12 +196,18 @@
        $("#example-table").tabulator({
                 height: "550px",
                 fitColumns: true,
-                selectable:true, //make rows selectable
                 index:"Articulo",
                 columns: [
                     {title: "Articulo", field: "Articulo", sortable: true, width: 300},
                     {title: "Detalle", field: "Detalle", sortable: true, width: 500, headerFilter:"input"},
-                    {title: "Alerta", field: "cant_alerta", editor:"number"},
+                    {title: "Alerta", field: "cant_alerta",width: 140, editor:"number"},
+                    {title:"Eliminar",width:200, align:"center", formatter:"buttonCross", cellClick:function(e, cell){
+                        cell.getRow().delete()
+                        $.ajax({
+                            url: "api/compraauto/eliminar",
+                            data: cell.getRow().getData(),
+                            type: "post"
+                        })}}
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({
@@ -199,20 +216,7 @@
                         type: "post"
                     })
                 },
-               rowSelectionChanged:function(data, rows){
-                   //update selected row counter on selection change
-                   articulosSeleccionados = data;
-                   console.log(data)
-               },
             });
-
-       function eliminarArticulosTabulator(){
-           console.log(articulosSeleccionados[0]['Articulo'])
-           // console.log(articulosSeleccionados)
-           $("#example-table").tabulator("deleteRow", articulosSeleccionados[0]['Articulo']);
-           articulosSeleccionados.splice(0,articulosSeleccionados.length)
-           console.log(articulosSeleccionados)
-       }
 
        function buscarArticulos(){
            cargarTablaArticulos()
@@ -246,10 +250,14 @@
                success : function(json) {
                }
            })
+
        }
 
 
        function cargarTablaArticulos(){
+           var modalCarga = document.getElementById('myModalCarga');
+           // When the user clicks the button, open the modal
+           modalCarga.style.display = "block";
            eliminarTabla()
            $.ajax({
                'url': "/api/compraauto",
@@ -278,6 +286,7 @@
                                ]
                            }
                    );
+                   modalCarga.style.display = "none";
                },
            })
        }
@@ -286,6 +295,7 @@
            if(typeof table != "undefined"){
                table.destroy()
            }
+           return
        }
 
        function seleccionarProveedor(nombreProveedor){
@@ -296,7 +306,6 @@
        }
 
        function llenarTablaTabulador(nombreProveedor) {
-           console.log(nombreProveedor)
            $("#example-table").tabulator("setData", '/api/compraauto_llenarTabulador', {Proveedor: nombreProveedor});
        }
        $(window).resize(function () {
