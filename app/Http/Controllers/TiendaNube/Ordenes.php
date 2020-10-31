@@ -96,8 +96,12 @@ class Ordenes extends Controller
         $ordenes = (Input::get('ordenes'));
         $ordenes = json_decode($ordenes);
         foreach ($ordenes as $orden){
-            $cliente_id = $this->verificarCliente($orden);
-            $this->crearControlPedido($cliente_id,$orden);
+            //Antes de crear la orden, verifico si ya existe. Es para evitar que se dupliquen en caso de correr la replica de forma simultanea desde 2 Navegadores.
+            $crearPedido = $this->verificarOrgen($orden->OrdenWeb,$orden->Tienda);
+            if($crearPedido){
+                $cliente_id = $this->verificarCliente($orden);
+                $this->crearControlPedido($cliente_id,$orden);
+            }
         }
         return Response::json(['ok']);
     }
