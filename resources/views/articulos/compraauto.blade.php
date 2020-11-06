@@ -270,6 +270,7 @@
                    table = $('#reporte').DataTable({
                                dom: 'Bfrtip',
                                "autoWidth": false,
+                               "bDestroy": true,
                                buttons: [
                                    'excel'
                                ],
@@ -293,7 +294,9 @@
 
        function eliminarTabla(){
            if(typeof table != "undefined"){
-               table.destroy()
+               // table.destroy()
+               // Para evitar hacer un destroy que demora mas tiempo, se agrego el parametro "bDestroy en las propiedades de la tabla" y luego hago un clear.
+               table.clear().draw();
            }
            return
        }
