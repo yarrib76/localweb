@@ -198,9 +198,10 @@
                 fitColumns: true,
                 index:"Articulo",
                 columns: [
-                    {title: "Articulo", field: "Articulo", sortable: true, width: 300},
-                    {title: "Detalle", field: "Detalle", sortable: true, width: 500, headerFilter:"input"},
-                    {title: "Alerta", field: "cant_alerta",width: 140, editor:"number"},
+                    {title: "Articulo", field: "Articulo", sortable: true, width: 250},
+                    {title: "Detalle", field: "Detalle", sortable: true, width: 475, headerFilter:"input"},
+                    {title: "Cantidad", field: "Cantidad", sortable: true, width: 100},
+                    {title: "Alerta", field: "cant_alerta",width: 110, editor:"number"},
                     {title:"Eliminar",width:200, align:"center", formatter:"buttonCross", cellClick:function(e, cell){
                         cell.getRow().delete()
                         $.ajax({

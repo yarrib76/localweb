@@ -22,19 +22,19 @@ class CompraAuto extends Controller
     {
         return view('articulos.compraauto');
     }
-    public function inicio()
+    public function inicio($local)
     {
         $data = $this->consultaBase();
         $this->storeExcel('xls',$data);
-        $this->envioMail();
+        $this->envioMail($local);
         return 'Finalizado';
     }
 
-    private function envioMail()
+    private function envioMail($local)
         {
-        $data = array('Prueba'=>'1','Prueba'=>'2');
+        $data = array('local'=>$local,'Prueba'=>'2');
         Mail::send('mail.envioMail',$data,function($message){
-            $message->to('yarrib76@gmail.com')->subject
+            $message->to('debyonce@hotmail.com')->subject
             ('Envio Automatico, articulos alertados para compra de mercadería');
             $message->from('yarrib76@gmail.com','Yamil Arribas');
             $message->attach( storage_path('public/export/CompraAuto.xls'), array ($options = []));

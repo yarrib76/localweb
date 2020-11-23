@@ -31,7 +31,7 @@ class CompraAuto extends Controller
 
     public function llenarTablaTabulador()
     {
-        $articulos = DB::select('select compraAuto.articulo as Articulo, arti.Detalle as Detalle, cant_alerta from samira.compraautomatica as compraAuto
+        $articulos = DB::select('select compraAuto.articulo as Articulo, arti.Detalle as Detalle, arti.cantidad as Cantidad, cant_alerta from samira.compraautomatica as compraAuto
                                  inner join samira.articulos as arti on compraAuto.articulo = arti.articulo');
         ob_start('ob_gzhandler');
         return Response::json($articulos);

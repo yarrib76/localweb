@@ -11,7 +11,7 @@ class CompraAuto extends Command
      *
      * @var string
      */
-    protected $signature = 'CompraAuto:Mail';
+    protected $signature = 'CompraAuto:Mail {options*}';
 
     /**
      * The console command description.
@@ -37,7 +37,8 @@ class CompraAuto extends Command
      */
     public function handle()
     {
+        $option = $this->argument('options');
         $compraAuto = new \Donatella\Http\Controllers\Articulo\CompraAuto();
-        $compraAuto->inicio();
+        $compraAuto->inicio($option[0]);
     }
 }
