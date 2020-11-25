@@ -43,6 +43,7 @@
                     <li><a href="/articulos"> ABM</a></li>
                     <li><a href="/sincroArticulos"> SincronizacionLocales</a></li>
                     <li><a href="/ordenesCompras"> Ordenes de Compra</a></li>
+                    <li><a href="/compraauto"> Compra Automatica</a></li>
                     <li class="divider"></li>
                     <li class="dropdown-submenu">
                         <a tabindex="-1" href="#">Modificacion General</a>
