@@ -57,7 +57,7 @@ class ServerStatusMail extends Controller
                     $message->from('yarrib76@gmail.com','Yamil Arribas');
                 });
                 break;
-            case 'donaconti':
+            case 'donaprod':
                 Mail::send('mail.statusMail',$data,function($message){
                     $message->to('samira.srl@hotmail.com', 'Prueba de Mail')->subject
                     ('Estado de Backup y Replicas');
