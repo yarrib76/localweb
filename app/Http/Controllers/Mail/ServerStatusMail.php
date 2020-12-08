@@ -24,7 +24,7 @@ class ServerStatusMail extends Controller
             case 'viamoreapps':
                 $mysqli = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
                 break;
-            case 'samiraweb':
+            case 'donaconti':
                 $mysqli = new mysqli("10.10.10.150", "root", "NetAcc10", "samira");
                 break;
             case 'dbweb01':
@@ -57,7 +57,7 @@ class ServerStatusMail extends Controller
                     $message->from('yarrib76@gmail.com','Yamil Arribas');
                 });
                 break;
-            case 'samiraweb':
+            case 'donaconti':
                 Mail::send('mail.statusMail',$data,function($message){
                     $message->to('samira.srl@hotmail.com', 'Prueba de Mail')->subject
                     ('Estado de Backup y Replicas');
