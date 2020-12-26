@@ -25,8 +25,10 @@ class CompraAuto extends Controller
     public function inicio($local)
     {
         $data = $this->consultaBase();
-        $this->storeExcel('xls',$data);
-        $this->envioMail($local);
+        if ($data){
+            $this->storeExcel('xls',$data);
+            $this->envioMail($local);
+        }
         return 'Finalizado';
     }
 
