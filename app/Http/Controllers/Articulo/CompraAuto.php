@@ -36,7 +36,7 @@ class CompraAuto extends Controller
         {
         $data = array('local'=>$local,'Prueba'=>'2');
         Mail::send('mail.envioMail',$data,function($message){
-            $message->to('debyonce@hotmail.com')->subject
+            $message->to(['debyonce@hotmail.com','yarrib76@gmail.com'])->subject
             ('Envio Automatico, articulos alertados para compra de mercadería');
             $message->from('yarrib76@gmail.com','Yamil Arribas');
             $message->attach( storage_path('public/export/CompraAuto.xls'), array ($options = []));
