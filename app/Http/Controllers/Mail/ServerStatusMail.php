@@ -50,7 +50,7 @@ class ServerStatusMail extends Controller
                     $message->from('yarrib76@gmail.com','Yamil Arribas');
                 });
                 break;
-            case 'viamoreapps':
+            case 'viamoreprod':
                 Mail::send('mail.statusMail',$data,function($message){
                     $message->to('ventas@viamore.com.ar', 'Prueba de Mail')->subject
                     ('Estado de Backup y Replicas');
