@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
 use Donatella\Http\Controllers\Api\GeneraNroPedidos;
 use Donatella\Http\Controllers\ProveedorEcomerce\TiendaNube;
+use Donatella\Models\Articulos;
 use Donatella\Models\Clientes;
 use Donatella\Models\ControlPedidos;
 use Donatella\Models\NroPedidos;
+use Donatella\Models\OrdenArticulos;
 use Donatella\Models\Provincias;
 use Illuminate\Http\Request;
 
@@ -62,7 +64,7 @@ class Ordenes extends Controller
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
-                // dd($orden);
+                //dd($orden->products);
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= $fechaInicio)){
@@ -82,7 +84,8 @@ class Ordenes extends Controller
                                             ,'Localidad' => $localidad
                                             ,'OrdenWeb' => $orden->number
                                             ,'TotalWeb' => $orden->total
-                                            ,'Tienda' =>$tienda];
+                                            ,'Tienda' =>$tienda
+                                            ,'Articulos' => $orden->products];
                     $count++;
                 }
             }
@@ -176,7 +179,7 @@ class Ordenes extends Controller
     private function crearControlPedido($cliente_id,$orden){
         $nroPedido = $this->getNroPedido();
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
-        ControlPedidos::create([
+        $resultControlPedido = ControlPedidos::create([
             'nroPedido' => $nroPedido['nroPedido'],
             'id_cliente' => $cliente_id,
             'Vendedora' => 'PAGINA ',
@@ -187,11 +190,26 @@ class Ordenes extends Controller
             'totalweb' => $orden->TotalWeb,
             'local' => $orden->Tienda
         ]);
+        $this->crearOrdenArticulo($resultControlPedido,$orden);
     }
 
     private function getNroPedido(){
         $generaNroPedido = new GeneraNroPedidos();
         $nroPedido = $generaNroPedido->Generar();
         return $nroPedido;
+    }
+
+    private function crearOrdenArticulo($resultControlPedido,$orden)
+    {
+        foreach ($orden->Articulos as $articulo)
+        {
+            OrdenArticulos::create([
+                'articulo' => $articulo->sku,
+                'detalle' => $articulo->name,
+                'precio' => $articulo->price,
+                'cantidad' => $articulo->quantity,
+                'id_controlpedidos' => $resultControlPedido->id
+            ]);
+        }
     }
 }
