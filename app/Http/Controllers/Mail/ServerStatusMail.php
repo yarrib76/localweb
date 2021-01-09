@@ -21,7 +21,7 @@ class ServerStatusMail extends Controller
             case 'vagrant':
                 $mysqli = new mysqli("192.168.0.20", "yarrib76", "NetAcc10", "samira");
                 break;
-            case 'viamoreapps':
+            case 'viamoreprod':
                 $mysqli = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
                 break;
             case 'donaprod':
