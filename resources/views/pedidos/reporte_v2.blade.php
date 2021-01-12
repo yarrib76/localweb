@@ -101,7 +101,7 @@
                                             @elseif($pedido->instancia == 1)
                                                  <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
                                             @endif
-                                                    <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');">CheckOut</button>
+                                                    <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');"><i class="fa fa-check"></i></button>
                                                 </td>
                                         @else
                                             <td bgcolor="#FF0000">Cancelado</td>
@@ -443,35 +443,36 @@
             <h3>Nº Pedido: </h3>
             <h5 id="cliente"></h5>
             <div id="general">
+                <h4>Articulos en la Tiendo y no en el sistema</h4>
                 <div id="div_checkOutInTN">
                     <div class="col-xs-12 col-xs-offset-0 well">
                         <table id="checkOutInTN" class="table table-striped table-bordered records_list">
                             <thead>
                             <tr>
-                                <th>nropedido</th>
-                                <th>ordenweb</th>
-                                <th>articulo</th>
-                                <th>detalle</th>
-                                <th>cantidad</th>
-                                <th>precio</th>
+                                <th>Nropedido</th>
+                                <th>Ordenweb</th>
+                                <th>Articulo</th>
+                                <th>Detalle</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
                             </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
             </div>
-
             <div id="general">
+                <h4>Articulos en el Sistema y no en  la Tienda </h4>
                 <div id="div_checkOutInLocalSystem">
                     <div class="col-xs-12 col-xs-offset-0 well">
                         <table id="checkOutInLocalSystem" class="table table-striped table-bordered records_list">
                             <thead>
                             <tr>
-                                <th>nropedido</th>
-                                <th>ordenweb</th>
-                                <th>articulo</th>
-                                <th>detalle</th>
-                                <th>cantidad</th>
+                                <th>Nropedido</th>
+                                <th>Ordenweb</th>
+                                <th>Articulo</th>
+                                <th>Detalle</th>
+                                <th>Cantidad</th>
                                 <th>PrecioVenta</th>
                             </tr>
                             </thead>
@@ -480,14 +481,15 @@
                 </div>
             </div>
             <div id="general">
+                <h4>Articulos con diferencia de Precio o Cantidad</h4>
                 <div id="div_checkOutDiff">
                     <div class="col-xs-12 col-xs-offset-0 well">
                         <table id="checkOutInDiff" class="table table-striped table-bordered records_list">
                             <thead>
                             <tr>
-                                <th>nropedido</th>
-                                <th>articulo</th>
-                                <th>detalle</th>
+                                <th>Nropedido</th>
+                                <th>Articulo</th>
+                                <th>Detalle</th>
                                 <th>Tncantidad</th>
                                 <th>TnPrecio</th>
                                 <th>CantidadLocal</th>
