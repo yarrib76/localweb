@@ -258,4 +258,8 @@ Route::group(['prefix' => 'api'],
         /*Reporte Articulo Proveedor*/
         Route::get('/reporteArticuloProveedor', 'Api\Reportes\ArticuloProveedor@query');
 
+        /*CheckOut Ordenes Articulos*/
+        Route::get('/ordencheckoutInTN', 'Api\OC\OrdenArti@inTn');
+        Route::get('/ordencheckoutInLocalSystem', 'Api\OC\OrdenArti@inLocalSystem');
+        Route::get('/ordencheckoutInDiff', 'Api\OC\OrdenArti@inDiff');
     });

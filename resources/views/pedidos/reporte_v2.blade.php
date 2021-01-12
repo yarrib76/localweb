@@ -101,7 +101,8 @@
                                             @elseif($pedido->instancia == 1)
                                                  <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
                                             @endif
-                                            </td>
+                                                    <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');">CheckOut</button>
+                                                </td>
                                         @else
                                             <td bgcolor="#FF0000">Cancelado</td>
                                             <td><button type="button" id="botonVer" class="btn btn-info" onclick="cargoTablaPopup({{$pedido->nropedido}});"><i class="fa fa-eye"></i></button>
@@ -309,6 +310,32 @@
         }
 
     </style>
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        /* The Modal (background) */
+        #myModalCheckOut {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        #modal-content-checkOut {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 3px solid #888;
+            width: 70%;
+            overflow-y: auto;
+        }
+    </style>
     <!-- The Modal -->
     <div id="myModal" class="modal">
 
@@ -408,6 +435,72 @@
         </div>
 
     </div>
+    <!-- The Modal CheckOut-->
+    <div id="myModalCheckOut" class="modal">
+        <!-- Modal content -->
+        <div id="modal-content-checkOut" class="modal-content">
+            <span id="closeCheckOut" class="close">&times;</span>
+            <h3>Nº Pedido: </h3>
+            <h5 id="cliente"></h5>
+            <div id="general">
+                <div id="div_checkOutInTN">
+                    <div class="col-xs-12 col-xs-offset-0 well">
+                        <table id="checkOutInTN" class="table table-striped table-bordered records_list">
+                            <thead>
+                            <tr>
+                                <th>nropedido</th>
+                                <th>ordenweb</th>
+                                <th>articulo</th>
+                                <th>detalle</th>
+                                <th>cantidad</th>
+                                <th>precio</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="general">
+                <div id="div_checkOutInLocalSystem">
+                    <div class="col-xs-12 col-xs-offset-0 well">
+                        <table id="checkOutInLocalSystem" class="table table-striped table-bordered records_list">
+                            <thead>
+                            <tr>
+                                <th>nropedido</th>
+                                <th>ordenweb</th>
+                                <th>articulo</th>
+                                <th>detalle</th>
+                                <th>cantidad</th>
+                                <th>PrecioVenta</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="general">
+                <div id="div_checkOutDiff">
+                    <div class="col-xs-12 col-xs-offset-0 well">
+                        <table id="checkOutInDiff" class="table table-striped table-bordered records_list">
+                            <thead>
+                            <tr>
+                                <th>nropedido</th>
+                                <th>articulo</th>
+                                <th>detalle</th>
+                                <th>Tncantidad</th>
+                                <th>TnPrecio</th>
+                                <th>CantidadLocal</th>
+                                <th>PrecioLocal</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -423,6 +516,11 @@
 
     <script type="text/javascript">
         var glonalNroControlPedido
+        // Get the modal
+        var modalcheckOut = document.getElementById('myModalCheckOut');
+        var tableCheckInTN
+        var tableCheckInLocalSystem
+        var tableCheckInDiff
         $(document).keyup(function(e) {
             if (e.keyCode == 27) { // escape key maps to keycode `27`
                 cerrar()
@@ -686,13 +784,147 @@
             });
         }
 
+        function checkOut (controlpedidos_id,nroPedido,nombre_cliente,apellido_cliente){
+            console.log(nroPedido)
+            eliminarTablas()
+            checkOutInTN(nroPedido)
+            checkOutInLocalSystem(nroPedido)
+            checkOutDiff(nroPedido)
+
+            // Get the <span> element that closes the modal
+            var spancheckOut = document.getElementById('closeCheckOut')
+
+            // When the user clicks the button, open the modal
+                modalcheckOut.style.display = "block";
+
+            // When the user clicks on <span> (x), close the modal
+            spancheckOut.onclick = function() {
+                modalcheckOut.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modalcheckOut) {
+                    modalcheckOut.style.display = "none";
+                }
+            }
+            $(".modal-content h3").html("Pedido Nº:" + nroPedido);
+            $(".modal-content #cliente").html( nombre_cliente + "," + apellido_cliente);
+        }
 
 
+        function checkOutInTN(nroPedido){
+            $.ajax({
+                url: '/api/ordencheckoutInTN?nroPedido=' + nroPedido,
+                'method': "GET",
+                'contentType': 'application/json',
+                success : function(json) {
+                    ordenInsert = json
+                    tableCheckInTN = $('#checkOutInTN').DataTable({
+                                dom: 'Bfrtip',
+                                "autoWidth": false,
+                                "bDestroy": true,
+                                "pageLength": 5,
+                                buttons: [
+                                    'excel'
+                                ],
+                                order: [0,'desc'],
+                                "aaData": json,
+                                "columns": [
+                                    { "data": "nropedido" },
+                                    { "data": "OrdenWeb" },
+                                    { "data": "articulo" },
+                                    { "data": "detalle" },
+                                    { "data": "cantidad" },
+                                    { "data": "precio" },
+                                ]
+                            }
+                    );
+                },
+            })
+        }
 
+        function checkOutInLocalSystem(nroPedido){
+            $.ajax({
+                url: '/api/ordencheckoutInLocalSystem?nroPedido=' + nroPedido,
+                'method': "GET",
+                'contentType': 'application/json',
+                success : function(json) {
+                    ordenInsert = json
+                    tableCheckInLocalSystem = $('#checkOutInLocalSystem').DataTable({
+                                dom: 'Bfrtip',
+                                "autoWidth": false,
+                                "bDestroy": true,
+                                "pageLength": 5,
+                                buttons: [
+                                    'excel'
+                                ],
+                                order: [0,'desc'],
+                                "aaData": json,
+                                "columns": [
+                                    { "data": "nropedido" },
+                                    { "data": "OrdenWeb" },
+                                    { "data": "Articulo" },
+                                    { "data": "detalle" },
+                                    { "data": "cantidad" },
+                                    { "data": "PrecioVenta" },
+                                ]
+                            }
+                    );
+                },
+            })
+        }
 
+        function checkOutDiff(nroPedido){
+            $.ajax({
+                url: '/api/ordencheckoutInDiff?nroPedido=' + nroPedido,
+                'method': "GET",
+                'contentType': 'application/json',
+                success : function(json) {
+                    ordenInsert = json
+                    tableCheckInDiff = $('#checkOutInDiff').DataTable({
+                                dom: 'Bfrtip',
+                                "autoWidth": false,
+                                "bDestroy": true,
+                                "pageLength": 5,
+                                buttons: [
+                                    'excel'
+                                ],
+                                order: [0,'desc'],
+                                "aaData": json,
+                                "columns": [
+                                    { "data": "nropedido" },
+                                    { "data": "articulo" },
+                                    { "data": "detalle" },
+                                    { "data": "TNCantidad" },
+                                    { "data": "TNPrecio" },
+                                    { "data": "CantidadLocal" },
+                                    { "data": "PrecioLocal" },
+                                ]
+                            }
+                    );
+                },
+            })
+        }
 
-
-
+        function eliminarTablas(){
+            if(typeof tableCheckInTN != "undefined"){
+                // table.destroy()
+                // Para evitar hacer un destroy que demora mas tiempo, se agrego el parametro "bDestroy en las propiedades de la tabla" y luego hago un clear.
+                tableCheckInTN.clear().draw();
+            }
+            if(typeof tableCheckInLocalSystem != "undefined"){
+                // table.destroy()
+                // Para evitar hacer un destroy que demora mas tiempo, se agrego el parametro "bDestroy en las propiedades de la tabla" y luego hago un clear.
+                tableCheckInLocalSystem.clear().draw();
+            }
+            if(typeof tableCheckInDiff != "undefined"){
+                // table.destroy()
+                // Para evitar hacer un destroy que demora mas tiempo, se agrego el parametro "bDestroy en las propiedades de la tabla" y luego hago un clear.
+                tableCheckInDiff.clear().draw();
+            }
+            return
+        }
         //Descontinuado
         var modalEncuesta = document.getElementById('myModalEncuesta');
         var nroPedidoEncuesta;
