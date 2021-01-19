@@ -262,4 +262,10 @@ Route::group(['prefix' => 'api'],
         Route::get('/ordencheckoutInTN', 'Api\OC\OrdenArti@inTn');
         Route::get('/ordencheckoutInLocalSystem', 'Api\OC\OrdenArti@inLocalSystem');
         Route::get('/ordencheckoutInDiff', 'Api\OC\OrdenArti@inDiff');
+
+        /*Reporte PedidosSalon */
+        Route::get('/ventasSalonFacturado', 'Api\Reportes\PedidosSalon@ventasSalonFacturado');
+        Route::get('/ventasSalonCantidad', 'Api\Reportes\PedidosSalon@ventasSalonCantidad');
+        Route::get('/ventasPedidosFacturados', 'Api\Reportes\PedidosSalon@ventasPedidosFacturados');
+        Route::get('/ventasPedidosCantidad', 'Api\Reportes\PedidosSalon@ventasPedidosCantidad');
     });
