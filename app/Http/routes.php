@@ -165,6 +165,8 @@ Route::get('/autosinc','Api\Automation\ReplicaTN@view');
 /*codigos de Barra*/
 Route::get('/barcode', 'Articulo\Barcode@crearCodigo');
 
+/*Reporte*/
+Route::get('/reportesalonpedidos','');
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');

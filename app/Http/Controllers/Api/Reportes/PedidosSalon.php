@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Response;
 
 class PedidosSalon extends Controller
 {
+    public function index()
+    {
+        return view('contabilidad.reportesalonpedidoss');
+
+    }
     public function ventasSalonFacturado()
     {
         $fecha_inicio = Input::get('fecha_inicio');
