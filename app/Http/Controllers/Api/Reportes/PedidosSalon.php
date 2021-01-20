@@ -12,11 +12,7 @@ use Illuminate\Support\Facades\Response;
 
 class PedidosSalon extends Controller
 {
-    public function index()
-    {
-        return view('contabilidad.reportesalonpedidoss');
 
-    }
     public function ventasSalonFacturado()
     {
         $fecha_inicio = Input::get('fecha_inicio');
@@ -49,7 +45,7 @@ class PedidosSalon extends Controller
     {
         $fecha_inicio = Input::get('fecha_inicio');
         $fecha_fin = Input::get('fecha_fin');
-        $consulta = DB::select('select ROUND(SUM(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE facth.total END),2) as Total, Facth.fecha from samira.facturah as Facth
+        $consulta = DB::select('select ROUND(SUM(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE facth.total END),2) as Total, upper(date_format(Facth.fecha, "%Y-%m-%d")) as Fecha from samira.facturah as Facth
                                     inner join samira.controlpedidos as control ON control.nrofactura = Facth.nrofactura
                                     where Facth.Fecha >= "'. $fecha_inicio .'" and Facth.Fecha <= "'. $fecha_fin .'"
                                     and Control.ordenWeb is Not null
