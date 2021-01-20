@@ -51,6 +51,20 @@
             text-align: center;
             position: relative;
         }
+        .buttonViamore {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #5088f4;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 20px;
+            padding: 20px;
+            width: 120px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
     </style>
 @stop
 @section('extra-javascript')
