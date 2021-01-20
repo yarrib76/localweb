@@ -9,6 +9,11 @@ use Donatella\Http\Controllers\Controller;
 
 class VistaPedidosSalon extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
     public function index()
     {
         return view('contabilidad.reportesalonpedidos');

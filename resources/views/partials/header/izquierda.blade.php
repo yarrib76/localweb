@@ -95,6 +95,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="/reporteFinanciero"> Reporte Financiero</a></li>
+                    <li><a href="/reportesalonpedidos"> Reporte Ventas Pedidos</a></li>
                 </ul>
             </li>
             <li class="dropdown">
