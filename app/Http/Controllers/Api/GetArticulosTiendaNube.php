@@ -66,11 +66,14 @@ class GetArticulosTiendaNube extends Controller
         // dd($query);
         $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
 
+        //obtengo todas las categorìas
+        $allCategorias = $this->obtengoSubCategoria($api);
+
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
             foreach ($articulosTiendaNube->body as $articulo){
-
-                $categorias = $this->obtengoCategorias($articulo->categories);
+                // dd($articulo->categories);
+                $categorias = $this->obtengoCategorias($articulo->categories,$api,$allCategorias);
 
                 $newDescriptions = "";
                 if (Input::get('local') == 'Viamore'){
@@ -192,12 +195,21 @@ class GetArticulosTiendaNube extends Controller
         return $cantidadConsultas;
     }
 
-    private function obtengoCategorias($catogories)
+    private function obtengoCategorias($catogories,$api,$allCategorias)
     {
         $categorias = "";
         foreach ($catogories as $categoria){
-            $categorias .=  $categoria->name->es . ",";
-    }
+            //verifico si la cotegorìa tiene un parent
+                if (!is_null($categoria->parent)) {
+                    // $subCategoria = $this->obtengoSubCategorias($categoria->parent,$api);
+                    //obtengo el nombre de la categorìa Padre
+                    $subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
+                    // dd($subCategoria->body->name->es . " > " . $categoria->name->es . ",");
+                    $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
+                } else {
+                    $categorias .= $categoria->name->es . ",";
+                }
+        }
         return (substr($categorias, 0, -1));
     }
 
@@ -231,5 +243,27 @@ class GetArticulosTiendaNube extends Controller
                 $sheet->fromArray($data);
             });
         })->download($type);
+    }
+
+    //Funcion obsoleta, realizaca consultas de categrìa por cada artìuclo, haciendo muy largo el proceso
+    private function obtengoSubCategorias($parent_id,$api){
+        $query = $api->get("categories/$parent_id");
+        return $query;
+    }
+
+    private function obtengoSubCategoria($api)
+    {
+        $query = $api->get("categories");
+        return $query->body;
+    }
+
+    private function obtengoCatPadre($parent_id,$allCategorias)
+    {
+        foreach ($allCategorias as $categoria) {
+            if ($categoria->id == $parent_id){
+                return $categoria->name;
+            }
+        }
+
     }
 }
