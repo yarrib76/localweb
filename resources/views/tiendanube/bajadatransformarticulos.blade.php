@@ -11,7 +11,6 @@
                 </div>
                 <select id="select">
                     <!--Debe ir el store_id de Samrira ya que se utilizara como master de exportacion de Articulos-->
-                    <!-- {{$store_id = '972788'}} -->
                     {{$store_id = '938857'}}
                     <option>Selecciona un Local</option>
                     @if (substr(Request::url('http://donatella.dyndns.org'),0,27) == 'http://donatella.dyndns.org')
