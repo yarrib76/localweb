@@ -101,7 +101,7 @@ Route::get('activarpromocion','Promociones\PromocionController@activar');
 Route::get('finalizarpromocion','Promociones\PromocionController@finalizar');
 Route::get('eliminarpromocion','Promociones\PromocionController@eliminar');
 Route::resource('promocion','Promociones\PromocionController');
-//Pureba Token
+
 /*Mapa*/
 Route::get('/mapadatos', 'Api\Bi\MapaController@datos');
 Route::get('/rankclientes', 'Api\Bi\MapaController@rankClientes');
