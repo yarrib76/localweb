@@ -36,6 +36,7 @@ class Vendedoras extends Controller
                                 where ultactualizacion > "' . $ultActuDesde .'" and ultactualizacion < "'. $ultActuHasta .'"
                                 and total > 1
                                 and estado <> 2
+                                and ordenWeb > 0
                                 and vendedora = ResulVendedora
                                 ) as cantPedidos,
                                 (SELECT count(*) as Cant FROM
@@ -43,6 +44,7 @@ class Vendedoras extends Controller
                                     where ultactualizacion > "' . $ultActuDesde .'" and ultactualizacion < "'. $ultActuHasta .'"
                                     and total > 1
                                     and estado <> 2
+                                    and ordenWeb > 0
                                     group by Day(ultactualizacion)) as cant) as Dias,
                                 (select round(sum( cantPedidos / Dias),1)) as Promedio,
                                 (select round(sum(total),2)
@@ -50,6 +52,7 @@ class Vendedoras extends Controller
                                     where ultactualizacion > "'. $ultActuDesde .'" and ultactualizacion < "'. $ultActuHasta .'"
                                     and total > 1
                                     and estado <> 2
+                                    and ordenWeb > 0
                                     and vendedora = ResulVendedora) as TotalFacturado,
                                 (select round(sum( TotalFacturado / cantPedidos),1)) as PromedioFacturado,
                                 (SELECT count(pedidotmp.Cantidad)
@@ -57,6 +60,7 @@ class Vendedoras extends Controller
                                     inner join samira.pedidotemp as pedidotmp ON pedidotmp.nropedido = controlpedidos.nropedido
                                     where ultactualizacion >  "'. $ultActuDesde .'" and ultactualizacion < "'. $ultActuHasta .'"
                                     and total > 1
+                                    and ordenWeb > 0
                                     and controlpedidos.estado <> 2
                                     and controlpedidos.vendedora = ResulVendedora) as cantArticulos,
                                 (select round(sum( cantArticulos / cantPedidos),1)) as PromedioCantArticulos
@@ -64,6 +68,7 @@ class Vendedoras extends Controller
                         where ultactualizacion >  "'. $ultActuDesde .'" and ultactualizacion < "'. $ultActuHasta .'"
                         and total > 1
                         and estado <> 2
+                        and ordenWeb > 0
                         group by vendedora;');
         return $query;
     }
