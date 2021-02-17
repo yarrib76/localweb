@@ -23,6 +23,8 @@
                             <option>Samira</option>
                         @elseif (substr(Request::url('http://viamore.dyndns.org'),0,25) == 'http://viamore.dyndns.org')
                             <option>Viamore</option>
+                        @elseif (substr(Request::url('http://viamoreconti.dyndns.org'),0,31) == 'http://viamoreconti.dyndns.org')
+                            <option>Viamore</option>
                         @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
                             <option>Viamore</option>
                             <option>Samira</option>
