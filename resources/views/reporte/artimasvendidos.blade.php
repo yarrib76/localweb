@@ -19,7 +19,7 @@
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Local')" class="buttonViamore">Viamore</button>
                     @elseif (substr(Request::url('http://dona.com'),0,15) == 'http://dona.com')
-                        <button onclick="verificar('Local')" class="buttonDonatella">Donatella</button>
+                        <button onclick="verificar('Local')" class="buttonDonatella">Local</button>
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Viamore')" class="buttonViamore">Viamore</button>
                     @endif
