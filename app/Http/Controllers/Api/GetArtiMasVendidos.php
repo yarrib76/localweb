@@ -26,17 +26,17 @@ class GetArtiMasVendidos extends Controller
         switch ($local){
             case 'Samira':
                 $url = ("http://samirasrl.dyndns.org:8081/api/reportesArticulos?anioDesde=" . $anioDesde .
-                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor . "'&esWeb=" . $esWeb);
+                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor);
                 return $this->viamore($url);
                 break;
             case 'Donatella':
                 $url = ("http://donatella.dyndns.org:8081/api/reportesArticulos?anioDesde=" . $anioDesde .
-                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor. "'&esWeb=" . $esWeb);
+                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor);
                 return $this->viamore($url);
                 break;
             case 'Viamore':
                 $url = ("http://viamore.dyndns.org:8081/api/reportesArticulos?anioDesde=" . $anioDesde .
-                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor. "'&esWeb=" . $esWeb);
+                    "&anioHasta=" . $anioHasta . "&proveedor=" . $proveedor);
                 return $this->viamore($url);
                 break;
             case 'Local':
