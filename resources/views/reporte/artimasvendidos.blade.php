@@ -18,7 +18,7 @@
                         <button onclick="verificar('Donatella')" class="buttonDonatella">Donatella</button>
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Local')" class="buttonViamore">Viamore</button>
-                    @elseif (substr(Request::url('http://dona.com'),0,15) == 'http://dona.com')
+                    @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
                         <button onclick="verificar('Local')" class="buttonDonatella">Local</button>
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Viamore')" class="buttonViamore">Viamore</button>
@@ -75,7 +75,7 @@
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
-            width: 42.3%;
+            width: 43.3%;
             height: 80%;
             overflow-y: auto;
         }
@@ -198,9 +198,12 @@
             success: function (json) {
                 if (json[0] != "") {
                     $.each(json, function (index, json) {
+                        if (json['TotalStock'] < 10 ){
+                            colorCelda = '#FF0000'
+                        }else colorCelda = 'FFFFFF'
                         table.append("<tr><td>" + json['Articulo'] + "</td><td>"
                                 + json['Detalle'] + "</td><td>"
-                                + json['TotalVendido'] + "</td><td>"
+                                + json['TotalVendido'] + "</td><td bgcolor=" + colorCelda + ">"
                                 + json['TotalStock'] + "</td><td>"
                                 + json['PrecioVenta'] + "</td><td>"
                                 + '<img src= ' + json['imagessrc'] + " " + 'height="52" width="52" onclick=verImagen(' + "'" + json['imagessrc']+ "'" + ')>' + "</td>");
@@ -227,6 +230,10 @@
         table1.destroy()
         table1 =  $('#reporteViamore').DataTable({
                     dom: 'Bfrtip',
+                    columnDefs: [
+                        { width: '50%', targets: 1 }
+                    ],
+                    fixedColumns: true,
                     buttons: [
                         'excel'
                     ]
@@ -277,8 +284,8 @@
             }
         }
         image.src = imagenName;
-        image.style.width = '500px';
-        image.style.height = '500px';
+        image.style.width = '494px';
+        image.style.height = '450px';
     }
 </script>
 
