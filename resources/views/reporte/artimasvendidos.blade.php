@@ -32,6 +32,8 @@
                         <input type="date" class="form-control" placeholder="Fecha" id="FechaFin" required="required">
                         <input type="checkbox" id="checkbox" onclick="checkboxProveedor()">Todos los Proveedores
                         <select id="proveedores" class="form-control" name="proveedor_name" ></select>
+                        <input type="checkbox" id="checkboxWeb" onclick="checkboxWeb()">WEB TN
+
                     </div>
                     <h3 id="LocalName"></h3>
                     <div class="panel-body">
@@ -43,9 +45,11 @@
                                 <th>TotalVendido</th>
                                 <th>TotalStock</th>
                                 <th>PrecioVenta</th>
+                                <th>Imagen</th>
                             </tr>
                             </thead>
                             <tbody>
+                                <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
@@ -65,6 +69,14 @@
             padding: 20px;
             width: 11%;
             height: 20%;
+            overflow-y: auto;
+        }
+        #modalImage {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 42.3%;
+            height: 80%;
             overflow-y: auto;
         }
         #myModalError {
@@ -89,6 +101,14 @@
             <img src="refresh/load.gif" height="100" width="100">
         </div>
     </div>
+    <div id="modalImage" class="modal">
+        <span class="close">&times;</span>
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img id="imagen">
+        </div>
+    </div>
+
     <div id="myModalError" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
@@ -122,6 +142,7 @@
 <script type="text/javascript">
     var modalError = document.getElementById('myModalError');
     var proveedor;
+    var web = 'NO';
     $(document).ready ( function(){
         $.ajax({
             type: 'get',
@@ -154,7 +175,7 @@
 
 
     function verificar(local) {
-     {
+
         // Get the modal
         var modal = document.getElementById('myModal');
         // When the user clicks the button, open the modal
@@ -168,11 +189,11 @@
         modal.style.display = "block";
         var table = $("#reporteViamore");
         table.children().remove()
-        table.append("<thead><tr><th>Articulo</th><th>Detalle</th><th>TotalVendido</th><th>TotalStock</th><th>PrecioVenta</th></tr></thead>")
+        table.append("<thead><tr><th>Articulo</th><th>Detalle</th><th>TotalVendido</th><th>TotalStock</th><th>PrecioVenta</th><th>Imagen</th></tr></thead>")
         table.append("<tbody>")
         $.ajax({
             url: '/api/artimasvendidos?' + 'local=' + local + '&anioDesde=' + fechaInicio
-            + '&anioHasta=' + fechaFin + '&proveedor=' + proveedor,
+            + '&anioHasta=' + fechaFin + '&proveedor=' + proveedor + '&esWeb=' + web,
             dataType: "json",
             success: function (json) {
                 if (json[0] != "") {
@@ -181,7 +202,8 @@
                                 + json['Detalle'] + "</td><td>"
                                 + json['TotalVendido'] + "</td><td>"
                                 + json['TotalStock'] + "</td><td>"
-                                + json['PrecioVenta'] + "</td>");
+                                + json['PrecioVenta'] + "</td><td>"
+                                + '<img src= ' + json['imagessrc'] + " " + 'height="52" width="52" onclick=verImagen(' + "'" + json['imagessrc']+ "'" + ')>' + "</td>");
                     });
                     table.append("</tr>")
                     table.append("</tbody>")
@@ -189,7 +211,7 @@
                     //close the modal
                     modal.style.display = "none";
                 } else {
-                    table.append("<tr><td>" + "Sin Informacion" + "</td><td>" + "Sin Informacion" + "</td><td>" + "Sin Informacion" + "</td>" + "</td></tr>");
+                    table.append("<tr><td>" + "Sin Informacion" + "</td><td>" + "Sin Informacion" + "</td><td>" + "Sin Informacion" + "</td>" + "Sin Informacion" + "</td>" + "</td></tr>");
                 }
             },
             error: function () {
@@ -199,7 +221,6 @@
                 modalError.style.display = "block";
             }
         })
-    }
     }
     function dataTable(){
         //Si exsiste la table1 la elimino para volver a crear con la nueva informacion
@@ -227,6 +248,37 @@
         } else {
             document.getElementById("proveedores").disabled = false;
         }
+    }
+    function checkboxWeb(){
+        // Get the checkbox
+        var checkBox = document.getElementById("checkboxWeb");
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true){
+            web = 'SI';
+        } else {
+            web = 'NO'
+        }
+    }
+    function verImagen(imagenName) {
+        var image = document.getElementById("imagen");
+        var modalImage = document.getElementById('modalImage');
+        // Get the <span> element that closes the modal
+        var spanImage = document.getElementsByClassName("close")[0];
+        // When the user clicks the button, open the modal
+        modalImage.style.display = "block";
+        // When the user clicks on <span> (x), close the modal
+        spanImage.onclick = function () {
+            modalImage.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modalImage) {
+                modalImage.style.display = "none";
+            }
+        }
+        image.src = imagenName;
+        image.style.width = '500px';
+        image.style.height = '500px';
     }
 </script>
 

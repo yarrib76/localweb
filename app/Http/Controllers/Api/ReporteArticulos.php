@@ -19,30 +19,58 @@ class ReporteArticulos extends Controller
         $añoDesde = Input::get('anioDesde');
         $añoHasta = Input::get('anioHasta');
         $proveedor = Input::get('proveedor');
-        $query = $this->queryGen($añoDesde, $añoHasta, $proveedor);
+        $esWeb = Input::get('esWeb');
+        $query = $this->queryGen($añoDesde, $añoHasta, $proveedor, $esWeb);
         return Response::json($query);
     }
 
-    public function queryGen($añoDesde, $añoHasta, $proveedor)
+    public function queryGen($añoDesde, $añoHasta, $proveedor, $esWeb)
     {
         /* Ojo puede que este limitado a una cantidad de registros */
-        if ($proveedor == "SinFiltro"){
-            $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
-                    art.ImageName, repoArt.PrecioVenta
-                    FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
-                    JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
-                    WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
-                    GROUP BY fac.Articulo
-                    ORDER BY TotalVendido DESC;');
-        }else {
-            $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
-                    repoArt.PrecioVenta
-                    FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
-                    JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
-                    WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
-                    and art.Proveedor = "' . $proveedor . '"
-                    GROUP BY fac.Articulo
-                    ORDER BY TotalVendido DESC;');
+        if ($esWeb == 'SI'){
+            if ($proveedor == "SinFiltro"){
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
+                        art.ImageName, repoArt.PrecioVenta, StatusSincr.imagessrc
+                        FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
+                        JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
+                        INNER JOIN samira.statusecomercesincro AS StatusSincr ON repoArt.Articulo = StatusSincr.articulo
+                        WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
+                        and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
+                        order by id_provecomerce Desc limit 1)
+                        GROUP BY fac.Articulo
+                        ORDER BY TotalVendido DESC;');
+            }else {
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
+                        repoArt.PrecioVenta, StatusSincr.imagessrc
+                        FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
+                        JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
+                        INNER JOIN samira.statusecomercesincro AS StatusSincr ON repoArt.Articulo = StatusSincr.articulo
+                        WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
+                        and art.Proveedor = "' . $proveedor . '"
+                        and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
+                        order by id_provecomerce Desc limit 1)
+                        GROUP BY fac.Articulo
+                        ORDER BY TotalVendido DESC;');
+            }
+        } else {
+            if ($proveedor == "SinFiltro"){
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
+                        art.ImageName, repoArt.PrecioVenta
+                        FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
+                        JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
+                        WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
+                        GROUP BY fac.Articulo
+                        ORDER BY TotalVendido DESC;');
+            }else {
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
+                        repoArt.PrecioVenta
+                        FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
+                        JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
+                        WHERE fac.Fecha >= "' . $añoDesde . '" and fac.Fecha <= "' . $añoHasta . '" and fac.Estado <> 2
+                        and art.Proveedor = "' . $proveedor . '"
+                        GROUP BY fac.Articulo
+                        ORDER BY TotalVendido DESC;');
+            }
         }
 
         return $query;

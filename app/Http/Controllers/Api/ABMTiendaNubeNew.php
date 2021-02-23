@@ -92,6 +92,9 @@ class ABMTiendaNubeNew extends Controller
                 foreach ($articulo->variants as $variant){
                     //dd($variant);
                     //Verifico que no sea null la cantidad
+                    if (!empty($articulo->images[0]->src)){
+                        $imagesSrc = $articulo->images[0]->src;
+                    }else $imagesSrc = "";
                     StatusEcomerceSinc::Create([
                         'id_provecomerce' => $id_provEcomerce->id,
                         'status' => 'Pending',
@@ -100,7 +103,8 @@ class ABMTiendaNubeNew extends Controller
                         'product_id' => $variant->product_id,
                         'articulo_id' => $variant->id,
                         'visible' => $articulo->published,
-                        'images' => $image
+                        'images' => $image,
+                        'imagessrc' => $imagesSrc
                     ]);
                 }
             }
