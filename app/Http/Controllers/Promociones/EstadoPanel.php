@@ -15,7 +15,7 @@ class EstadoPanel extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Gerencia');
+        $this->middleware('role:Gerencia,Ventas');
     }
     public function index()
     {

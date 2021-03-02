@@ -19,7 +19,7 @@ class PromocionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Gerencia');
+        $this->middleware('role:Gerencia,Ventas');
     }
     /**
      * Display a listing of the resource.

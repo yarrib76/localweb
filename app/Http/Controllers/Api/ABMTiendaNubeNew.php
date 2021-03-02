@@ -199,6 +199,14 @@ class ABMTiendaNubeNew extends Controller
                             'published' => true
                         ]);
                     }
+
+                    //Si el Stock es menor a la cantidad especificada en la corria, oculta el articulo para que no salga con Sin-Stock
+                   /* if ($cantidad < $artiCant) {
+                        // dd($articulo_id_TN);
+                        $response = $api->put("products/$product_id_TN", [
+                            'published' => false
+                        ]);
+                    } */
                     $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
                         'price' => $precioAydua->query($articuloLocal[0])[0]['PrecioVenta'],
                         'stock' => $this->verificoStock($cantidad,$artiCant)
