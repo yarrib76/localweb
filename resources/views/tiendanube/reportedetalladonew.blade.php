@@ -38,6 +38,9 @@
                                 <option value="40">40</option>
                                 <option value="50">50</option>
                                 <option value="80">80</option>
+                                <option value="100">100</option>
+                                <option value="150">150</option>
+                                <option value="200">200</option>
                             </select>
                             Ordenes de Compra |
                         </label>
