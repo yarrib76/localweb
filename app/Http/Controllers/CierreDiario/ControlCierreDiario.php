@@ -9,5 +9,8 @@ use Donatella\Http\Controllers\Controller;
 
 class ControlCierreDiario extends Controller
 {
-    //
+    public function index()
+    {
+        return view('cierrediario.controlcierre');
+    }
 }
