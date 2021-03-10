@@ -16,7 +16,7 @@ class ControlCierreDiario extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Gerencia');
+        $this->middleware('role:Gerencia,Caja');
     }
     public function index()
     {
