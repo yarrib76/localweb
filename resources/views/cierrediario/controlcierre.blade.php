@@ -4,52 +4,24 @@
         <div class="row">
             <div class="col-sm-15">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i>Productividad</i></div>
+                    <div class="panel-heading"><i>Verificacion de Cierre Caja</i></div>
                     <div class="col-sm-3">
                         Fecha Inicio
-                        <input type="date" class="form-control" placeholder="Fecha" id="FechaInicio" required="required">
+                        <input type="date" class="form-control" placeholder="Fecha" id="Fecha" required="required">
                     </div>
-                    <div class="col-sm-3">
-                        Fecha Fin
-                        <input type="date" class="form-control" placeholder="Fecha" id="FechaFin" required="required">
-                    </div>
-                    <button onclick="verificar()" class="buttonViamore">Ejecutar</button>
-                    <div class="col-sm-15">
-                        <div class="col-sm-2">
-                            Efectivo
-                            <input type="number" id="Efectivo" class="form-control" name="Efectivo" disabled = true >
-                        </div>
-                        <div class="col-sm-2">
-                            Pedidos Pendientes
-                            <input type="number" id="MercadoPago" class="form-control" name="MercadoPago" disabled = true >
-                        </div>
-                        <div class="col-sm-2">
-                            Dias De Trabajo
-                            <input type="number" id="TransferenciaBco" class="form-control" name="TransferenciaBco" disabled = true >
-                        </div>
-                    </div>
+                    <button onclick="cierreDiarios()" class="buttonViamore">Ejecutar</button>
                     <div class="panel-body">
-                        <table id="reporteViamore" class="table table-striped table-bordered records_list">
+                        <table id="reporteCierre" class="table table-striped table-bordered records_list">
                             <thead>
                             <tr>
-                                <th>Vendedora</th>
-                                <th>Pedidos</th>
-                                <th>Dias</th>
-                                <th>Promedio Pedidos</th>
-                                <th>Promedio Facturado</th>
-                                <th>Promedio Articulos</th>
+                                <th>Tipo Pago</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <td>Sin Informacion</td>
-                            <td>Sin Informacion</td>
-                            <td>Sin Informacion</td>
-                            <td>Sin Informacion</td>
-                            <td>Sin Informacion</td>
-                            <td>Sin Informacion</td>
-                            </tbody>
                         </table>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -100,18 +72,51 @@
 
 @stop
 @section('extra-javascript')
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <!-- DataTables -->
     <script type="text/javascript">
+            var table;
+            function cierreDiarios() {
+                eliminarTabla()
+                var fecha = document.getElementById("Fecha").value;
+                $.ajax({
+                    'url': "/controlcierreconsulta?fecha=" + fecha,
+                    'method': "GET",
+                    'contentType': 'application/json',
+                    success: function (json) {
+                        for (var i = 0, ien = json.length; i < ien; i++) {
+                            json[i]['tipo_pago'] = "<img src=/refresh/" + json[i]['tipo_pago'] + " " + "height='50' width='50'" + ">"
+                        }
 
-        $(document).ready( function () {
-            $('#reporte').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: [
-                            'excel'
-                        ],
-                        order: [0,'desc']
-                    }
-
-            );
-        } );
+                        table = $('#reporteCierre').DataTable({
+                                    dom: 'Bfrtip',
+                                    "autoWidth": false,
+                                    buttons: [
+                                        'excel'
+                                    ],
+                                    order: [0, 'desc'],
+                                    "aaData": json,
+                                    "columns": [
+                                        {"data": "tipo_pago"},
+                                        {"data": "cantidad"},
+                                        {"data": "Total"}
+                                    ]
+                                }
+                        );
+                        //     modal.style.display = "none";
+                    },
+                })
+        }
+            function eliminarTabla(){
+                if(typeof table != "undefined") {
+                    table.destroy()
+                }
+            }
     </script>
 @stop

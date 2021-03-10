@@ -60,6 +60,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="/cierreDiario"> Cierres </a></li>
+                    <li><a href="/controlcierre"> Verificar Cierres </a></li>
                 </ul>
             </li>
             <li class="dropdown">
