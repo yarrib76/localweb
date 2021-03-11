@@ -68,6 +68,7 @@ Route::resource('facturaWeb', 'CierreDiario\FacturaWebController');
 Route::resource('clientes', 'Cliente\ClientesController');
 Route::get('controlcierre', 'CierreDiario\ControlCierreDiario@index');
 Route::get('controlcierreconsulta', 'CierreDiario\ControlCierreDiario@cierrecaja');
+Route::get('controlcierrefactura', 'CierreDiario\ControlCierreDiario@cierreFacturas');
 
 Route::get('articuloedit/{nroArticulo}','Articulo\ArticulosController@edit');
 Route::get('articulocreate','Articulo\ArticulosController@create');

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-cog"> Cierre De Caja Fecha: {{$fechaCierre}}</i></div>
+                    <div class="panel-heading"><i class="fa fa-cog"> Cierre De Caja Fecha: {{$fechaCierre}} @if (isset($cierresDiarios[0]->tipo_pago))Tipo de Pago: {{$cierresDiarios[0]->tipo_pago}} @endif </i></div>
                     <div class="panel-body">
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>

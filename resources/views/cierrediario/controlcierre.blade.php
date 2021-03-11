@@ -82,6 +82,9 @@
     <!-- DataTables -->
     <script type="text/javascript">
             var table;
+            $(document).ready( function () {
+                document.getElementById('Fecha').value = new Date().toISOString().slice(0, 10);
+            })
             function cierreDiarios() {
                 eliminarTabla()
                 var fecha = document.getElementById("Fecha").value;
@@ -91,7 +94,8 @@
                     'contentType': 'application/json',
                     success: function (json) {
                         for (var i = 0, ien = json.length; i < ien; i++) {
-                            json[i]['tipo_pago'] = "<img src=/refresh/" + json[i]['tipo_pago'] + " " + "height='50' width='50'" + ">"
+                            json[i]['tipo_pago_imagen'] = "<img src=/refresh/" + json[i]['tipo_pago_imagen'] + " " + "height='50' width='50'" + ">"
+                            json[i]['cantidad'] = "<a href='/controlcierrefactura?fecha=" + fecha + "&id_tipo_pago=" + json[i]['id_tipo_pago'] + " '>" + json[i]['cantidad']
                         }
 
                         table = $('#reporteCierre').DataTable({
@@ -103,7 +107,7 @@
                                     order: [0, 'desc'],
                                     "aaData": json,
                                     "columns": [
-                                        {"data": "tipo_pago"},
+                                        {"data": "tipo_pago_imagen"},
                                         {"data": "cantidad"},
                                         {"data": "Total"}
                                     ]
