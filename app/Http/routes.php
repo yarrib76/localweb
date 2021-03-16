@@ -154,6 +154,9 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
+Route::get('/notasadhesivas', function () {
+    return view('notas.notasadhesivas');
+});
 
 /*Compra Automatica*/
 Route::get('/compraautomail', 'Articulo\CompraAuto@inicio');

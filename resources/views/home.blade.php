@@ -1,3 +1,6 @@
+@if (Auth::user()->id_roles == 2){
+    <meta http-equiv="Refresh" content="0; url='/notasadhesivas'" />
+@else
 @extends('layouts.master')
 @section('contenido')
 
@@ -10,7 +13,7 @@
                         <tr>
                             <th>
                                 <div class="panel-body">
-                                    <iframe src="/dashboard" width="1090" height="500" frameborder="2"></iframe>
+                                    <iframe src="/dashboard" width="1090" height="750" frameborder="2"></iframe>
                                 </div>
                             </th>
                     </table>
@@ -19,3 +22,4 @@
 	</div>
 </div>
 @endsection
+@endif
