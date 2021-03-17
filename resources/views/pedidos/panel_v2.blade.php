@@ -200,6 +200,7 @@
             width: 202px;
         }
     </style>
+    @include('idle.pages')
 @stop
 @section('extra-javascript')
     <script type="text/javascript">
