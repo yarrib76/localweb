@@ -4,36 +4,14 @@
         <div class="row">
             <div class="col-sm-12 ">
                 <ul id="notasUl">
-                    <li id="notasLi">
-                        <a id="notasA" href="#">
-                            <h2 id="notasH2">Instagram</h2>
-                            <p id="notasP">Revisar los mensajes y las publicaciones</p>
-                        </a>
-                    </li>
-                    <li id="notasLi">
-                        <a id="notasA" href="#">
-                            <h2 id="notasH2">FaceBook</h2>
-                            <p id="notasP">Revisar los mensajes pendientes</p>
-                        </a>
-                    </li>
-                    <li id="notasLi">
-                        <a id="notasA" href="#">
-                            <h2 id="notasH2">Pagos Pendientes</h2>
-                            <p id="notasP">Verificar que los pagos esten facturados</p>
-                        </a>
-                    </li>
-                    <li id="notasLi">
-                        <a id="notasA" href="#">
-                            <h2 id="notasH2">Pedidos</h2>
-                            <p id="notasP">Verificar si hay pedidos para imprimir / asignar</p>
-                        </a>
-                    </li>
-                    <li id="notasLi">
-                        <a id="notasA" href="#">
-                            <h2 id="notasH2">Carrritos Abandonados</h2>
-                            <p id="notasP">Verificar si hay carritos Abandonados</p>
-                        </a>
-                    </li>
+                    @foreach($notas as $nota)
+                            <li id="notasLi">
+                                <a id="notasA" href="#">
+                                    <h2 id="notasH2">{{$nota->titulo}}</h2>
+                                    <p id="notasP">{{$nota->body}}</p>
+                                </a>
+                            </li>
+                    @endforeach
                 </ul>
             </div>
         </div>

@@ -154,9 +154,10 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
-Route::get('/notasadhesivas', function () {
-    return view('notas.notasadhesivas');
-});
+
+/*Notas Adhesivas*/
+Route::resource('notasadmin','Notas\NotasAdhesivasAdmin');
+Route::get('/notasadhesivas', 'Notas\NotasAdhesivas@index');
 
 /*Compra Automatica*/
 Route::get('/compraautomail', 'Articulo\CompraAuto@inicio');
@@ -210,6 +211,7 @@ Route::group(['prefix' => 'api'],
 
         Route::get('/proveedoresSelect', 'Api\ProveedoresSelect@query');
         Route::get('/provinciasSelect', 'Api\ProvinciasSelect@query');
+        Route::get('/relesWebSelect', 'Api\RolesSelect@query');
 
         Route::get('/getcontrolpedidos', 'Api\GetControlPedidosMobil@query');
         Route::get('/getpedidos', 'Api\GetPedidoMobil@query');
