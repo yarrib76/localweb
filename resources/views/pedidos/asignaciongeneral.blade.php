@@ -15,16 +15,43 @@
     </div>
 
 @stop
+
 @section('extra-javascript')
 
    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
 
    <script>
+       idleTimer = null;
+       idleState = false;
+       idleWait = 20000;
+       (function ($) {
        $(document).ready( function () {
            llenarTabla();
            paramLookup();
-        } );
+           $('*').bind('mousemove keydown scroll', function () {
+
+               clearTimeout(idleTimer);
+
+               if (idleState == true) {
+
+                   // Reactivated event
+               }
+
+               idleState = false;
+
+               idleTimer = setTimeout(function () {
+
+                   // Idle Event
+                   window.location.replace("/notasadhesivas");
+
+                   idleState = true; }, idleWait);
+           });
+
+           $("body").trigger("mousemove");
+
+       });
+       }) (jQuery)
 
        //custom max min header filter
        var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
