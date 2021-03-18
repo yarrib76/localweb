@@ -127,7 +127,7 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
-                    Notas Adhesivas <b class="caret"></b>
+                    Notas<b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="/notasadmin">Administrar Notas</a></li>
