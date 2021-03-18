@@ -33,6 +33,7 @@
                     <li><a href="/artimasVendidos"> ArticulosMasVendidos </a></li>
                     <li><a href="/panelPedidos"> Pedidos </a></li>
                     <li><a href="/reportevendedoras"> Vendedoras </a></li>
+                    <li><a href="/notasadmin">Administrar Notas</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -123,14 +124,6 @@
                         </ul>
                     </li>
                     <li><a href="/tiendanubeGetArticulosInbox"> Exportar Articulos A Excel </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
-                    Notas<b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/notasadmin">Administrar Notas</a></li>
                 </ul>
             </li>
      <!--       <li class="dropdown">
