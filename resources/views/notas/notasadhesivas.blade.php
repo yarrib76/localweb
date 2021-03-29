@@ -97,7 +97,7 @@ family=Reenie+Beanie:regular"
             float:left;
         }
         #notasUl #notasLi #notasH2{
-            font-size:190%;
+            font-size:170%;
             font-weight:bold;
             padding-bottom:10px;
         }
