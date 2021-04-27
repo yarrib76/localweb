@@ -4,7 +4,7 @@ namespace Donatella\Http\Controllers\Contabilidad;
 
 use Donatella\Models\Estados_Financiera;
 use Donatella\Models\FacturacionHist;
-use Donatella\Models\Tipo_pagos;
+use Donatella\Models\Tipo_Pagos;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
@@ -45,7 +45,7 @@ class Facturas extends Controller
     public function tipo_pagos()
     {
         $tipoPagos = [];
-        $tipoPagos = Tipo_pagos::all();
+        $tipoPagos = Tipo_Pagos::all();
         for ($i = 0; $i < $tipoPagos->count(); $i++ ){
             $arrTipePagos[$i] = [$tipoPagos[$i]->tipo_pago => $tipoPagos[$i]->tipo_pago];
         }
