@@ -156,7 +156,7 @@
                     {title: "Cliente", field: "Cliente", sortable: true, width: 200,headerFilter:"input"},
                     {title: "Fecha", field: "fecha", sortable: true, width: 100,headerFilter:"input"},
                     {title: "NroFactura", field: "NroFactura", sortable: true, width: 110,headerFilter:"input"},
-                    {title: "Total", field: "Totales", sortable: true, width: 110},
+                    {title: "Total", field: "Totales", sortable: true, width: 110,headerFilter:"input"},
                     {title: "Envio", field: "Envio", sortable: true, width: 90},
                     {title: "TotalEnvio", field: "TotalConEnvio", sortable: true, width: 110,headerFilter:"input"},
                     {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110,headerFilter:"input", bottomCalc:"sum"},
