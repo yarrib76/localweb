@@ -96,6 +96,7 @@
                     Contabilidad <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
+                    <li><a href="/reportefacturas"> Facturas</a></li>
                     <li><a href="/reporteFinanciero"> Reporte Financiero</a></li>
                     <li><a href="/reportesalonpedidos"> Reporte Ventas Pedidos</a></li>
                 </ul>

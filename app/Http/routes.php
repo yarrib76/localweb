@@ -172,8 +172,15 @@ Route::get('/autosinc','Api\Automation\ReplicaTN@view');
 /*codigos de Barra*/
 Route::get('/barcode', 'Articulo\Barcode@crearCodigo');
 
-/*Reporte*/
+/*Reporte Contabilidad*/
 Route::get('/reportesalonpedidos', 'Contabilidad\VistaPedidosSalon@index');
+Route::get('/reportefacturas', 'Contabilidad\Facturas@index');
+Route::get('/listarfacturas', 'Contabilidad\Facturas@listarfacturas');
+Route::get('/tipo_pagos', 'Contabilidad\Facturas@tipo_pagos');
+Route::get('/estados_financiera', 'Contabilidad\Facturas@estados_financiera');
+Route::post('updateFactura/update','Contabilidad\Facturas@update');
+
+
 
 Route::group(['prefix' => 'api'],
     function () {
@@ -279,4 +286,5 @@ Route::group(['prefix' => 'api'],
         Route::get('/ventasSalonCantidad', 'Api\Reportes\PedidosSalon@ventasSalonCantidad');
         Route::get('/ventasPedidosFacturados', 'Api\Reportes\PedidosSalon@ventasPedidosFacturados');
         Route::get('/ventasPedidosCantidad', 'Api\Reportes\PedidosSalon@ventasPedidosCantidad');
+
     });

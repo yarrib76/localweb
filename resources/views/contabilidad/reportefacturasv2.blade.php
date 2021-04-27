@@ -4,9 +4,10 @@
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Asignacion de Pedidos
+                    <div class="panel-heading">Facturas
                     </div>
                     <div class="panel-body">
+                        <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
                         <div id="example-table"></div>
                     </div>
                 </div>
@@ -20,38 +21,14 @@
 
    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+   <script type="text/javascript" src="../../js/tabulador/xlsx.full.min.js"></script>
 
    <script>
-       idleTimer = null;
-       idleState = false;
-       idleWait = 20000;
-       (function ($) {
        $(document).ready( function () {
            llenarTabla();
            paramLookup();
-           $('*').bind('mousemove keydown scroll', function () {
-
-               clearTimeout(idleTimer);
-
-               if (idleState == true) {
-
-                   // Reactivated event
-               }
-
-               idleState = false;
-
-               idleTimer = setTimeout(function () {
-
-                   // Idle Event
-                   window.location.replace("/notasadhesivas");
-
-                   idleState = true; }, idleWait);
-           });
-
-           $("body").trigger("mousemove");
-
+           estadosLookup();
        });
-       }) (jQuery)
 
        //custom max min header filter
        var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
@@ -135,7 +112,7 @@
        function paramLookup(cell){
            //cell - the cell component
            $.ajax({
-               url: '/asignaciongeneral/vendedoras',
+               url: '/tipo_pagos',
                dataType : "json",
                success : function(json) {
                    var arr= json
@@ -145,34 +122,55 @@
                        obj[ key ] = item [ key ]; //assign the key and value to output obj
                    });
                    vendedoras = obj
-                   console.log (vendedoras)
                }
            });
            //do some processing and return the param object
            return vendedoras;
        }
+       var estados = {}
+       function estadosLookup (cell){
+           //cell - the cell component
+           $.ajax({
+               url: '/estados_financiera',
+               dataType : "json",
+               success : function(json) {
+                   var arr= json
+                   var obj = {}; //create the empty output object
+                   arr.forEach( function(item){
+                       var key = Object.keys(item)[0]; //take the first key from every object in the array
+                       obj[ key ] = item [ key ]; //assign the key and value to output obj
+                   });
+                   estados = obj
+               }
+           });
+           //do some processing and return the param object
+           return estados;
+       }
 
        $("#example-table").tabulator({
                 height: "550px",
-           initialSort:[
-               {column:"nropedido", dir:"desc"}, //sort by this first
-           ],
+          // initialSort:[
+          //     {column:"NroFactura", dir:"asc"}, //sort by this first
+        //   ],
                 columns: [
-                    {title: "Pedido", field: "nropedido", sortable: true, width: 115},
-                    {title: "Cliente", field: "cliente", sortable: true, width: 300, headerFilter:"input"},
-                    {title: "Vendedora", field: "vendedora", width: 200, editor:"select", editorParams:paramLookup},
-                    {title: "OrdenWeb", field: "ordenweb", sortable: true, width: 110},
-                    {title: "Total", field: "total", sortable: true, width: 110},
-                    {title: "TotalWeb", field: "totalweb", sortable: true, width: 110},
-                    {title: "Local", field: "local", sortable: true, width: 145},
+                    {title: "Cliente", field: "Cliente", sortable: true, width: 200,headerFilter:"input"},
+                    {title: "Fecha", field: "fecha", sortable: true, width: 100,headerFilter:"input"},
+                    {title: "NroFactura", field: "NroFactura", sortable: true, width: 110,headerFilter:"input"},
+                    {title: "Total", field: "Totales", sortable: true, width: 110},
+                    {title: "Envio", field: "Envio", sortable: true, width: 90},
+                    {title: "TotalEnvio", field: "TotalConEnvio", sortable: true, width: 110,headerFilter:"input"},
+                    {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110,headerFilter:"input", bottomCalc:"sum"},
+                    {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup,headerFilter:"input"},
+                    {title: "Estado", field: "nombre", sortable: true, width: 110,editor:"select",editorParams:estadosLookup,headerFilter:"input"},
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({
-                        url: "/asignaciongeneral/update",
+                        url: "/updateFactura/update",
                         data: cell.getRow().getData(),
                         type: "post"
                     })
-                }
+                },
+
             });
 
        function buscarProveedor(){
@@ -195,10 +193,14 @@
            }
        }
        function llenarTabla() {
-           $("#example-table").tabulator("setData", '/asignaciongeneral/query');
+           $("#example-table").tabulator("setData", '/listarfacturas');
        }
        $(window).resize(function () {
            $("#example-table").tabulator("redraw");
        });
+       $("#download-xlsx").click(function(){
+           $("#example-table").tabulator("download", "xlsx", "data.xlsx", {sheetName:"ReporteFinanciera"});
+       });
+
     </script>
 @stop
