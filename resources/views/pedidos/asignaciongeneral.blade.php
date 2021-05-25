@@ -160,10 +160,10 @@
                 columns: [
                     {title: "Pedido", field: "nropedido", sortable: true, width: 115},
                     {title: "Cliente", field: "cliente", sortable: true, width: 300, headerFilter:"input"},
-                    {title: "Vendedora", field: "vendedora", width: 200, editor:"select", editorParams:paramLookup},
+                    {title: "Vendedora", field: "vendedora", width: 200, editor:"select", editorParams:paramLookup,headerFilter:"input"},
                     {title: "OrdenWeb", field: "ordenweb", sortable: true, width: 110},
                     {title: "Total", field: "total", sortable: true, width: 110},
-                    {title: "TotalWeb", field: "totalweb", sortable: true, width: 110},
+                    {title: "TotalWeb", field: "totalweb", sortable: true, width: 110, bottomCalc:"sum"},
                     {title: "Local", field: "local", sortable: true, width: 145},
                 ],
                 cellEdited:function(cell, value, data){
