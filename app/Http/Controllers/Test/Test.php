@@ -54,5 +54,6 @@ class Test extends Controller
     {
         $text = 'Aros de Acero Blanco NAR08';
         dd(substr($text,0, strrpos($text, ' ') + 1));
+        dd();
     }
 }
