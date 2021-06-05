@@ -503,6 +503,7 @@
         </div>
     </div>
 
+    @include('pedidos.formcancelados')
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -518,6 +519,7 @@
 
     <script type="text/javascript">
         var glonalNroControlPedido
+        var globalNroPedido
         // Get the modal
         var modalcheckOut = document.getElementById('myModalCheckOut');
         var tableCheckInTN
@@ -592,16 +594,55 @@
         }
 
         function calcelarPedido (nroPedido){
+            globalNroPedido = nroPedido
             if (confirm("Esta seguro que quiere cancelar el pedido Nº " + nroPedido + "?")){
                 $.ajax({
-                    url: '/api/cancelarPedido?nroPedido=' + nroPedido,
+                    url: '/api/cancelarPedidoPropuesta?nroPedido=' + nroPedido,
                     dataType : "json",
                     success : function(json) {
-                        location.reload();
+                        cargarModalCancelados(nroPedido,json[0]['descripcion'],json[1]['puntos'] ,json[2]['nombreCliente']);
                     }
                 });
             } else {
 
+            }
+        }
+
+        function cancelacionDifinitiva(){
+             $.ajax({
+                 url: '/api/cancelarPedido?nroPedido=' + globalNroPedido,
+                 dataType : "json",
+                 success : function(json) {
+                     location.reload();
+                 }
+             });
+        }
+        function cargarModalCancelados (nroPedido,propuesta,puntos,cliente) {
+            // Get the modal
+            var modalCancelados = document.getElementById('myModalCancelados');
+
+            // Get the <span> element that closes the modal
+            var spanCancelados = document.getElementById("closeCancelados");
+
+            // When the user clicks the button, open the modal
+            modalCancelados.style.display = "block";
+
+            // When the user clicks on <span> (x), close the modal
+            spanCancelados.onclick = function() {
+                modalCancelados.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modalCancelados) {
+                    modalCancelados.style.display = "none";
+                }
+            }
+            $(".modal-content h3").html("Pedido Nº:" + nroPedido);
+            if (puntos == 0){
+                $(".modal-content #propuesta").html("El cliente " + cliente + " No tiene propuestas disponibles");
+            } else {
+                $(".modal-content #propuesta").html("Ofrecer al cliente " + cliente + " la siguiente propuesta, " +  propuesta);
             }
         }
 

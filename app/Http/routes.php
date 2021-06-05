@@ -210,6 +210,7 @@ Route::group(['prefix' => 'api'],
         Route::get('/modificoSiEsWeb', 'Api\ModificarArticuloWeb@modifico');
         Route::get('/sku', 'Api\Sku@query');
         Route::get('/refresh', 'Api\ArticuloProveedores@query');
+        Route::get('/cancelarPedidoPropuesta', 'Api\cancelarPedido@propuesta');
         Route::get('/cancelarPedido', 'Api\cancelarPedido@cancelar');
         Route::get('/comentarios', 'Api\ListaComentariosWeb@query');
         Route::get('/registrosllamadas', 'Api\ListaRegistroLlamadasWeb@query');
