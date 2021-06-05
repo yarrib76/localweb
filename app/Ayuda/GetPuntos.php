@@ -67,7 +67,8 @@ class GetPuntos
                 if ($historial[0]['TotalPedido'] > 20000) {
                     $puntos = $puntos + 5000;
                 }
-
+        }elseif ($historial[4]['cantOfertasAceptadas'] >= $historial[3]['cant_ofertasDisponibles']){
+            $puntos = -1;
         }
         return $puntos;
     }

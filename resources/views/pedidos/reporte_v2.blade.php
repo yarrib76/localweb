@@ -640,8 +640,12 @@
             }
             $(".modal-content h3").html("Pedido Nº:" + nroPedido);
             if (puntos == 0){
-                $(".modal-content #propuesta").html("El cliente " + cliente + " No tiene propuestas disponibles");
-            } else {
+                $(".modal-content #propuesta").html("El cliente " + cliente + " no tiene propuestas disponibles");
+            }
+            if (puntos == -1){
+                $(".modal-content #propuesta").html("El " + cliente + " " + propuesta);
+            }
+            if (puntos > 0) {
                 $(".modal-content #propuesta").html("Ofrecer al cliente " + cliente + " la siguiente propuesta, " +  propuesta);
             }
         }
