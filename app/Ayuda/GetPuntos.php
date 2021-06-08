@@ -19,15 +19,16 @@ class GetPuntos
         $historial = $this->historialCompras($id_cliente,$historial);
         $historial = $this->historialPromo($id_cliente,$historial);
         $puntosObtenidos = $this->analisisPuntos($historial);
+        // dd($historial,$puntosObtenidos);
         return $puntosObtenidos;
     }
 
     private function historialCompras($id_cliente,$historial)
     {
         $cantCompras = DB::select(' SELECT count(*) as Compras FROM samira.controlpedidos
-                                    where id_cliente = "'. $id_cliente .'";');
+                                    where id_cliente = "'. $id_cliente .'" and estado <> 2;');
         $monto =  DB::select(' SELECT sum(Total) as Total FROM samira.controlpedidos
-                               where id_cliente = "'. $id_cliente .'";');
+                               where id_cliente = "'. $id_cliente .'" and estado <> 2;');
         $cantOfertasDisponibles = DB::select('select cant_ofertas from samira.clientes
                                     where id_clientes = "'. $id_cliente .'"');
         $historial[1] = ['cantCompasHistorico' => $cantCompras[0]->Compras];
@@ -67,7 +68,7 @@ class GetPuntos
                 if ($historial[0]['TotalPedido'] > 20000) {
                     $puntos = $puntos + 5000;
                 }
-        }elseif ($historial[4]['cantOfertasAceptadas'] >= $historial[3]['cant_ofertasDisponibles']){
+        }elseif ($historial[4]['cantOfertasAceptadas'] > $historial[3]['cant_ofertasDisponibles']){
             $puntos = -1;
         }
         return $puntos;
