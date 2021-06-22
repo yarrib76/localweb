@@ -43,7 +43,7 @@ class ServerStatusMail extends Controller
         $reporteSincro = new ReporteSincro();
         $resFinal = $reporteSincro->crearReporte();
         $data = array('Slave_IO_Running'=>$statusSlave_IO_Running,'Slave_SQL_Running'=>$statusSlave_SQL_Running,
-            'diasBackup'=>(int)$total);
+            'diasBackup'=>(int)$total,'resFinal'=>$resFinal);
         switch (gethostname()){
             case 'vagrant':
                 Mail::send('mail.statusMail',$data,function($message){
