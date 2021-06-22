@@ -109,5 +109,12 @@ return [
 
     'sendmail' => '/usr/sbin/sendmail -bs',
 
-    
+    /*Soluciono Error Connection could not be established with host smtp.gmail.com [ #0]*/
+    'stream' => [
+        'ssl' => [
+            'allow_self_signed' => true,
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ]
 ];

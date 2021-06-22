@@ -19,6 +19,26 @@
         </tr>
         </tbody>
     </table>
+    <table id="reporte" class="table table-striped table-bordered records_list" border="1">
+        <thead>
+        <tr>
+            <th>Campo</th>
+            <th>RegistroProd</th>
+            <th>RegistroConti</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($resFinal as $data)
+            <tr>
+                <td>{{$data['Campo']}}</td>
+                <td>{{$data['RegistroProd']}}</td>
+                <td>{{$data['RegistroConti']}}</td>
+                <td>{{$data['Estado']}}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
 
 </div>
 <h1>El ultimo backup no puede superar los 3 días</h1>
