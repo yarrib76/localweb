@@ -19,7 +19,7 @@ class ServerStatusMail extends Controller
         //Las IP son de los servidores secundarios
         switch (gethostname()){
             case 'vagrant':
-                $mysqli = new mysqli("192.168.0.20", "yarrib76", "NetAcc10", "samira");
+                $mysqli = new mysqli("192.168.0.109", "root", "NetAcc10", "samira");
                 break;
             case 'viamoreprod':
                 $mysqli = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
@@ -40,8 +40,10 @@ class ServerStatusMail extends Controller
         $result=$result->fetch_assoc();
         $statusSlave_IO_Running = $result['Slave_IO_Running'];
         $statusSlave_SQL_Running = $result['Slave_SQL_Running'];
+        $reporteSincro = new ReporteSincro();
+        $resFinal = $reporteSincro->crearReporte();
         $data = array('Slave_IO_Running'=>$statusSlave_IO_Running,'Slave_SQL_Running'=>$statusSlave_SQL_Running,
-            'diasBackup'=>(int)$total);
+            'diasBackup'=>(int)$total,'resFinal'=>$resFinal);
         switch (gethostname()){
             case 'vagrant':
                 Mail::send('mail.statusMail',$data,function($message){
