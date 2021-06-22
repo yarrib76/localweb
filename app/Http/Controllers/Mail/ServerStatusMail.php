@@ -19,19 +19,22 @@ class ServerStatusMail extends Controller
         //Las IP son de los servidores secundarios
         switch (gethostname()){
             case 'vagrant':
-                $mysqli = new mysqli("192.168.0.109", "root", "NetAcc10", "samira");
+                $mysqliProd = new mysqli("192.168.0.109", "root", "NetAcc10", "samira");
+                $mysqliConti = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
                 break;
             case 'viamoreprod':
-                $mysqli = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
+                $mysqliConti = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
+                $mysqliProd = new mysqli("192.168.0.104", "yarrib76", "NetAcc10", "samira");
                 break;
             case 'donaprod':
-                $mysqli = new mysqli("192.168.0.150", "root", "NetAcc10", "samira");
+                $mysqliConti = new mysqli("192.168.0.150", "root", "NetAcc10", "samira");
+                $mysqliProd = new mysqli("192.168.0.50", "root", "NetAcc10", "samira");
                 break;
             case 'donaconti':
                 $mysqli = new mysqli("192.168.0.150", "yarrib76", "NetAcc10", "samira");
                 break;
         }
-        $result = $mysqli->query("SELECT
+        $result = $mysqliConti->query("SELECT
 	        (SELECT SERVICE_STATE FROM performance_schema.replication_connection_status) as Slave_IO_Running ,
 	        (SELECT SERVICE_STATE FROM performance_schema.replication_applier_status) as Slave_SQL_Running;");
         $ultimoBkp = DB::select('SELECT fechafile from samira.statusbackup');
@@ -41,7 +44,7 @@ class ServerStatusMail extends Controller
         $statusSlave_IO_Running = $result['Slave_IO_Running'];
         $statusSlave_SQL_Running = $result['Slave_SQL_Running'];
         $reporteSincro = new ReporteSincro();
-        $resFinal = $reporteSincro->crearReporte();
+        $resFinal = $reporteSincro->crearReporte($mysqliProd,$mysqliConti);
         $data = array('Slave_IO_Running'=>$statusSlave_IO_Running,'Slave_SQL_Running'=>$statusSlave_SQL_Running,
             'diasBackup'=>(int)$total,'resFinal'=>$resFinal);
         switch (gethostname()){

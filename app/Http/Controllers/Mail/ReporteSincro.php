@@ -13,10 +13,8 @@ use mysqli;
 
 class ReporteSincro
 {
-    public function crearReporte()
+    public function crearReporte($mysqliProd,$mysqliConti)
     {
-        $mysqliProd = new mysqli("192.168.0.104", "root", "NetAcc10", "samira");
-        $mysqliConti = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
         $resultProd = $mysqliProd->query("call checkRepli");
         $resultConti = $mysqliConti->query("call checkRepli");
         // $result=$result->fetch_assoc();
