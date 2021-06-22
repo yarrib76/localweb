@@ -19,7 +19,7 @@
         </tr>
         </tbody>
     </table>
-    
+
 
 </div>
 <h1>El ultimo backup no puede superar los 3 días</h1>
