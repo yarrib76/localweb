@@ -3,6 +3,7 @@
 namespace Donatella\Http\Controllers\Test;
 
 use Carbon\Carbon;
+use DateTime;
 use Donatella\Ayuda\GetPuntos;
 use Donatella\Ayuda\Precio;
 use Donatella\Models\Articulos;
@@ -21,6 +22,10 @@ class Test extends Controller
 {
     public function Test()
     {
+        $carbon = new \Carbon\Carbon();
+        $datetime = $carbon->now();
+        $datetime = (date(DATE_ISO8601, strtotime($datetime)));
+        dd($datetime);
         $mysqliProd = new mysqli("192.168.0.104", "root", "NetAcc10", "samira");
         $mysqliConti = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
         // $mysqliConti = new mysqli("192.168.0.109", "root", "NetAcc10", "samira");
