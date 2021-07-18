@@ -28,6 +28,7 @@ class ClientesController extends Controller
         $clientes = Clientes::where('id_clientes', '<>', 1)
             ->orderby('nombre', 'desc')
             ->get();
+        dd($clientes[0]['provincias']);
         return view('clientes.reporte', compact('clientes'));
     }
 

@@ -34,23 +34,6 @@
                                 <th>Accion</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @foreach($clientes as $cliente)
-                                <tr>
-                                    <td>{{$cliente->nombre}}</td>
-                                    <td>{{$cliente->apellido}}</td>
-                                    <td>{{$cliente->apodo}}</td>
-                                    <td>{{$cliente->cuit}}</td>
-                                    <td>{{$cliente->direccion}}</td>
-                                    <td>{{$cliente->mail}}</td>
-                                    <td>{{$cliente->telefono}}</td>
-                                    <td>{{$cliente->localidad}}</td>
-                                    <td>{{$cliente['provincias']->nombre}}</td>
-                                    <td>{{substr($cliente->created_at,0 ,10)}}</td>
-                                    <td><a href='{{ route('clientes.edit', $cliente->id_clientes) }}' class = 'btn btn-primary'>Modificar</a></td>
-                                </tr>
-                            @endforeach
-                            </tbody>
                         </table>
                         <a href='{{ route('clientes.create') }}' class = 'btn btn-primary'>Crear Cliente</a>
                     </div>
@@ -72,48 +55,68 @@
 
     <script type="text/javascript">
         $(document).ready( function () {
-            var table =  $('#reporte').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: [
-                            {
-                                extend: 'excel',
-                                text: 'Excel',
-                                className: 'btn btn-default',
-                                exportOptions: {
-                                    columns: [0,1,5,6,9]
-                                }
-                            }
-                        ],
-                        "columnDefs": [
-                            {
-                                "targets": [ 2 ],
-                                "visible": false,
-                                "searchable": true
-                            },
-                            {
-                                "targets": [ 3 ],
-                                "visible": false,
-                                "searchable": true
-                            },
-                            {
-                                "targets": [ 7 ],
-                                "visible": false,
-                                "searchable": true
-                            },
-                            {
-                                "targets": [ 8 ],
-                                "visible": false,
-                                "searchable": true
-                            },
-                            {
-                                "targets": [ 9 ],
-                                "visible": false,
-                                "searchable": true
-                            }
-                        ]
+            $.ajax({
+                'url': "/api/abmarticulos",
+                'method': "GET",
+                'contentType': 'application/json',
+                success : function(json) {
+                    for (var i = 0, ien = json.length; i < ien; i++) {
+                        json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
+                                + "<br/>" + "<a href='/articuloedit/" + json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
                     }
-
-            );
+                    var table =  $('#reporte').DataTable({
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'excel',
+                                        text: 'Excel',
+                                        className: 'btn btn-default',
+                                        exportOptions: {
+                                            columns: [0,1,5,6,9]
+                                        }
+                                    }
+                                ],
+                                "aaData": json,
+                                "columns": [
+                                    { "data": "nombre" },
+                                    { "data": "apellido" },
+                                    { "data": "apodo" },
+                                    { "data": "cuit" },
+                                    { "data": "direccion" },
+                                    { "data": "mail" },
+                                    { "data": "telefono" }
+                                ],
+                                "columnDefs": [
+                                    {
+                                        "targets": [ 2 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 3 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 7 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 8 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 9 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    }
+                                ]
+                            }
+                    );
+                },
+            })
             $('a.toggle-vis').on( 'click', function (e) {
                 e.preventDefault();
 
@@ -123,6 +126,6 @@
                 // Toggle the visibility
                 column.visible( ! column.visible() );
             } );
-        } );
+        });
     </script>
 @stop
