@@ -70,116 +70,120 @@ class GetArticulosTiendaNube extends Controller
         $allCategorias = $this->obtengoSubCategoria($api);
 
         for ($i = 1; $i <= $cantidadConsultas; $i++){
-            $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
-            foreach ($articulosTiendaNube->body as $articulo){
-                // dd($articulo->categories);
-                $categorias = $this->obtengoCategorias($articulo->categories,$api,$allCategorias);
+            try {
+                $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                foreach ($articulosTiendaNube->body as $articulo){
+                    // dd($articulo->categories);
+                    $categorias = $this->obtengoCategorias($articulo->categories,$api,$allCategorias);
 
-                $newDescriptions = "";
-                if (Input::get('local') == 'Viamore'){
-                    $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN FLORES";
-                    $newMarca = "VIAMORE";
-                    //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
-                    if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
-                        $newDescriptions = (str_replace("SAMIRA Bijou"," Viamore",$articulo->description->es));
+                    $newDescriptions = "";
+                    if (Input::get('local') == 'Viamore'){
+                        $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN FLORES";
+                        $newMarca = "VIAMORE";
+                        //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
+                        if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
+                            $newDescriptions = (str_replace("SAMIRA Bijou"," Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
+                            $newDescriptions = (str_replace("SAMIRA BIJOU"," Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'Samira Bijou') == true){
+                            $newDescriptions = (str_replace("Samira Bijou"," Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
+                            $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," Viamore",$articulo->description->es));
+                        }
                     }
-                    if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
-                        $newDescriptions = (str_replace("SAMIRA BIJOU"," Viamore",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,'Samira Bijou') == true){
-                        $newDescriptions = (str_replace("Samira Bijou"," Viamore",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
-                        $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," Viamore",$articulo->description->es));
-                    }
-                }
 
-                if (Input::get('local') == 'Donatella'){
-                    $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN ONCE";
-                    $newMarca = "DONATELLA";
-                    //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
-                    if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
-                        $newDescriptions = (str_replace("SAMIRA Bijou"," Donatella Bijou",$articulo->description->es));
+                    if (Input::get('local') == 'Donatella'){
+                        $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN ONCE";
+                        $newMarca = "DONATELLA";
+                        //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
+                        if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
+                            $newDescriptions = (str_replace("SAMIRA Bijou"," Donatella Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
+                            $newDescriptions = (str_replace("SAMIRA BIJOU"," Donatella Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'Samira Bijou') == true){
+                            $newDescriptions = (str_replace("Samira Bijou"," Donatella Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
+                            $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," Donatella Bijou",$articulo->description->es));
+                        }
                     }
-                    if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
-                        $newDescriptions = (str_replace("SAMIRA BIJOU"," Donatella Bijou",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,'Samira Bijou') == true){
-                        $newDescriptions = (str_replace("Samira Bijou"," Donatella Bijou",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
-                        $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," Donatella Bijou",$articulo->description->es));
-                    }
-                }
 
- /*
-                if (Input::get('local') == 'Samira'){
-                    $newTituloSeo = $articulo->name->es . " " . "POR MAYOR EN ONCE";
-                    $newMarca = "SAMIRA";
-                    //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
-                    if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
-                        $newDescriptions = (str_replace("SAMIRA Bijou"," SAMIRA Bijou",$articulo->description->es));
+     /*
+                    if (Input::get('local') == 'Samira'){
+                        $newTituloSeo = $articulo->name->es . " " . "POR MAYOR EN ONCE";
+                        $newMarca = "SAMIRA";
+                        //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
+                        if(strpos($articulo->description->es,'SAMIRA Bijou') == true){
+                            $newDescriptions = (str_replace("SAMIRA Bijou"," SAMIRA Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
+                            $newDescriptions = (str_replace("SAMIRA BIJOU"," SAMIRA Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'Samira Bijou') == true){
+                            $newDescriptions = (str_replace("Samira Bijou"," SAMIRA Bijou",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
+                            $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," SAMIRA Bijou",$articulo->description->es));
+                        }
                     }
-                    if(strpos($articulo->description->es,'SAMIRA BIJOU') == true){
-                        $newDescriptions = (str_replace("SAMIRA BIJOU"," SAMIRA Bijou",$articulo->description->es));
+    /*
+    /*
+                    if (Input::get('local') == 'Viamore'){
+                        $newTituloSeo = $articulo->name->es . " " . "POR MAYOR EN FLORES";
+                        $newMarca = "VIAMORE";
+                        //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
+                        if(strpos($articulo->description->es,'Viamore') == true){
+                            $newDescriptions = (str_replace("Viamore","Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'VIAMORE') == true){
+                            $newDescriptions = (str_replace("VIAMORE","Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,'Samira Bijou') == true){
+                            $newDescriptions = (str_replace("Samira Bijou","Viamore",$articulo->description->es));
+                        }
+                        if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
+                            $newDescriptions = (str_replace(" Samira&nbsp;Bijou","Viamore",$articulo->description->es));
+                        }
                     }
-                    if(strpos($articulo->description->es,'Samira Bijou') == true){
-                        $newDescriptions = (str_replace("Samira Bijou"," SAMIRA Bijou",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
-                        $newDescriptions = (str_replace(" Samira&nbsp;Bijou"," SAMIRA Bijou",$articulo->description->es));
+    */
+                    if (empty($articulo->attributes)){
+                        NewArtiTN::Create([
+                            'Identificador de URL' => $articulo->handle->es,
+                            'Nombre' => $articulo->name->es,
+                            'Categorías' => $categorias,
+                            'SKU' => $articulo->variants[0]->sku,
+                            'Mostrar en tienda' =>"NO",
+                            'Precio' => "0",
+                            'Precio Promocional' => "0",
+                            'Descripción' => $newDescriptions,
+                            'Título para SEO' => $newTituloSeo,
+                            'Marca' => $newMarca
+                        ]);
+                    } elseif (!empty($articulo->variants[0]->values[0]->es)) {
+                        NewArtiTN::Create([
+                            'Identificador de URL' => $articulo->handle->es,
+                            'Nombre' => $articulo->name->es,
+                            'Categorías' => $categorias,
+                            'Nombre de propiedad 1' => $articulo->attributes[0]->es,
+                            'Valor de propiedad 1' => $articulo->variants[0]->values[0]->es,
+                            'SKU' => $articulo->variants[0]->sku,
+                            'Precio' => "0",
+                            'Precio Promocional' => "0",
+                            'Mostrar en tienda' =>"NO",
+                            'Descripción' => $newDescriptions,
+                            'Título para SEO' => $newTituloSeo,
+                            'Marca' => $newMarca
+                        ]);
+                        $this->creoVariantes($articulo);
                     }
                 }
-/*
-/*
-                if (Input::get('local') == 'Viamore'){
-                    $newTituloSeo = $articulo->name->es . " " . "POR MAYOR EN FLORES";
-                    $newMarca = "VIAMORE";
-                    //Cambio la palabra SAMIRA Bijou en sus diferentes escrituras por Viamore en la descripciòn
-                    if(strpos($articulo->description->es,'Viamore') == true){
-                        $newDescriptions = (str_replace("Viamore","Viamore",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,'VIAMORE') == true){
-                        $newDescriptions = (str_replace("VIAMORE","Viamore",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,'Samira Bijou') == true){
-                        $newDescriptions = (str_replace("Samira Bijou","Viamore",$articulo->description->es));
-                    }
-                    if(strpos($articulo->description->es,' Samira&nbsp;Bijou') == true){
-                        $newDescriptions = (str_replace(" Samira&nbsp;Bijou","Viamore",$articulo->description->es));
-                    }
-                }
-*/
-                if (empty($articulo->attributes)){
-                    NewArtiTN::Create([
-                        'Identificador de URL' => $articulo->handle->es,
-                        'Nombre' => $articulo->name->es,
-                        'Categorías' => $categorias,
-                        'SKU' => $articulo->variants[0]->sku,
-                        'Mostrar en tienda' =>"NO",
-                        'Precio' => "0",
-                        'Precio Promocional' => "0",
-                        'Descripción' => $newDescriptions,
-                        'Título para SEO' => $newTituloSeo,
-                        'Marca' => $newMarca
-                    ]);
-                } elseif (!empty($articulo->variants[0]->values[0]->es)) {
-                    NewArtiTN::Create([
-                        'Identificador de URL' => $articulo->handle->es,
-                        'Nombre' => $articulo->name->es,
-                        'Categorías' => $categorias,
-                        'Nombre de propiedad 1' => $articulo->attributes[0]->es,
-                        'Valor de propiedad 1' => $articulo->variants[0]->values[0]->es,
-                        'SKU' => $articulo->variants[0]->sku,
-                        'Precio' => "0",
-                        'Precio Promocional' => "0",
-                        'Mostrar en tienda' =>"NO",
-                        'Descripción' => $newDescriptions,
-                        'Título para SEO' => $newTituloSeo,
-                        'Marca' => $newMarca
-                    ]);
-                    $this->creoVariantes($articulo);
-                }
+            }catch (Exception $e){
+                $i = $i-1;
             }
         }
             return Response::json("ok");

@@ -236,6 +236,7 @@ Route::group(['prefix' => 'api'],
         /*Tienda Nube*/
         //Route::get('/tiendanube', 'Api\ABMTiendaNube@abmProductos');
         Route::get('/tiendanube', 'Api\ABMTiendaNubeNew@getProductos');
+        Route::get('/tiendanubebug', 'Api\ABMTiendaNubeBug@getProductos');
         Route::get('/tiendanubeabm', 'Api\ABMTiendaNubeNew@abmProductos');
         Route::get('/tiendanubesincroArticulos', 'Api\ABMTiendaNubeNew@sincroArticulos');
         //Baja los articulos de Tienda Nube a la base NewArtiTN
