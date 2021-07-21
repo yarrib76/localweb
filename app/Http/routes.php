@@ -70,6 +70,7 @@ Route::get('controlcierre', 'CierreDiario\ControlCierreDiario@index');
 Route::get('controlcierreconsulta', 'CierreDiario\ControlCierreDiario@cierrecaja');
 Route::get('controlcierrefactura', 'CierreDiario\ControlCierreDiario@cierreFacturas');
 
+Route::get('clientesedit/{nroCliente}','Cliente\ClientesController@edit');
 Route::get('articuloedit/{nroArticulo}','Articulo\ArticulosController@edit');
 Route::get('articulocreate','Articulo\ArticulosController@create');
 

@@ -56,13 +56,12 @@
     <script type="text/javascript">
         $(document).ready( function () {
             $.ajax({
-                'url': "/api/abmarticulos",
+                'url': "/api/abmclientes",
                 'method': "GET",
                 'contentType': 'application/json',
                 success : function(json) {
                     for (var i = 0, ien = json.length; i < ien; i++) {
-                        json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
-                                + "<br/>" + "<a href='/articuloedit/" + json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
+                        json[i]['Accion'] = "<a href='/clientesedit/" + json[i]['id_clientes'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
                     }
                     var table =  $('#reporte').DataTable({
                                 dom: 'Bfrtip',
@@ -84,7 +83,11 @@
                                     { "data": "cuit" },
                                     { "data": "direccion" },
                                     { "data": "mail" },
-                                    { "data": "telefono" }
+                                    { "data": "telefono" },
+                                    { "data": "localidad" },
+                                    { "data": "provincia" },
+                                    { "data": "fecha" },
+                                    { "data": "Accion" }
                                 ],
                                 "columnDefs": [
                                     {

@@ -25,11 +25,13 @@ class ClientesController extends Controller
      */
     public function index()
     {
+    /*
         $clientes = Clientes::where('id_clientes', '<>', 1)
             ->orderby('nombre', 'desc')
             ->get();
-        dd($clientes[0]['provincias']);
-        return view('clientes.reporte', compact('clientes'));
+      //  dd($clientes[0]);
+    */
+        return view('clientes.reporte2', compact('clientes'));
     }
 
     /**
