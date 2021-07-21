@@ -41,7 +41,22 @@
             </div>
         </div>
     </div>
-
+    <style>
+        #myModal {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 11%;
+            height: 20%;
+            overflow-y: auto;
+        }
+    </style>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -54,7 +69,12 @@
     <!-- DataTables -->
 
     <script type="text/javascript">
+        var table;
         $(document).ready( function () {
+            // Get the modal
+            var modal = document.getElementById('myModal');
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
             $.ajax({
                 'url': "/api/abmclientes",
                 'method': "GET",
@@ -63,7 +83,7 @@
                     for (var i = 0, ien = json.length; i < ien; i++) {
                         json[i]['Accion'] = "<a href='/clientesedit/" + json[i]['id_clientes'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
                     }
-                    var table =  $('#reporte').DataTable({
+                     table =  $('#reporte').DataTable({
                                 dom: 'Bfrtip',
                                 buttons: [
                                     {
@@ -118,6 +138,7 @@
                                 ]
                             }
                     );
+                    modal.style.display = "none";
                 },
             })
             $('a.toggle-vis').on( 'click', function (e) {
