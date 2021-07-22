@@ -84,7 +84,7 @@ class ABMTiendaNubeBug extends Controller
                     }
                 }
             }catch (Exception $e){
-                echo " error en " . $i;
+               // echo " error en " . $i;
                 $i = $i-1;
             };
         }
