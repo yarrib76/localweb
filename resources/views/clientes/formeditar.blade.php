@@ -23,11 +23,12 @@
             <div class="col-sm-9">
                 <input type="text" class="form-control" placeholder="Localidad" value="{{$cliente->localidad}}" name="Localidad">
             </div>
-
+            <!--
             <div class="col-sm-9">
                 <label>Provincia</label>
                 <input type="text" class="form-control" placeholder="Provincia" value="{{$cliente->provincia}}" name="Provincia">
             </div>
+            -->
             <div class="col-sm-9">
                 <label>Provincia</label>
                 <select id="provincia" class="form-control" name="Provincia_id" ></select>
@@ -40,6 +41,19 @@
                 <input type="text" class="form-control" placeholder="Telefono" value="{{$cliente->telefono}}" name="Telefono">
             </div>
 
+            <div class="col-sm-9">
+                <label>Encuesta</label>
+                <select id="encuesta_id" class="form-control" name="Encuesta" >
+                    <option value="Ninguna">Ninguna</option>
+                    <option value="Google">Google</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="FaceBook">FaceBook</option>
+                    <option value="Recomendado">Recomendado</option>
+                    <option value="Volante">Volante</option>
+                    <option value="Caminando">Caminando</option>
+                </select>
+            </div>
+
         <input type="hidden" class="form-control" value="{{$cliente->id_clientes}}" name="id">
 
     </div>
@@ -49,6 +63,7 @@
 <script>
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
+        $('#encuesta_id').val("{{$cliente->encuesta}}")
         var provincia_id = "{{$cliente['provincias']->id}}"
         //     category_id = $(this).val();
         //  $('#moviles').empty();

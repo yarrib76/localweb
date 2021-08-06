@@ -114,6 +114,7 @@ class ClientesController extends Controller
             "Id_provincia" => Input::get('Provincia_id'),
             'Mail' => Input::get('Mail'),
             'Telefono' => Input::get('Telefono'),
+            'encuesta' => Input::get('Encuesta'),
         ]);
 
         return redirect()->route('clientes.index');
