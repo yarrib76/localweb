@@ -261,6 +261,7 @@ Route::group(['prefix' => 'api'],
 
         /*Encuesta Redes*/
         Route::get('/encuestaRedes', 'Api\EncuestaRedes@updateEncuesta');
+        Route::get('/encuestaRedesConsulta', 'Api\EncuestaRedes@consultaEncuesta');
 
         /*Elimina tabla Auto Replica*/
         Route::get('/deleteautosinctable', 'Api\Automation\ReplicaTN@delete');

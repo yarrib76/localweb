@@ -43,7 +43,7 @@
                                 @foreach($pedidos as $pedido)
                                     <tr>
                                         <td>{{$pedido->nropedido}}</td>
-                                        <td>{{$pedido->nombre}}, {{$pedido->apellido}}</td>
+                                        <td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         <td>{{$pedido->vendedora}}</td>
                                         <td>{{$pedido->nrofactura}}</td>
@@ -406,34 +406,22 @@
             <h4>Encuesta</h4>
             <div class="col-xs-12 col-xs-offset-0 well-sm">
                 <label id="Trans"></label>
-                <p>Encusta, Seleccione una Opción:</p>
+                <p>Encuesta, Seleccione una Opción:</p>
                 <div>
-                    <input type="radio" id="facebook" name="encuesta" value="facebook"
-                           checked>
-                    <label for="facebook">FaceBook</label>
-                </div>
-
-                <div>
-                    <input type="radio" id="instagram" name="encuesta" value="instagram">
-                    <label for="instagram">Instagram</label>
-                </div>
-
-                <div>
-                    <input type="radio" id="google" name="encuesta" value="google">
-                    <label for="google">Google</label>
-                </div>
-                <div>
-                    <input type="radio" id="local" name="encuesta" value="local">
-                    <label for="local">Local</label>
-                </div>
-                <div>
-                    <input type="radio" id="otros" name="encuesta" value="otros">
-                    <label for="otros">Otros</label>
+                    <select id="encuesta_id" class="form-control" name="Encuesta" >
+                        <option value="Ninguna">Ninguna</option>
+                        <option value="Google">Google</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="FaceBook">FaceBook</option>
+                        <option value="Recomendado">Recomendado</option>
+                        <option value="Volante">Volante</option>
+                        <option value="Caminando">Caminando</option>
+                        <option value="Vivo">Vivo</option>
+                    </select>
                 </div>
             </div>
             <input type="button" id="guardar" value="Guardar" class="btn btn-success" onclick="guardarEncuesta();">
         </div>
-
     </div>
     <!-- The Modal CheckOut-->
     <div id="myModalCheckOut" class="modal">
@@ -520,6 +508,7 @@
     <script type="text/javascript">
         var glonalNroControlPedido
         var globalNroPedido
+        var globalid_cliente;
         // Get the modal
         var modalcheckOut = document.getElementById('myModalCheckOut');
         var tableCheckInTN
@@ -974,9 +963,9 @@
         }
         //Descontinuado
         var modalEncuesta = document.getElementById('myModalEncuesta');
-        var nroPedidoEncuesta;
-        function encuesta(nroPedido){
-            nroPedidoEncuesta = nroPedido
+        function encuesta(id_cliente, nombre, apellido){
+            globalid_cliente = id_cliente;
+            consultaEncuestaCliente(globalid_cliente);
             // Get the <span> element that closes the modal
             var span = document.getElementById("closeEncuesta");
 
@@ -994,47 +983,27 @@
                     modalEncuesta.style.display = "none";
                 }
             }
-            $(".modal-content h4").html("Pedido Nº:" + nroPedido);
+            $(".modal-content h4").html("Cliente: " + nombre + ", " + apellido);
         }
 
         //Descontinuado
-        function guardarEncuesta(){
-            var isCheckedFace = document.getElementById('facebook').checked;
-            var isCheckedInstagram = document.getElementById('instagram').checked;
-            var isCheckedGoogle = document.getElementById('google').checked;
-            var isCheckedLocal = document.getElementById('local').checked;
-            var isCheckedOtros = document.getElementById('otros').checked;
-            if (isCheckedFace) {
-                $.ajax({
-                    url: 'api/encuestaRedes?nropedido=' + nroPedidoEncuesta + '&&resultado=' + "FaceBook",
-                    dataType: "json",
-                });
-            }
-            if (isCheckedInstagram){
-                $.ajax({
-                    url: 'api/encuestaRedes?nropedido=' + nroPedidoEncuesta + '&&resultado=' + "Instagram",
-                    dataType: "json",
-                });
-            }
-            if (isCheckedGoogle){
-                $.ajax({
-                    url: 'api/encuestaRedes?nropedido=' + nroPedidoEncuesta + '&&resultado=' + "Google",
-                    dataType: "json",
-                });
-            }
-            if (isCheckedLocal){
-                $.ajax({
-                    url: 'api/encuestaRedes?nropedido=' + nroPedidoEncuesta + '&&resultado=' + "Local",
-                    dataType: "json",
-                });
-            }
-            if (isCheckedOtros){
-                $.ajax({
-                    url: 'api/encuestaRedes?nropedido=' + nroPedidoEncuesta + '&&resultado=' + "Otros",
-                    dataType: "json",
-                });
-            }
+        function guardarEncuesta(id_cliente){
+            var select = document.getElementById('encuesta_id');
+            var selectValue = select.options[select.selectedIndex].text;
+            $.ajax({
+                url: 'api/encuestaRedes?id_cliente=' + globalid_cliente + '&encuesta=' + selectValue ,
+                dataType: "json",
+            });
             modalEncuesta.style.display = "none";
+        }
+        function consultaEncuestaCliente(id_cliente){
+            $.ajax({
+                url: '/api/encuestaRedesConsulta?id_cliente=' + id_cliente,
+                dataType: "json",
+                success: function (json) {
+                    $('#encuesta_id').val(json[0]['encuesta'])
+                }
+            });
         }
     </script>
 

@@ -10,6 +10,7 @@ use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
 class ClientesController extends Controller
@@ -117,7 +118,8 @@ class ClientesController extends Controller
             'encuesta' => Input::get('Encuesta'),
         ]);
 
-        return redirect()->route('clientes.index');
+       return redirect()->route('clientes.index');
+     //   return Redirect::back()->with('code', 5);
 
     }
 

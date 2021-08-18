@@ -14,7 +14,7 @@
                                 <input name="_method" type="hidden" value="PATCH">
                             <div class="col-sm-8 col-sm-offset-4">
                                 <button type="submit" class="btn btn-primary" name="modificar"><i class="fa fa-btn fa-plus"></i> Modificar</button>
-                                <a href="/clientes" type="submit" class="btn btn-primary" name="salir"> Salir</a>
+                                <a href="javascript:window.open('','_self').close();" type="submit" class="btn btn-primary" name="salir"> Salir</a>
                             </div>
                             {!! Form::close() !!}
                         </div>

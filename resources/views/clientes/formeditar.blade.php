@@ -51,6 +51,7 @@
                     <option value="Recomendado">Recomendado</option>
                     <option value="Volante">Volante</option>
                     <option value="Caminando">Caminando</option>
+                    <option value="Vivo">Vivo</option>
                 </select>
             </div>
 
@@ -63,6 +64,7 @@
 <script>
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
+        //Defino el valor para el Select
         $('#encuesta_id').val("{{$cliente->encuesta}}")
         var provincia_id = "{{$cliente['provincias']->id}}"
         //     category_id = $(this).val();
