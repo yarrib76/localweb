@@ -24,7 +24,7 @@
    <script>
        idleTimer = null;
        idleState = false;
-       idleWait = 20000;
+       idleWait = 180000;
        (function ($) {
        $(document).ready( function () {
            llenarTabla();
