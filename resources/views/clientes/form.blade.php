@@ -36,6 +36,21 @@
         <div class="col-sm-9">
             <input type="text" class="form-control" placeholder="Telefono" name="Telefono">
         </div>
+
+        <div class="col-sm-9">
+            <label>Encuesta</label>
+            <select id="encuesta_id" class="form-control" name="Encuesta" >
+                <option value="Ninguna">Ninguna</option>
+                <option value="Google">Google</option>
+                <option value="Instagram">Instagram</option>
+                <option value="FaceBook">FaceBook</option>
+                <option value="Recomendado">Recomendado</option>
+                <option value="Volante">Volante</option>
+                <option value="Caminando">Caminando</option>
+                <option value="Vivo">Vivo</option>
+            </select>
+        </div>
+
     </div>
 
 </div>
