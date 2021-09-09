@@ -38,7 +38,7 @@
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
-            width: 50%;
+            width: 35%;
             height: 35%;
             overflow-y: auto;
         }
