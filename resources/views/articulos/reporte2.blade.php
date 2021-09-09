@@ -36,9 +36,9 @@
         }
         #modalImage {
             background-color: #fefefe;
-            margin: 10%;
+            margin: auto;
             padding: 20px;
-            width: 20%;
+            width: 50%;
             height: 35%;
             overflow-y: auto;
         }
@@ -166,7 +166,7 @@
                 }
             }
             image.src = imagenName;
-            image.style.width = '300px';
+            image.style.width = '350px';
             image.style.height = '300px';
         }
     </script>
