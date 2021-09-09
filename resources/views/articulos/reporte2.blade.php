@@ -36,7 +36,7 @@
         }
         #modalImage {
             background-color: #fefefe;
-            margin: auto;
+            margin: 10%;
             padding: 20px;
             width: 20%;
             height: 35%;
