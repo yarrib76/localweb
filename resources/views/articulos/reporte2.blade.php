@@ -166,7 +166,7 @@
                 }
             }
             image.src = imagenName;
-            image.style.width = '500px';
+            image.style.width = '550px';
             image.style.height = '300px';
         }
     </script>
