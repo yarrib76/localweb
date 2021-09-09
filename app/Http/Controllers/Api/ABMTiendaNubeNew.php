@@ -83,31 +83,36 @@ class ABMTiendaNubeNew extends Controller
         ]);
 
         for ($i = 1; $i <= $cantidadConsultas; $i++){
-            $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
-            foreach ($articulosTiendaNube->body as $articulo){
-                $image = 0;
-                if (!empty($articulo->images)){
-                    $image = 1;
+            try {
+                $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                foreach ($articulosTiendaNube->body as $articulo){
+                    $image = 0;
+                    if (!empty($articulo->images)){
+                        $image = 1;
+                    }
+                    foreach ($articulo->variants as $variant){
+                        //dd($variant);
+                        //Verifico que no sea null la cantidad
+                        if (!empty($articulo->images[0]->src)){
+                            $imagesSrc = $articulo->images[0]->src;
+                        }else $imagesSrc = "";
+                        StatusEcomerceSinc::Create([
+                            'id_provecomerce' => $id_provEcomerce->id,
+                            'status' => 'Pending',
+                            'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
+                            'articulo' => $variant->sku,
+                            'product_id' => $variant->product_id,
+                            'articulo_id' => $variant->id,
+                            'visible' => $articulo->published,
+                            'images' => $image,
+                            'imagessrc' => $imagesSrc
+                        ]);
+                    }
                 }
-                foreach ($articulo->variants as $variant){
-                    //dd($variant);
-                    //Verifico que no sea null la cantidad
-                    if (!empty($articulo->images[0]->src)){
-                        $imagesSrc = $articulo->images[0]->src;
-                    }else $imagesSrc = "";
-                    StatusEcomerceSinc::Create([
-                        'id_provecomerce' => $id_provEcomerce->id,
-                        'status' => 'Pending',
-                        'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
-                        'articulo' => $variant->sku,
-                        'product_id' => $variant->product_id,
-                        'articulo_id' => $variant->id,
-                        'visible' => $articulo->published,
-                        'images' => $image,
-                        'imagessrc' => $imagesSrc
-                    ]);
-                }
-            }
+            }catch (Exception $e){
+                // echo " error en " . $i;
+                $i = $i-1;
+            };
         }
         return Response::json("ok");
     }

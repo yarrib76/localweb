@@ -271,6 +271,7 @@ Route::group(['prefix' => 'api'],
 
         /*AMB Articulos*/
         Route::get('/abmarticulos', 'Api\Articulos\GetArticulos@consulta');
+        Route::get('/fotoarticulo', 'Api\Articulos\GetArticulos@foto');
         Route::get('/compraauto', 'Api\Articulos\CompraAuto@consulta');
         Route::get('/compraauto_llenarTabulador', 'Api\Articulos\CompraAuto@llenarTablaTabulador');
         Route::get('/compraauto_agregar', 'Api\Articulos\CompraAuto@agregarArticulo');

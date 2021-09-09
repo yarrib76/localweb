@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
 class GetArticulos extends Controller
@@ -22,5 +23,15 @@ class GetArticulos extends Controller
                                     group by Arti.Articulo');
         ob_start('ob_gzhandler');
         return Response::json($articulos);
+    }
+
+    public function foto()
+    {
+        $nroArticulo = Input::get('nroArticulo');
+        $imagessrc = DB::select ('SELECT imagessrc FROM samira.statusecomercesincro as StatusSincr
+                                    where articulo = "'.$nroArticulo.'"
+                                    and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
+                                    order by id_provecomerce Desc limit 1);');
+        return Response::json($imagessrc);
     }
 }

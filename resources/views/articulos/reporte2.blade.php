@@ -34,11 +34,40 @@
             height: 20%;
             overflow-y: auto;
         }
+        #modalImage {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 20%;
+            height: 35%;
+            overflow-y: auto;
+        }
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
     <div id="myModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
             <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
+    <div id="modalImage" class="modal">
+        <span class="close">&times;</span>
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img id="imagen">
         </div>
     </div>
 @stop
@@ -66,6 +95,7 @@
                     for ( var i=0, ien=json.length ; i<ien ; i++ ) {
                         json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
                         + "<br/>" +  "<a href='/articuloedit/"+ json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
+                        + "<br/>" +  "<a onclick = getFoto(" + json[i]['Articulo'] + ") ' target='_blank' class = 'btn btn-primary'>Foto</a>"
                     }
                     $('#reporte').DataTable({
                                 dom: 'Bfrtip',
@@ -106,7 +136,38 @@
                     }
                 }
             });
-
+        }
+        function getFoto (nroArticulo){
+            $.ajax({
+                url: 'api/fotoarticulo?nroArticulo=' + nroArticulo,
+                dataType : "json",
+                success : function(json) {
+                    // console.log(json[0])
+                    verImagen(json[0]['imagessrc'])
+                }
+            });
+        }
+        function verImagen(imagenName) {
+           // console.log(imagenName)
+            var image = document.getElementById("imagen");
+            var modalImage = document.getElementById('modalImage');
+            // Get the <span> element that closes the modal
+            var spanImage = document.getElementsByClassName("close");
+            // When the user clicks the button, open the modal
+            modalImage.style.display = "block";
+            // When the user clicks on <span> (x), close the modal
+            spanImage.onclick = function () {
+                modalImage.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modalImage) {
+                    modalImage.style.display = "none";
+                }
+            }
+            image.src = imagenName;
+            image.style.width = '300px';
+            image.style.height = '300px';
         }
     </script>
 @stop
