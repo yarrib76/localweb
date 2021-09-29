@@ -155,7 +155,7 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
-
+    Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
 /*Notas Adhesivas*/
 Route::resource('notasadmin','Notas\NotasAdhesivasAdmin');
 Route::get('/notasadhesivas', 'Notas\NotasAdhesivas@index');
