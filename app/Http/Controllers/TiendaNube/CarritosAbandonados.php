@@ -2,17 +2,31 @@
 
 namespace Donatella\Http\Controllers\TiendaNube;
 
+use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
 use Donatella\Models\Carrito_abandonado;
+use Donatella\Models\Notas_Carrito_abandonado;
+use Donatella\Models\Vendedores;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 use TiendaNube\API;
 
 class CarritosAbandonados extends Controller
 {
+
+    public function index()
+    {
+        $carritosAbandonados = Carrito_abandonado::all();
+        $user_id = Auth::user()->id;
+        return view('tiendanube.carritosabandonados.reporte_v2', compact('user_id'));
+        return view('tiendanube.carritosabandonados.reporte', compact('carritosAbandonados','user_id'));
+    }
     public function main()
     {
         $cantidadPorPaginas = 10;
@@ -80,7 +94,61 @@ class CarritosAbandonados extends Controller
             "cel_contacto" => $carrito->contact_phone,
             "email_contacto" => $carrito->contact_email,
             "total" => $carrito->total,
-            "fecha" => $fecha
+            "fecha" => $fecha,
+            "vendedora" => "PAGINA "
         ]);
+    }
+
+    public function query()
+    {
+        $carritos = DB::select('select * from samira.carritos_abandonados;');
+        ob_start('ob_gzhandler');
+        return Response::json($carritos);
+    }
+
+    public function vendedoras()
+    {
+        $arrVendedoras = [];
+        $vendedoras = Vendedores::all();
+        for ($i = 0; $i < $vendedoras->count(); $i++ ){
+            $arrVendedoras[$i] = [$vendedoras[$i]->Nombre => $vendedoras[$i]->Nombre];
+        }
+        ob_start('ob_gzhandler');
+        return Response::json($arrVendedoras);
+    }
+
+    public function updateVendedora()
+    {
+        $datos = Input::all();
+        $articulo = Carrito_abandonado::where('id_carritos_abandonados', $datos['id_carritos_abandonados']);
+        $articulo->update([
+            'vendedora' => $datos['vendedora']
+        ]);
+        return;
+    }
+
+    public function notasCarritos()
+    {
+        $id_carrito = Input::get('id_carrito');
+        DB::statement("SET lc_time_names = 'es_ES'");
+        $notas_carrito = DB::select('SELECT DATE_FORMAT(fecha, "%d de %M %Y %k:%i") AS fecha, usuarios.name as nombre,
+                                        notas_carritos.notas as comentario
+                                        from samira.notas_carritos_abandonados as notas_carritos
+                                        INNER JOIN samira.users as usuarios ON usuarios.id = notas_carritos.users_id
+                                        WHERE notas_carritos.id_carritos_abandonados = "'. $id_carrito . '"
+                                        ORDER BY fecha DESC');
+        return Response::json($notas_carrito);
+    }
+
+    public function agrrgarNotaCarritoAbandonado()
+    {
+        $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
+        Notas_Carrito_abandonado::create([
+            'id_carritos_abandonados' => Input::get('id_carrito'),
+            'users_id' => Input::get('user_id'),
+            'notas' => Input::get('textarea'),
+            'fecha' => $fecha
+        ]);
+        return Response::json('ok');
     }
 }

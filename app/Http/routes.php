@@ -181,7 +181,13 @@ Route::get('/tipo_pagos', 'Contabilidad\Facturas@tipo_pagos');
 Route::get('/estados_financiera', 'Contabilidad\Facturas@estados_financiera');
 Route::post('updateFactura/update','Contabilidad\Facturas@update');
 
-
+/*Carritos Abandonados*/
+Route::get('/carritosAbandonados', 'TiendaNube\CarritosAbandonados@index');
+Route::get('/carritosAbandonados/query', 'TiendaNube\CarritosAbandonados@query');
+Route::get('/carritosAbandonados/vendedoras', 'TiendaNube\CarritosAbandonados@vendedoras');
+Route::post('/carritosAbandonados/updateVendedora', 'TiendaNube\CarritosAbandonados@updateVendedora');
+Route::get('/carritosAbandonados/notasCarritos', 'TiendaNube\CarritosAbandonados@notasCarritos');
+Route::get('/carritosAbandonados/agregarNota', 'TiendaNube\CarritosAbandonados@agrrgarNotaCarritoAbandonado');
 
 Route::group(['prefix' => 'api'],
     function () {
