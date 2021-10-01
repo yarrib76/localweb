@@ -183,15 +183,15 @@
        }
 
        var iconFormatter= function(value, data, cell, row, options){ //plain text value
-           return "<img class='infoImage' src='refresh/financiera.png' height='50' width='50'>";
+           return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>";
        };
+
        $("#example-table").tabulator({
                 height: "550px",
            initialSort:[
                {column:"nropedido", dir:"desc"}, //sort by this first
            ],
                 columns: [
-                    {title: "id_tienda_nube", field: "id_tienda_nube", sortable: true, width: 115},
                     {title: "Contacto", field: "nombre_contacto", sortable: true, width: 150, headerFilter:"input"},
                     {title: "Vendedora", field: "vendedora", width: 115, editor:"select", editorParams:paramLookup,headerFilter:"input"},
                     {title: "Celular", field: "cel_contacto", sortable: true, width: 120, formatter:"link", formatterParams:{url:function(cell){
@@ -203,7 +203,34 @@
                         console.log(cell.getRow().getData())
                         notas_carrito(cell.getRow().getData()['id_carritos_abandonados'],cell.getRow().getData()['nombre_contacto'])
 
+                    }},
+                    {title:"Cerrar",width:110, align:"center", formatter:"buttonTick", cellClick:function(e, cell){
+                        if (confirm("Esta seguro que quiere cerrar el carrito abandonado de " + cell.getRow().getData()['nombre_contacto'] + "?")) {
+                            $.ajax({
+                                url: '/carritosAbandonados/notasCarritos?id_carrito=' + cell.getRow().getData()['id_carritos_abandonados'],
+                                dataType : "json",
+                                success : function(json) {
+                                    console.log(isEmptyObject(json))
+                                    if (!isEmptyObject(json)){
+                                        cell.getRow().delete()
+                                        $.ajax({
+                                            url: "/carritosAbandonados/finalizarCarrito",
+                                            data: cell.getRow().getData(),
+                                            type: "post"
+                                        })
+                                    } else alert('Para cancelar debe agregar una nota')
+                                }
+                            });
+
+                         /*   cell.getRow().delete()
+                            $.ajax({
+                                url: "/carritosAbandonados/finalizarCarrito",
+                                data: cell.getRow().getData(),
+                                type: "post"
+                            }) */
+                        }
                     }}
+
                 ],
                 cellEdited:function(cell, value, data){
                     console.log(cell.getData())
@@ -214,6 +241,10 @@
                     })
                 }
             });
+
+       function isEmptyObject(obj) {
+           return Object.keys(obj).length === 0;
+       }
 
        function buscarProveedor(){
            // Get the <span> element that closes the modal
@@ -276,7 +307,7 @@
                    modalComentario.style.display = "none";
                }
            }
-           $(".modal-content #cliente").html( cliente);
+           $(".modal-content #cliente").html( "Cliente: " + cliente);
        }
 
 

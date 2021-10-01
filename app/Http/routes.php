@@ -188,6 +188,7 @@ Route::get('/carritosAbandonados/vendedoras', 'TiendaNube\CarritosAbandonados@ve
 Route::post('/carritosAbandonados/updateVendedora', 'TiendaNube\CarritosAbandonados@updateVendedora');
 Route::get('/carritosAbandonados/notasCarritos', 'TiendaNube\CarritosAbandonados@notasCarritos');
 Route::get('/carritosAbandonados/agregarNota', 'TiendaNube\CarritosAbandonados@agrrgarNotaCarritoAbandonado');
+Route::post('/carritosAbandonados/finalizarCarrito', 'TiendaNube\CarritosAbandonados@finalizarCarrito');
 
 Route::group(['prefix' => 'api'],
     function () {

@@ -101,7 +101,8 @@ class CarritosAbandonados extends Controller
 
     public function query()
     {
-        $carritos = DB::select('select * from samira.carritos_abandonados;');
+        $carritos = DB::select('select * from samira.carritos_abandonados
+                                where estado = 0;');
         ob_start('ob_gzhandler');
         return Response::json($carritos);
     }
@@ -150,5 +151,15 @@ class CarritosAbandonados extends Controller
             'fecha' => $fecha
         ]);
         return Response::json('ok');
+    }
+
+    public function finalizarCarrito()
+    {
+        $id_carrito = Input::get('id_carritos_abandonados');
+        $carrito = Carrito_abandonado::where('id_carritos_abandonados',$id_carrito);
+        $carrito->update([
+            'estado' => 1,
+        ]);
+        return;
     }
 }
