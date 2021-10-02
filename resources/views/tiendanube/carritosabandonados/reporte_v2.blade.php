@@ -218,7 +218,7 @@
                                             data: cell.getRow().getData(),
                                             type: "post"
                                         })
-                                    } else alert('Para cancelar debe agregar una nota')
+                                    } else alert('Para finalizar debe agregar una nota')
                                 }
                             });
 

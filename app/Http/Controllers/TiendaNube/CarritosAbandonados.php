@@ -27,12 +27,12 @@ class CarritosAbandonados extends Controller
         return view('tiendanube.carritosabandonados.reporte_v2', compact('user_id'));
         return view('tiendanube.carritosabandonados.reporte', compact('carritosAbandonados','user_id'));
     }
-    public function main()
+    public function main($store_id)
     {
         $cantidadPorPaginas = 10;
         $tnConnect = new TnubeConnect();
-        $store_id = Input::get('store_id');
-        $store_id = 1043936;
+        // $store_id = Input::get('store_id');
+        // $store_id = 1043936;
         $connect = $tnConnect->getConnectionTN($store_id);
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
         $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);

@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
          Commands\StatusMail::class,
          Commands\AutoSincTN::class,
          Commands\CompraAuto::class,
+         Commands\CarritoAbandonado::class,
     ];
 
     /**
