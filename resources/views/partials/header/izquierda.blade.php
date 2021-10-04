@@ -125,6 +125,7 @@
                         </ul>
                     </li>
                     <li><a href="/tiendanubeGetArticulosInbox"> Exportar Articulos A Excel </a></li>
+                    <li><a href="/carritosAbandonados"> Gestion Carritos Abandonados </a></li>
                 </ul>
             </li>
      <!--       <li class="dropdown">

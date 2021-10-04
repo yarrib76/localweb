@@ -129,7 +129,7 @@ class CarritosAbandonados extends Controller
     public function updateVendedora()
     {
         $datos = Input::all();
-        $articulo = Carrito_abandonado::where('id_carritos_abandonados', $datos['id_carritos_abandonados']);
+        $articulo = Carrito_abandonado::where('id_carritos_abandonados', $datos['id_carritos']);
         $articulo->update([
             'vendedora' => $datos['vendedora']
         ]);
@@ -163,7 +163,7 @@ class CarritosAbandonados extends Controller
 
     public function finalizarCarrito()
     {
-        $id_carrito = Input::get('id_carritos_abandonados');
+        $id_carrito = Input::get('id_carritos');
         $carrito = Carrito_abandonado::where('id_carritos_abandonados',$id_carrito);
         $carrito->update([
             'estado' => 1,
