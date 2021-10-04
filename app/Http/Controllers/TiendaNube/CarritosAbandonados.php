@@ -20,12 +20,17 @@ use TiendaNube\API;
 class CarritosAbandonados extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $carritosAbandonados = Carrito_abandonado::all();
+        // $carritosAbandonados = Carrito_abandonado::all();
         $user_id = Auth::user()->id;
         return view('tiendanube.carritosabandonados.reporte_v2', compact('user_id'));
-        return view('tiendanube.carritosabandonados.reporte', compact('carritosAbandonados','user_id'));
+        // return view('tiendanube.carritosabandonados.reporte', compact('carritosAbandonados','user_id'));
     }
     public function main($store_id)
     {
@@ -101,8 +106,11 @@ class CarritosAbandonados extends Controller
 
     public function query()
     {
-        $carritos = DB::select('select * from samira.carritos_abandonados
-                                where estado = 0;');
+        $carritos = DB::select('select id_carritos_abandonados as id_carritos, id_tienda_nube, nombre_contacto, cel_contacto,
+                                    email_contacto,total, estado, fecha, vendedora, (select count(*) from samira.notas_carritos_abandonados
+                                    where id_carritos_abandonados = id_carritos) as cant_notas
+                                    from samira.carritos_abandonados as carritos
+                                    where estado = 0');
         ob_start('ob_gzhandler');
         return Response::json($carritos);
     }

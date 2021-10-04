@@ -181,11 +181,7 @@
            //do some processing and return the param object
            return vendedoras;
        }
-
-       var iconFormatter= function(value, data, cell, row, options){ //plain text value
-           return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>";
-       };
-
+       
        $("#example-table").tabulator({
                 height: "550px",
            initialSort:[
@@ -199,15 +195,17 @@
                     {title: "Total", field: "total", sortable: true, width: 110, bottomCalc:"sum",bottomCalcParams:{precision:2}},
                     {title: "Email", field: "email_contacto", sortable: true, width: 250},
                     {title: "Fecha", field: "fecha", sortable: true, width: 145},
-                    {title: "Notas",width:100, align:"center", formatter:iconFormatter, cellClick:function(e, cell) {
+                    {title: "Notas", width:100, align:"center", formatter:function iconFormatter(cell){
+                        return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>" + cell.getRow().getData()['cant_notas']}
+                        ,cellClick:function(e, cell) {
                         console.log(cell.getRow().getData())
-                        notas_carrito(cell.getRow().getData()['id_carritos_abandonados'],cell.getRow().getData()['nombre_contacto'])
+                        notas_carrito(cell.getRow().getData()['id_carritos'],cell.getRow().getData()['nombre_contacto'])
 
                     }},
                     {title:"Cerrar",width:110, align:"center", formatter:"buttonTick", cellClick:function(e, cell){
                         if (confirm("Esta seguro que quiere cerrar el carrito abandonado de " + cell.getRow().getData()['nombre_contacto'] + "?")) {
                             $.ajax({
-                                url: '/carritosAbandonados/notasCarritos?id_carrito=' + cell.getRow().getData()['id_carritos_abandonados'],
+                                url: '/carritosAbandonados/notasCarritos?id_carrito=' + cell.getRow().getData()['id_carritos'],
                                 dataType : "json",
                                 success : function(json) {
                                     console.log(isEmptyObject(json))
@@ -322,6 +320,7 @@
                        console.log(json)
                        document.getElementById("textarea").value = "";
                        refreshfunctionComentario()
+                       llenarTabla()
                    }
                });
            } else alert("Debe agregar una nota")
