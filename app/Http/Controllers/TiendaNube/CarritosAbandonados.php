@@ -110,7 +110,8 @@ class CarritosAbandonados extends Controller
                                     email_contacto,total, estado, fecha, vendedora, (select count(*) from samira.notas_carritos_abandonados
                                     where id_carritos_abandonados = id_carritos) as cant_notas
                                     from samira.carritos_abandonados as carritos
-                                    where estado = 0');
+                                    where estado = 0
+                                    ORDER by fecha DESC ');
         ob_start('ob_gzhandler');
         return Response::json($carritos);
     }
