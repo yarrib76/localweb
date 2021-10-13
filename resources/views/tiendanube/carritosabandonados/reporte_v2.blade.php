@@ -281,7 +281,7 @@
                success : function(json) {
                    $.each(json, function(index, json){
                        table.append("<tr><td>"+json['nombre']+"</td><td>"+json['comentario']+
-                               "</td><td>"+json['fecha']+"</td>"+ "</tr>");
+                               "</td><td>"+json['fechaFormateada']+"</td>"+ "</tr>");
                    });
                }
            });
@@ -337,7 +337,7 @@
                success : function(json) {
                    $.each(json, function(index, json){
                        table.append("<tr><td>"+json['nombre']+"</td><td>"+json['comentario']+
-                               "</td><td>"+json['fecha']+"</td>"+ "</tr>");
+                               "</td><td>"+json['fechaFormateada']+"</td>"+ "</tr>");
                    });
                }
            });

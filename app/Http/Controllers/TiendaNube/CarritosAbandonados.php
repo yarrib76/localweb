@@ -141,7 +141,7 @@ class CarritosAbandonados extends Controller
     {
         $id_carrito = Input::get('id_carrito');
         DB::statement("SET lc_time_names = 'es_ES'");
-        $notas_carrito = DB::select('SELECT DATE_FORMAT(fecha, "%d de %M %Y %k:%i") AS fecha, usuarios.name as nombre,
+        $notas_carrito = DB::select('SELECT DATE_FORMAT(fecha, "%d de %M %Y %k:%i") AS fechaFormateada, usuarios.name as nombre,
                                         notas_carritos.notas as comentario
                                         from samira.notas_carritos_abandonados as notas_carritos
                                         INNER JOIN samira.users as usuarios ON usuarios.id = notas_carritos.users_id
