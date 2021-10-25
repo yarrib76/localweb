@@ -417,6 +417,7 @@
                         <option value="Volante">Volante</option>
                         <option value="Caminando">Caminando</option>
                         <option value="Vivo">Vivo</option>
+                        <option value="No Responde">No Responde</option>
                     </select>
                 </div>
             </div>
