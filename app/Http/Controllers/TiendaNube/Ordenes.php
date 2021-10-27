@@ -67,6 +67,7 @@ class Ordenes extends Controller
                 //dd($orden->products);
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
+                $fechaProveedor = date('Y-m-d H:i:s',strtotime($orden->created_at));
                 if ($crearPedido && ($fecha >= $fechaInicio)){
                     /* Verifico si el cambo localidad esta lleno, si es así utilizo ese campo del form, de lo contrario utilizo city*/
                     if ($orden->customer->default_address->locality){
@@ -85,7 +86,8 @@ class Ordenes extends Controller
                                             ,'OrdenWeb' => $orden->number
                                             ,'TotalWeb' => $orden->total
                                             ,'Tienda' =>$tienda
-                                            ,'Articulos' => $orden->products];
+                                            ,'Articulos' => $orden->products
+                                            ,'FechaProveedor' => $fechaProveedor];
                     $count++;
                 }
             }
@@ -188,7 +190,8 @@ class Ordenes extends Controller
             'OrdenWeb' => $orden->OrdenWeb,
             'cajera' => 'ReplicaTN',
             'totalweb' => $orden->TotalWeb,
-            'local' => $orden->Tienda
+            'local' => $orden->Tienda,
+            'fecha_proveedor' => $orden->FechaProveedor
         ]);
         $this->crearOrdenArticulo($resultControlPedido,$orden);
     }
