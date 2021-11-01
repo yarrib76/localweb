@@ -24,7 +24,7 @@
                             <button class="btn btn-primary" onclick="sincro('1043936',{{$id_corrida}})">Sincro</button>
                         @elseif (substr(Request::url('http://dona.com'),0,15) == 'http://dona.com')
                             <button class="btn btn-primary" onclick="sincro('972788',{{$id_corrida}})">Sincro</button>
-                        @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
+                        @elseif (substr(Request::url('http://donalab2.dyndns.org'),0,26) == 'http://donalab.dyndns.org')
                             <button class="btn btn-primary" onclick="sincro('972788',{{$id_corrida}})">Sincro</button>
                         @endif -->
                         <input type="checkbox" id="chkOrdenCompra" name="chkOrdenCompra1">

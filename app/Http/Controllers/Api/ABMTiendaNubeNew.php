@@ -214,20 +214,28 @@ class ABMTiendaNubeNew extends Controller
                         ]);
                     }
                    */
-                    $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
-                        'price' => $precioAydua->query($articuloLocal[0])[0]['PrecioVenta'],
-                        'stock' => $this->verificoStock($cantidad,$artiCant)
-                    ]);
-                    /*
-                    $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
-                        'price' => "",
-                        'stock' => $this->verificoStock($cantidad)
-                    ]);*/
+                    if ($articuloLocal[0]['Web'] == 1) {
+                        // dd($articuloLocal[0]['Web']);
+                        $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
+                            'price' => $precioAydua->query($articuloLocal[0])[0]['PrecioVenta'],
+                            'stock' => $this->verificoStock($cantidad, $artiCant)
+                        ]);
+                        $statusEcommerceSinc->update([
+                            'status' => 'OK',
+                            'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
+                        ]);
+                    } else {
+                        /*
+                        $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
+                            'price' => "",
+                            'stock' => $this->verificoStock($cantidad)
+                        ]);*/
 
-                    $statusEcommerceSinc->update([
-                        'status' => 'OK',
-                        'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
-                    ]);
+                        $statusEcommerceSinc->update([
+                            'status' => 'Excluido',
+                            'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
+                        ]);
+                    }
                 }catch (Exception $e){
                     $statusEcommerceSinc->update([
                         'status' => "ErrorAPI", //$e->response->body->code,

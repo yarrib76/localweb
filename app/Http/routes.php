@@ -54,6 +54,8 @@ Route::get('/reporteArticuloProveedor', 'Reporte\ArticuloProveedores@query');
 Route::get('/dashboard', 'Reporte\Dashboard@reporte');
 Route::get('/transferenciasarticulos', 'Reporte\TransferenciasArticulos@query');
 Route::get('/reportesArticulosWeb', 'Reporte\ReportesArticulosWeb@getArticulosWeb');
+Route::get('/reportesArticulosWebnew/query', 'Reporte\ReportesArticulosWeb@query');
+Route::post('/reportesArticulosWebnew/update', 'Reporte\ReportesArticulosWeb@update');
 Route::get('/altaArticulo', 'Articulo\Alta@nuevoArticulo');
 Route::get('/ordenesCompras', 'Articulo\OrdenesCompras@query');
 Route::get('/reporteFinanciero', 'Contabilidad\ReporteFinanciero@query');

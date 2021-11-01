@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 
 class ReportesArticulosWeb extends Controller
 {
@@ -19,10 +21,11 @@ class ReportesArticulosWeb extends Controller
     }
     public function getArticulosWeb()
     {
-        $articulos = Articulos::where('Web', '=', 1)
-            ->get();
-        $articulosWeb = $this->queryFinal($articulos);
-        return view('reporte.reportearticulosweb', compact('articulosWeb'));
+      //  $articulos = Articulos::where('Web', '=', 1)
+      //      ->get();
+      //  $articulosWeb = $this->queryFinal($articulos);
+        return view('reporte.reportearticuloswebnew', compact('articulosWeb'));
+        // return view('reporte.reportearticulosweb', compact('articulosWeb'));
     }
 
     public function queryFinal($articulos)
@@ -46,5 +49,33 @@ class ReportesArticulosWeb extends Controller
             return "InStock";
         }
         return "OutOfStock";
+    }
+
+    public function query ()
+    {
+            $resultadoQuery = DB::select('select articulo, detalle, cantidad,
+                                            CASE
+                                                when web = 0 then "No"
+                                                when web = 1 then "Si"
+                                            END as sincronizar
+                                          from samira.articulos');
+        ob_start('ob_gzhandler');
+        return Response::json($resultadoQuery);
+    }
+
+    public function update()
+    {
+        $datos = Input::all();
+        if ($datos['sincronizar'] == "No"){
+            DB::select ('UPDATE `samira`.`articulos`
+                SET
+                `Web` = 0
+                where articulo = "'.$datos['articulo'].'" ');
+        } else {
+            DB::select ('UPDATE `samira`.`articulos`
+                SET
+                `Web` = 1
+                where articulo = "'.$datos['articulo'].'" ');
+        }
     }
 }

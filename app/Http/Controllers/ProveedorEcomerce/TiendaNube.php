@@ -22,8 +22,9 @@ class TiendaNube extends Controller
         $provEcomerces = DB::select ('SELECT ecomerce.id as corrida, ecomerce.proveedor, usuario.name as nombre, ecomerce.id_cliente,ecomerce.tienda, ecomerce.fecha,
                                     count(status) as total,
                                     SUM(CASE WHEN status.status = "OK" THEN 1 ELSE 0 END) as ok,
-                                    SUM(CASE WHEN status.status <> "OK" and status.status <> "Pending" THEN 1 ELSE 0 END) as error,
-                                    SUM(CASE WHEN status.status = "Pending" THEN 1 ELSE 0 END) as pending
+                                    SUM(CASE WHEN status.status <> "OK" and status.status <> "Pending" and "Excluido" THEN 1 ELSE 0 END) as error,
+                                    SUM(CASE WHEN status.status = "Pending" THEN 1 ELSE 0 END) as pending,
+                                    SUM(CASE WHEN status.status = "Excluido" THEN 1 ELSE 0 END) as excluido
                                     FROM samira.provecomerce ecomerce
                                     inner join samira.users as usuario ON usuario.id = ecomerce.id_users
                                     inner join samira.statusecomercesincro status ON status.id_provecomerce = ecomerce.id

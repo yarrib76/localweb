@@ -83,10 +83,12 @@ class ReplicaTN extends Controller
                 $cantidad = ($articuloLocal[0]->Cantidad - $articuloEnPedidos[0]->Cantidad);
             }else $cantidad = $articuloLocal[0]->Cantidad;
             try {
-                $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
-                    'price' => $precioAydua->query($articuloLocal[0])[0]['PrecioVenta'],
-                    'stock' => $this->verificoStock($cantidad,$artiCant)
-                ]);
+                if ($articuloLocal[0]['Web'] == 1) {
+                    $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
+                        'price' => $precioAydua->query($articuloLocal[0])[0]['PrecioVenta'],
+                        'stock' => $this->verificoStock($cantidad, $artiCant)
+                    ]);
+                }
                 /*
                 $response = $api->put("products/$product_id_TN/variants/$articulo_id_TN", [
                     'price' => "",
