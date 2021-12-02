@@ -18,7 +18,7 @@
                         <button onclick="verificar('Donatella')" class="buttonDonatella">Donatella</button>
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Local')" class="buttonViamore">Viamore</button>
-                    @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
+                    @elseif (substr(Request::url('http://donalab2.dyndns.org'),0,26) == 'http://donalab2.dyndns.org')
                         <button onclick="verificar('Local')" class="buttonDonatella">Local</button>
                         <button onclick="verificar('Samira')" class="buttonSamira">Samira</button>
                         <button onclick="verificar('Viamore')" class="buttonViamore">Viamore</button>
@@ -42,6 +42,7 @@
                             <tr>
                                 <th>Articulo</th>
                                 <th>Detalle</th>
+                                <th>ProveedorSKU</th>
                                 <th>TotalVendido</th>
                                 <th>TotalStock</th>
                                 <th>PrecioVenta</th>
@@ -49,6 +50,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                                <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
@@ -203,6 +205,7 @@
                         }else colorCelda = 'FFFFFF'
                         table.append("<tr><td>" + json['Articulo'] + "</td><td>"
                                 + json['Detalle'] + "</td><td>"
+                                + json['ProveedorSKU'] + "</td><td>"
                                 + json['TotalVendido'] + "</td><td bgcolor=" + colorCelda + ">"
                                 + json['TotalStock'] + "</td><td>"
                                 + json['PrecioVenta'] + "</td><td>"

@@ -29,7 +29,7 @@ class ReporteArticulos extends Controller
         /* Ojo puede que este limitado a una cantidad de registros */
         if ($esWeb == 'SI'){
             if ($proveedor == "SinFiltro"){
-                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, art.ProveedorSKU, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
                         art.ImageName, repoArt.PrecioVenta, StatusSincr.imagessrc
                         FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
                         JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
@@ -40,7 +40,7 @@ class ReporteArticulos extends Controller
                         GROUP BY fac.Articulo
                         ORDER BY TotalVendido DESC;');
             }else {
-                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, ProveedorSKU, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
                         repoArt.PrecioVenta, StatusSincr.imagessrc
                         FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
                         JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
@@ -54,7 +54,7 @@ class ReporteArticulos extends Controller
             }
         } else {
             if ($proveedor == "SinFiltro"){
-                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, ProveedorSKU, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock,
                         art.ImageName, repoArt.PrecioVenta
                         FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
                         JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
@@ -62,7 +62,7 @@ class ReporteArticulos extends Controller
                         GROUP BY fac.Articulo
                         ORDER BY TotalVendido DESC;');
             }else {
-                $query = DB::select('SELECT fac.Articulo, art.Detalle, SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
+                $query = DB::select('SELECT fac.Articulo, art.Detalle, ProveedorSKU,  SUM(fac.cantidad) AS TotalVendido,  art.Cantidad AS TotalStock, art.ImageName,
                         repoArt.PrecioVenta
                         FROM samira.factura AS fac JOIN samira.articulos AS art ON fac.Articulo = art.Articulo
                         JOIN samira.reportearticulo AS repoArt ON fac.Articulo = repoArt.Articulo
