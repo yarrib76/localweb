@@ -119,7 +119,7 @@ class CarritosAbandonados extends Controller
     public function vendedoras()
     {
         $arrVendedoras = [];
-        $vendedoras = Vendedores::all();
+        $vendedoras = Vendedores::where('Tipo', '<>', 0)->get();
         for ($i = 0; $i < $vendedoras->count(); $i++ ){
             $arrVendedoras[$i] = [$vendedoras[$i]->Nombre => $vendedoras[$i]->Nombre];
         }
