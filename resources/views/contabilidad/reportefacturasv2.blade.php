@@ -157,11 +157,12 @@
                     {title: "Fecha", field: "fecha", sortable: true, width: 100,headerFilter:"input"},
                     {title: "NroFactura", field: "NroFactura", sortable: true, width: 110,headerFilter:"input"},
                     {title: "Total", field: "Totales", sortable: true, width: 110,headerFilter:"input"},
-                    {title: "Envio", field: "Envio", sortable: true, width: 90},
+                    {title: "Envio", field: "Envio", sortable: true, width: 80},
                     {title: "TotalEnvio", field: "TotalConEnvio", sortable: true, width: 110,headerFilter:"input"},
                     {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110,headerFilter:"input", bottomCalc:"sum"},
                     {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup,headerFilter:"input"},
                     {title: "Estado", field: "nombre", sortable: true, width: 110,editor:"select",editorParams:estadosLookup,headerFilter:"input"},
+                    {title: "Comentario", field: "comentario", width: 115,editor:"textarea"},
                 ],
                 cellEdited:function(cell, value, data){
                     $.ajax({

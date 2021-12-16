@@ -32,7 +32,7 @@ class Facturas extends Controller
                                     Envio, totalEnvio as TotalConEnvio, tipo_pagos.tipo_pago, estados.nombre, fecha,
                                     (SELECT
                                     CASE WHEN TotalConEnvio = 0 THEN ROUND(sum(Totales - (Totales * 2.5 / 100)),2)
-                                        else ROUND(sum(TotalConEnvio - (TotalConEnvio * 2.5 / 100)),2) end) as Cobrar
+                                        else ROUND(sum(TotalConEnvio - (TotalConEnvio * 2.5 / 100)),2) end) as Cobrar, comentario
                                     FROM samira.facturah
                                     inner join samira.clientes as clientes ON clientes.id_clientes = facturah.id_clientes
                                     inner join samira.tipo_pagos ON tipo_pagos.id_tipo_pagos = facturah.id_tipo_pago
@@ -74,6 +74,7 @@ class Facturas extends Controller
         $articulo->update([
             'id_tipo_pago' => $id_tipo_pagos[0]->id_tipo_pagos,
             'id_estados_financiera' => $id_estados_financiera[0]->id_estado,
+            'comentario' =>$datos['comentario']
         ]);
         return;
     }
