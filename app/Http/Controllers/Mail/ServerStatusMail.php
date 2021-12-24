@@ -45,7 +45,6 @@ class ServerStatusMail extends Controller
         $statusSlave_SQL_Running = $result['Slave_SQL_Running'];
         $reporteSincro = new ReporteSincro();
         $resFinal = $reporteSincro->crearReporte($mysqliProd,$mysqliConti);
-        dd($resFinal);
         $data = array('Slave_IO_Running'=>$statusSlave_IO_Running,'Slave_SQL_Running'=>$statusSlave_SQL_Running,
             'diasBackup'=>(int)$total,'resFinal'=>$resFinal);
         switch (gethostname()){
