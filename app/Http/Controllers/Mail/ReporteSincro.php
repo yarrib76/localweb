@@ -17,7 +17,7 @@ class ReporteSincro
     {
         $resultProd = $mysqliProd->query("call checkRepli");
         $resultConti = $mysqliConti->query("call checkRepli");
-        dd($resultConti);
+        dd($resultProd);
         // $result=$result->fetch_assoc();
         $registrosProd[] = '';
         $registrosConti[] = '';
