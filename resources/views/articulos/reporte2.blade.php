@@ -39,7 +39,7 @@
             margin: auto;
             padding: 20px;
             width: 50%;
-            height: 35%;
+            height: 50%;
             overflow-y: auto;
         }
         /* The Close Button */
@@ -167,7 +167,9 @@
             }
             image.src = imagenName;
             image.style.width = '550px';
-            image.style.height = '300px';
+            image.style.height = '300px'
+            image.style.maxWidth = '50%';
+            image.style.maxHeight = '50%';
         }
     </script>
 @stop
