@@ -26,6 +26,7 @@ class ReporteSincro
             $registrosConti[$countConti] = ['Campo' => $row[0], 'Registros' => $row[1]];
             $countConti++;
         }
+        dd($registrosConti);
         while ($row = mysqli_fetch_array($resultProd)){
             $registrosProd[$countProd] = ['Campo' => $row[0], 'Registros' => $row[1]];
             $countProd++;
