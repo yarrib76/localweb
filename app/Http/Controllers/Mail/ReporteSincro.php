@@ -43,6 +43,7 @@ class ReporteSincro
                 }
             }
         }else $resFinal[0] = ['Estado' => 'Error Sincro'];
+        dd($resFinal);
         return $resFinal;
     }
 }
