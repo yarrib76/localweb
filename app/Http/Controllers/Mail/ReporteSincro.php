@@ -30,7 +30,7 @@ class ReporteSincro
             $registrosProd[$countProd] = ['Campo' => $row[0], 'Registros' => $row[1]];
             $countProd++;
         }
-        dd($registrosProd);
+
         $resFinal[] = '';
         if (count($registrosProd) == count($registrosConti)){
             for ($i =  0; $i <= count($registrosProd)-1; $i++){
