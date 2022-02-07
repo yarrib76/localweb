@@ -25,8 +25,10 @@ class Vendedoras extends Controller
                                 SUM(CASE WHEN ctrl.total < 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "EnProceso",
                                 SUM(CASE WHEN ctrl.total > 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "ParaFacturar"
                                 FROM samira.controlpedidos as ctrl
+                                inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
                                 where ctrl.fecha > "2020-05-01" and
                                 ctrl.vendedora not in ("Veronica"," ")
+                                and vendedores.tipo <> 0
                                 group by vendedora;');
         return view('reporte.reportevendedoras', compact('consultas'));
     }
