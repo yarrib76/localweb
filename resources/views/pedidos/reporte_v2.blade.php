@@ -42,7 +42,7 @@
                                 {{$a = 1}}
                                 @foreach($pedidos as $pedido)
                                     <tr>
-                                        <td>{{$pedido->nropedido}}</td>
+                                        <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}' target="_blank"> {{$pedido->nropedido}} </a></td>
                                         <td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         <td>{{$pedido->vendedora}}</td>
