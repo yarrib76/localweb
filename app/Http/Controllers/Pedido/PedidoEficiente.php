@@ -18,12 +18,18 @@ class PedidoEficiente extends Controller
         $nroPedido = Input::get('nroPedido');
         $articulosEnPedidos = DB::SELECT('SELECT ordenArti.articulo as NroArticulo, ordenArti.detalle as Detalle,
                                             (SELECT count(ordenArti.articulo) as EnPedidos FROM samira.controlpedidos as ctrlPedido
-                                            inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
-                                            where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and ctrlPedido.instancia = 1
-                                            and ordenArti.articulo = NroArticulo
-                                            and ordenArti.estado_Arti_Pedido = 0
-                                            group by (ordenArti.articulo)
-                                            having EnPedidos > 1) as EnPedidos
+                                                inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
+                                                where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and ctrlPedido.instancia = 1
+                                                and ordenArti.articulo = NroArticulo
+                                                and ordenArti.estado_Arti_Pedido = 0
+                                                group by (ordenArti.articulo)
+                                                having EnPedidos > 1) as EnPedidos,
+                                            (SELECT imagessrc FROM samira.statusecomercesincro as StatusSincr
+                                                where articulo = NroArticulo
+                                                and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
+                                                order by id_provecomerce Desc limit 1)) as Imagesrc,
+                                            (SELECT cantidad from samira.articulos
+                                                where articulo = nroArticulo) as Stock
                                             FROM samira.controlpedidos as ctrlPedido
                                             inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
                                             where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and ctrlPedido.instancia = 1
@@ -38,10 +44,9 @@ class PedidoEficiente extends Controller
         $vendedora = Input::get('vendedora');
         $articulo = Input::get('nroArticulo');
         $query = DB::SELECT('SELECT ctrlPedido.NroPedido, ctrlPedido.OrdenWeb, ordenArti.articulo as Articulo,
-                                ordenArti.detalle as Detalle, ordenArti.cantidad as Cantidad, Arti.Cantidad as Stock
+                                ordenArti.detalle as Detalle, ordenArti.cantidad as Cantidad
                                 FROM samira.controlpedidos as ctrlPedido
                                 inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
-                                inner join samira.articulos as Arti on Arti.Articulo = ordenArti.Articulo
                                 where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and instancia = 1
                                 and ordenArti.estado_Arti_Pedido = 0
                                 and ordenArti.articulo = "'.$articulo.'";');

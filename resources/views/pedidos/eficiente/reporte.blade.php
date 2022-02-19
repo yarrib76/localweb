@@ -17,7 +17,8 @@
                             <tbody>
                             @foreach($articulosEnPedidos as $articuloEnPedido)
                                 <tr>
-                                    <td><a onclick="artiPedidos('{{$articuloEnPedido->NroArticulo}}', '{{$vendedora}}', '{{$articuloEnPedido->Detalle}}')"> {{$articuloEnPedido->NroArticulo}}</a></td>
+                                    <td><a onclick="artiPedidos('{{$articuloEnPedido->NroArticulo}}', '{{$vendedora}}',
+                                                '{{$articuloEnPedido->Detalle}}', '{{$articuloEnPedido->Imagesrc}}', '{{$articuloEnPedido->Stock}}')"> {{$articuloEnPedido->NroArticulo}}</a></td>
                                     <td>{{$articuloEnPedido->Detalle}}</td>
                                     <td>{{$articuloEnPedido->EnPedidos}}</td>
                             @endforeach
@@ -33,6 +34,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Articulo: </h3>
+            <button target='_blank' class = 'btn btn-primary' onclick="verImagen()">Foto</button>
             <div class="col-xs-12 col-xs-offset-0 well">
                 <table id="articulo-table" class="table table table-scroll table-striped">
                     <thead>
@@ -41,6 +43,13 @@
                     </thead>
                 </table>
             </div>
+        </div>
+    </div>
+    <div id="modalImage" class="modal">
+        <span class="closeImagen">&times;</span>
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img id="imagen">
         </div>
     </div>
     <style>
@@ -69,21 +78,28 @@
             width: 86%;
             overflow-y: auto;
         }
+        #modalImage {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 50%;
+            height: 50%;
+            overflow-y: auto;
+        }
         /* The Close Button */
-        .close {
+        .closeImagen {
             color: #aaaaaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
 
-        .close:hover,
-        .close:focus {
+        .closeImagen:hover,
+        .closeImagen:focus {
             color: #000;
             text-decoration: none;
             cursor: pointer;
         }
-
     </style>
 @stop
 @section('extra-javascript')
@@ -101,6 +117,7 @@
 
     <script type="text/javascript">
         var modal = document.getElementById('myModal');
+        var imagenName;
         $(document).ready( function () {
             $('#reporte').DataTable({
                         dom: 'Bfrtip',
@@ -113,7 +130,8 @@
         } );
 
         //Llena la tabla y muestra el modal con los pedidos que tienen el artículo.
-        function artiPedidos (nroArticulo,vendedora,detalle){
+        function artiPedidos (nroArticulo,vendedora,detalle,imagesrc,stock){
+            imagenName = imagesrc
             llenarTabla(nroArticulo,vendedora)
             // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("close")[0];
@@ -133,7 +151,7 @@
                     modal.style.display = "none";
                 }
             }
-            $(".modal-content h3").html("Articulo: " + nroArticulo + " " + detalle);
+            $(".modal-content h3").html("Articulo: " + nroArticulo + " - " + detalle + " - En Stock:" + stock);
         }
         //custom max min header filter
         var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
@@ -222,7 +240,6 @@
                 {title: "NroPedido", field: "NroPedido", sortable: true, width: 110,headerFilter:"input"},
                 {title: "OrdenWeb", field: "OrdenWeb", sortable: true, width: 110,headerFilter:"input"},
                 {title: "Cantidad", field: "Cantidad", sortable: true, width: 100},
-                {title: "Stock", field: "Stock", sortable: true, width: 80},
                 {title:"Cerrar",width:110, align:"center", formatter:"buttonTick", cellClick:function(e, cell){
                     if (confirm("Esta seguro que ya agrago el articulo " + cell.getRow().getData()['Articulo'] + "?")) {
                             cell.getRow().delete()
@@ -254,6 +271,30 @@
 
         function refresh (){
             location.reload();
+        }
+        function verImagen() {
+            // console.log(imagenName)
+            var image = document.getElementById("imagen");
+            var modalImage = document.getElementById('modalImage');
+            // Get the <span> element that closes the modal
+            var spanImage = document.getElementsByClassName("closeImagen")[0];
+            // When the user clicks the button, open the modal
+            modalImage.style.display = "block";
+            // When the user clicks on <span> (x), close the modal
+            spanImage.onclick = function () {
+                modalImage.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modalImage) {
+                    modalImage.style.display = "none";
+                }
+            }
+            image.src = imagenName;
+            image.style.width = '550px';
+            image.style.height = '300px'
+            image.style.maxWidth = '50%';
+            image.style.maxHeight = '50%';
         }
     </script>
 @stop

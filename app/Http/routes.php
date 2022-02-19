@@ -88,8 +88,8 @@ Route::get('asignaciongeneral','Pedido\AsignacionGeneral@inbox');
 Route::get('asignaciongeneral/query','Pedido\AsignacionGeneral@query');
 Route::get('asignaciongeneral/vendedoras','Pedido\AsignacionGeneral@vendedoras');
 Route::post('asignaciongeneral/update','Pedido\AsignacionGeneral@update');
-Route::get('pedidoeficienteindex','Pedido\PedidoEficiente@index');
 /*Pedidos Eficientes*/
+Route::get('pedidoeficienteindex','Pedido\PedidoEficiente@index');
 Route::get('/pedidoeficienteArticuloPedidos','Pedido\PedidoEficiente@articuloPedidos');
 Route::post('/pedidoeficienteArticuloPedidos/agregar','Pedido\PedidoEficiente@agregar');
 
