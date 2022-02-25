@@ -106,11 +106,12 @@ class CarritosAbandonados extends Controller
 
     public function query()
     {
+        $estado = (Input::get('estado'));
         $carritos = DB::select('select id_carritos_abandonados as id_carritos, id_tienda_nube, nombre_contacto, cel_contacto,
                                     email_contacto,total, estado, fecha, vendedora, (select count(*) from samira.notas_carritos_abandonados
                                     where id_carritos_abandonados = id_carritos) as cant_notas
                                     from samira.carritos_abandonados as carritos
-                                    where estado = 0
+                                    where estado = "'.$estado.'"
                                     ORDER by fecha DESC ');
         ob_start('ob_gzhandler');
         return Response::json($carritos);

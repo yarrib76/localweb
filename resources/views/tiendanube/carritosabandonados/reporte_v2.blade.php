@@ -4,7 +4,8 @@
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">CheckOut
+                    <div class="panel-heading">CheckOut Estado <input onclick="cambioEstado()" type="checkbox" id="estado">
+                        <h5 className='element' id='estadoActual'></h5>
                     </div>
                     <div class="panel-body">
                         <div id="example-table"></div>
@@ -78,8 +79,10 @@
 
    <script>
        var globalCarrito_id
+       var estado = 0
        $(document).ready( function () {
-           llenarTabla();
+           llenarTabla(estado);
+           document.getElementById('estadoActual').innerText = "Abiertos"
            paramLookup();
        })
 
@@ -263,8 +266,8 @@
                }
            }
        }
-       function llenarTabla() {
-           $("#example-table").tabulator("setData", '/carritosAbandonados/query');
+       function llenarTabla(estado) {
+           $("#example-table").tabulator("setData", '/carritosAbandonados/query?estado=' + estado);
        }
        $(window).resize(function () {
            $("#example-table").tabulator("redraw");
@@ -320,7 +323,7 @@
                        console.log(json)
                        document.getElementById("textarea").value = "";
                        refreshfunctionComentario()
-                       llenarTabla()
+                       cambioEstado()
                    }
                });
            } else alert("Debe agregar una nota")
@@ -353,6 +356,17 @@
                if (event.target == modalComentario) {
                    modalComentario.style.display = "none";
                }
+           }
+       }
+
+       function cambioEstado(){
+           if (document.getElementById("estado").checked){
+               llenarTabla(1);
+               document.getElementById('estadoActual').innerText = "Cerrados"
+           } else
+           {
+               llenarTabla(0);
+               document.getElementById('estadoActual').innerText = "Abiertos"
            }
        }
     </script>
