@@ -237,6 +237,7 @@
             columns: [
                 {title: "Articulo", field: "Articulo", sortable: true, width: 200},
                 {title: "Detalle", field: "Detalle", sortable: true, width: 250},
+                {title: "Cliente", field: "Cliente", sortable: true, width: 230,headerFilter:"input"},
                 {title: "NroPedido", field: "NroPedido", sortable: true, width: 110,headerFilter:"input"},
                 {title: "OrdenWeb", field: "OrdenWeb", sortable: true, width: 110,headerFilter:"input"},
                 {title: "Cantidad", field: "Cantidad", sortable: true, width: 100},

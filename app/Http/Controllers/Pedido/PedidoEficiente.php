@@ -44,9 +44,10 @@ class PedidoEficiente extends Controller
         $vendedora = Input::get('vendedora');
         $articulo = Input::get('nroArticulo');
         $query = DB::SELECT('SELECT ctrlPedido.NroPedido, ctrlPedido.OrdenWeb, ordenArti.articulo as Articulo,
-                                ordenArti.detalle as Detalle, ordenArti.cantidad as Cantidad
+                                ordenArti.detalle as Detalle, ordenArti.cantidad as Cantidad, concat(clientes.nombre,",",clientes.apellido) as Cliente
                                 FROM samira.controlpedidos as ctrlPedido
                                 inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
+                                inner join samira.clientes ON clientes.id_clientes = ctrlPedido.id_cliente
                                 where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and instancia = 1
                                 and ordenArti.estado_Arti_Pedido = 0
                                 and ordenArti.articulo = "'.$articulo.'";');
