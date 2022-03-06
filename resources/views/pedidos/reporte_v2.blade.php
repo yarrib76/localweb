@@ -42,8 +42,11 @@
                                 {{$a = 1}}
                                 @foreach($pedidos as $pedido)
                                     <tr>
-                                        <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}' target="_blank"> {{$pedido->nropedido}} </a></td>
-                                        <td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
+                                        @if(!empty($pedido->cantArtiEnPedidos))
+                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}' class="badgeActivo" data-badge="{{$pedido->cantArtiEnPedidos}}"> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
+                                        @else
+                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}'> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
+                                        @endif
                                         <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         <td>{{$pedido->vendedora}}</td>
                                         <td>{{$pedido->nrofactura}}</td>
@@ -212,6 +215,23 @@
             background-position: bottom right;
             background-repeat: no-repeat;
             resize: none;
+        }
+        .badgeActivo {
+            position:relative;
+        }
+        .badgeActivo[data-badge]:after {
+            content:attr(data-badge);
+            position:absolute;
+            top:0px;
+            right:-40px;
+            font-size:.7em;
+            background:yellow;
+            color:black;
+            width:18px;height:18px;
+            text-align:center;
+            line-height:18px;
+            border-radius:50%;
+            box-shadow:0 0 1px #333;
         }
     </style>
 

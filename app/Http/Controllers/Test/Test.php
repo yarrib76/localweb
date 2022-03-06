@@ -22,6 +22,21 @@ class Test extends Controller
 {
     public function Test()
     {
+        $con = '';
+        $res = array();
+        try {
+            $con = new \mysqli(env("DB_HOST", "localhost"), env("DB_USERNAME", "root"), env("DB_PASSWORD", 'NetAcc10'), env("DB_DATABASE", "samira"))
+            or die('Could not connect to the database server' . mysqli_connect_error());
+            if (empty($con))
+                throw new \Exception("Connection is only allowed for authorized personnels.", 5001);
+        } catch (\Exception $e) {
+            echo 'Caught exception: ', $e->getMessage(), "\n";
+        }
+        $r = $con->query('CALL vendedoras_en_proceso()');
+        while ($row = mysqli_fetch_array($r)) {
+            $res[] = $row;
+        }
+        dd($res);
         $carbon = new \Carbon\Carbon();
         $datetime = $carbon->now();
         $datetime = (date(DATE_ISO8601, strtotime($datetime)));

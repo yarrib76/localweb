@@ -57,7 +57,8 @@ class Vendedoras extends Controller
         $user_id = Auth::user()->id;
         $vendedora = Input::get('Vendedora');
         DB::statement("SET lc_time_names = 'es_ES'");
-        $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
+        //Lo reemplaze por un StorePrecedure para saber la cantidad de articulos repetidos con la utilidad de pedido efecientes
+        /* $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
                     pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb,
                     pedidos.instancia, clientes.id_clientes, clientes.encuesta
@@ -66,7 +67,9 @@ class Vendedoras extends Controller
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
                     where pedidos.estado = 1 and pedidos.total < 1 and vendedora = "'. $vendedora .'"
                     group by nropedido');
-
+        */
+        //Utilizo esta función para llamar a un store procedure
+        $pedidos = $this->consultaVendedorasEnProceso($vendedora);
         $estado = 'Procesados';
         return view('pedidos.reporte_v2', compact('pedidos','user_id','estado'));
     }
@@ -106,5 +109,26 @@ class Vendedoras extends Controller
 
         $estado = 'Procesados';
         return view('pedidos.reporte_v2', compact('pedidos','user_id','estado'));
+    }
+
+    private function consultaVendedorasEnProceso($vendedora)
+    {
+        //Utilizo esta conexción para llamar a un Store Procedure
+        $con = '';
+        $res = array();
+        try {
+            $con = new \mysqli(env("DB_HOST", "localhost"), env("DB_USERNAME", "root"), env("DB_PASSWORD", 'NetAcc10'), env("DB_DATABASE", "samira"))
+            or die('Could not connect to the database server' . mysqli_connect_error());
+            if (empty($con))
+                throw new \Exception("Connection is only allowed for authorized personnels.", 5001);
+        } catch (\Exception $e) {
+            echo 'Caught exception: ', $e->getMessage(), "\n";
+        }
+        $r = $con->query('CALL vendedoras_en_proceso("'.$vendedora.'")');
+        while ($row = mysqli_fetch_object($r)) {
+
+            $res[] = $row;
+        }
+        return $object = (object) $res;
     }
 }

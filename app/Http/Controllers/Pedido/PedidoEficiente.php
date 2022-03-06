@@ -27,7 +27,8 @@ class PedidoEficiente extends Controller
                                             (SELECT imagessrc FROM samira.statusecomercesincro as StatusSincr
                                                 where articulo = NroArticulo
                                                 and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
-                                                order by id_provecomerce Desc limit 1)) as Imagesrc,
+                                                order by id_provecomerce Desc limit 1)
+                                                group by articulo) as Imagesrc,
                                             (SELECT cantidad from samira.articulos
                                                 where articulo = nroArticulo) as Stock
                                             FROM samira.controlpedidos as ctrlPedido
