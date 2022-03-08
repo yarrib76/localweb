@@ -205,6 +205,7 @@
             <h5 id="DatosTelefono">Telefono:</h5>
             <h5 id="DatosLocalidad">Localidad:</h5>
             <h5 id="DatosProvincia">Provincia:</h5>
+            <h5 id="DatosEncuesta">Encuesta:</h5>
         </div>
     </div>
     <style>
@@ -592,6 +593,8 @@
                     $(".modal-content #DatosTelefono").html( "Telefono: " + json[0]['telefono']);
                     $(".modal-content #DatosLocalidad").html( "Localidad: " + json[0]['localidad']);
                     $(".modal-content #DatosProvincia").html( "Provincia: " + json[0]['provincias']['nombre']);
+                    $(".modal-content #DatosEncuesta").html( "Encuesta: " + json[0]['encuesta']);
+
                 }
             });
             // Get the modal
