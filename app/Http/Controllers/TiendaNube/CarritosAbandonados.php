@@ -34,7 +34,7 @@ class CarritosAbandonados extends Controller
     }
     public function main($store_id)
     {
-        $cantidadPorPaginas = 10;
+        $cantidadPorPaginas = 2;
         $tnConnect = new TnubeConnect();
         // $store_id = Input::get('store_id');
         // $store_id = 1043936;
