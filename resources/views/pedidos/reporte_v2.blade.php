@@ -47,7 +47,11 @@
                                         @else
                                             <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}'> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         @endif
-                                        <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
+                                        @if ($pedido->empaquetado == 1)
+                                                <td data-order = "{{$pedido->fechaParaOrdenFact}}">{{$pedido->FechaFactura}}</td>
+                                        @else
+                                                <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
+                                        @endif
                                         <td>{{$pedido->vendedora}}</td>
                                         <td>{{$pedido->nrofactura}}</td>
                                         <td>{{$pedido->total}}</td>
