@@ -64,11 +64,18 @@ class PanelController extends Controller
     {
         $user_id = Auth::user()->id;
         DB::statement("SET lc_time_names = 'es_ES'");
+        //Realizo esta operación para saber si el pedido esta mas de x días facturado y en empaquetado
+        $fecha_actual = date("Y-m-d");
+        $fecha_limite = (date("Y-m-d",strtotime($fecha_actual."- 3 days")));
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden,
                     DATE_FORMAT(facturah.fecha, "%d de %M %Y") FechaFactura, facturah.fecha as fechaParaOrdenFact, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
                     pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb,
-                    pedidos.instancia, clientes.id_clientes, clientes.encuesta
+                    pedidos.instancia, clientes.id_clientes, clientes.encuesta,
+                    CASE
+                        WHEN "'.$fecha_limite.'" <= facturah.fecha then 1
+                        ELSE 2
+                    END as vencimiento
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id

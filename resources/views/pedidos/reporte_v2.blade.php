@@ -47,10 +47,14 @@
                                         @else
                                             <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}'> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         @endif
-                                        @if ($pedido->empaquetado == 1)
+                                        @if ($pedido->empaquetado == 1 and $pedido->estado <> 2)
+                                            @if ($pedido->vencimiento == 2)
+                                                <td bgcolor="#FF0000" data-order = "{{$pedido->fechaParaOrdenFact}}">{{$pedido->FechaFactura}}</td>
+                                            @else
                                                 <td data-order = "{{$pedido->fechaParaOrdenFact}}">{{$pedido->FechaFactura}}</td>
+                                            @endif
                                         @else
-                                                <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
+                                            <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         @endif
                                         <td>{{$pedido->vendedora}}</td>
                                         <td>{{$pedido->nrofactura}}</td>
@@ -72,7 +76,7 @@
                                         @if($pedido->estado == 0 and $pedido->empaquetado == 1)
                                             <td bgcolor="#87CEFA">Empaquetado</td>
                                             <td><button type="button" value="botonVer" class="btn btn-info" onclick="cargoTablaPopup({{$pedido->nropedido}});"><i class="fa fa-eye"></i></button>
-                                                <button type="button" value="botoncancel" class="btn btn-warning" onclick="calcelarPedido({{$pedido->nropedido}});" ><i class="fa fa-eraser"></i></button>
+                                                <button type="button" value="botoncancel" disabled class="btn btn-warning" onclick="calcelarPedido({{$pedido->nropedido}});" ><i class="fa fa-eraser"></i></button>
                                                 <input type="button" value="Entregado" id="botonEntregado{{$a++}}" class="btn btn-primary" onclick="pedidoEntregado({{$pedido->nropedido}},{{$a - 1}});">
                                                 <button id="boton{{$a}}" value="Agregar Transporte" class="btn btn-danger" onclick="modificoTransporte({{$pedido->nropedido}},'{{$pedido->transporte}}',{{$a - 1}});"><i class="fa fa-bus"></i></button>
                                                 @if(!empty($pedido->comentarios))
