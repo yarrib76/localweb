@@ -184,7 +184,7 @@
            //do some processing and return the param object
            return vendedoras;
        }
-       
+
        $("#example-table").tabulator({
                 height: "550px",
            initialSort:[
