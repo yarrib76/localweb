@@ -11,6 +11,7 @@
                             <tr>
                                 <th>Articulo</th>
                                 <th>Detalle</th>
+                                <th>Cantidad</th>
                                 <th>EnPedido</th>
                             </tr>
                             </thead>
@@ -20,6 +21,7 @@
                                     <td><a onclick="artiPedidos('{{$articuloEnPedido->NroArticulo}}', '{{$vendedora}}',
                                                 '{{$articuloEnPedido->Detalle}}', '{{$articuloEnPedido->Imagesrc}}', '{{$articuloEnPedido->Stock}}')"> {{$articuloEnPedido->NroArticulo}}</a></td>
                                     <td>{{$articuloEnPedido->Detalle}}</td>
+                                    <td>{{$articuloEnPedido->Cantidad}}</td>
                                     <td>{{$articuloEnPedido->EnPedidos}}</td>
                             @endforeach
                             </tbody>

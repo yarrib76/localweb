@@ -52,6 +52,7 @@ Route::get('auth/logout', 'Auth\AuthController@logout');
 Route::get('/reporteArticulo', 'Reporte\Articulo@index');
 Route::get('/reporteArticuloProveedor', 'Reporte\ArticuloProveedores@query');
 Route::get('/dashboard', 'Reporte\Dashboard@reporte');
+Route::get('/panelcontrol', 'Reporte\PanelControl@panel');
 Route::get('/transferenciasarticulos', 'Reporte\TransferenciasArticulos@query');
 Route::get('/reportesArticulosWeb', 'Reporte\ReportesArticulosWeb@getArticulosWeb');
 Route::get('/reportesArticulosWebnew/query', 'Reporte\ReportesArticulosWeb@query');

@@ -24,6 +24,13 @@ class PedidoEficiente extends Controller
                                                 and ordenArti.estado_Arti_Pedido = 0
                                                 group by (ordenArti.articulo)
                                                 having EnPedidos > 1) as EnPedidos,
+                                            (SELECT sum(ordenArti.cantidad) as Cantidad FROM samira.controlpedidos as ctrlPedido
+                                                inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
+                                                where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and ctrlPedido.instancia = 1
+                                                and ordenArti.articulo = NroArticulo
+                                                and ordenArti.estado_Arti_Pedido = 0
+                                                group by (ordenArti.articulo)
+                                                having EnPedidos > 1) as Cantidad,
                                             (SELECT imagessrc FROM samira.statusecomercesincro as StatusSincr
                                                 where articulo = NroArticulo
                                                 and StatusSincr.id_provecomerce = (select id_provecomerce from samira.statusecomercesincro
