@@ -339,9 +339,9 @@
 
         $("#example-table").tabulator({
             height: "190px",
-            // initialSort:[
-            //     {column:"NroFactura", dir:"asc"}, //sort by this first
-            //   ],
+            initialSort:[
+                {column:"EnProceso", dir:"desc"}, //sort by this first
+            ],
             columns: [
                 {title: "Vendedora", field: "vendedoraConsulta", sortable: true, width: 110},
                 {title: "Proceso", field: "EnProceso", sortable: true, width: 90,formatter: function color(cell) {
