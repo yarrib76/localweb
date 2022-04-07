@@ -62,7 +62,7 @@
                                 <div id="jobs-wrapper">
                                     <a href="#">
                                         <div class="panel-footer" data-panel="job-details">
-                                            <span class="pull-left">Operativa</span>
+                                            <span class="pull-left">Pedidos</span>
                                             <a href="/reportevendedoras" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
                                             <div class="clearfix"></div>
                                         </div>
