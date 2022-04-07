@@ -97,28 +97,8 @@
                                 <h1 id="pedidosPendientes"></h1>
                             </td>
                             <td>
-                                <div id = "RecuadroPanel" class="panel panel-primary">
-                                    <div id = "Operativa" class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-12 text-left">
-                                                <div class="huge">
-                                                    <h4>Venta Salon</h4> <h4>2</h4>
-                                                    <h4>Pededidos Facturados</h4> <h4>5</h4>
-                                                    <h4>Pedidos Pasados</h4> <h4>2</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="jobs-wrapper">
-                                        <a href="#">
-                                            <div class="panel-footer" data-panel="job-details">
-                                                <span class="pull-left">Operativa</span>
-                                                <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+                                <h2 style="text-align: center">Pedidos Pasados</h2>
+                                <h1 id="pedidosPasados"></h1>
                             </td>
                         </tr>
                     </tbody>
@@ -174,6 +154,12 @@
             font-size: 140px;
             text-align: center;
         }
+        #pedidosPasados {
+            font-weight: bold;
+            color: rgba(64, 9, 21, 0.98);
+            font-size: 140px;
+            text-align: center;
+        }
         #tres{ border:1px solid black;
             width:49.5%;
             display:inline-block;
@@ -191,9 +177,38 @@
 <script type="text/javascript" src="../../js/charts/loader.js"></script>
 @section('extra-javascript')
     <script type="text/javascript">
-        var cantFactPorPedidos = 0
-        var cantFactPorSalon = 0
-        $(document).ready( function () {
+        idleTimer = null;
+        idleState = false;
+        idleWait = 20000;
+
+        (function ($) {
+
+            $(document).ready(function () {
+                recargaDatos()
+                $('*').bind('mousemove keydown scroll', function () {
+
+                    clearTimeout(idleTimer);
+
+                    if (idleState == true) {
+
+                        // Reactivated event
+                    }
+
+                    idleState = false;
+
+                    idleTimer = setTimeout(function () {
+
+                        // Idle Event
+                        recargaDatos()
+
+                        idleState = true; }, idleWait);
+                });
+
+                $("body").trigger("mousemove");
+
+            });
+        }) (jQuery)
+        function recargaDatos(){
             $.ajax({
                 url: "/consultaempaquetados",
                 dataType: "json",
@@ -236,6 +251,7 @@
                         };
                         var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
                         chart.draw(data, options);
+                        document.getElementById('pedidosPasados').textContent = (json['cantPedidosPasados'][0]['cantPedidos']);
                     }
                 },
             })
@@ -246,6 +262,6 @@
                     document.getElementById('pedidosPendientes').textContent = (json[0]['pedidosPendientes']);
                 }
             });
-        })
+        }
     </script>
 @stop
