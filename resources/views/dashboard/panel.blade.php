@@ -23,7 +23,7 @@
                                     <a href="#">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Empaquetados</span>
-                                            <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                            <a href="/empaquetados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
                                             <div class="clearfix"></div>
                                         </div>
                                     </a>
@@ -47,7 +47,7 @@
                                     <a href="#">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Carritos Abandonados</span>
-                                            <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                            <a href="/carritosAbandonados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
                                             <div class="clearfix"></div>
                                         </div>
                                     </a>
@@ -63,7 +63,7 @@
                                     <a href="#">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Operativa</span>
-                                            <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                            <a href="/reportevendedoras" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
                                             <div class="clearfix"></div>
                                         </div>
                                     </a>
