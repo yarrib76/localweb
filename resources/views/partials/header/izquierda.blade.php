@@ -128,6 +128,9 @@
                     <li><a href="/carritosAbandonados"> Gestion Carritos Abandonados </a></li>
                 </ul>
             </li>
+            <li class="dropdown">
+                <li><a href="/panelcontrol"> DashBoard </a></li>
+            </li>
      <!--       <li class="dropdown">
                 <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
                     Articulos <b class="caret"></b>
