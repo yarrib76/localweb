@@ -34,6 +34,7 @@
                     <li><a href="/panelPedidos"> Pedidos </a></li>
                     <li><a href="/reportevendedoras"> Vendedoras </a></li>
                     <li><a href="/notasadmin">Administrar Notas</a></li>
+                    <li><a href="/panelcontrol"> DashBoard </a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -127,9 +128,6 @@
                     <li><a href="/tiendanubeGetArticulosInbox"> Exportar Articulos A Excel </a></li>
                     <li><a href="/carritosAbandonados"> Gestion Carritos Abandonados </a></li>
                 </ul>
-            </li>
-            <li class="dropdown">
-                <li><a href="/panelcontrol"> DashBoard </a></li>
             </li>
      <!--       <li class="dropdown">
                 <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
