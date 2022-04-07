@@ -31,8 +31,8 @@ class Consultas extends Controller
         $empaquetadosSinTransporte = DB::select('select count(*) as SinTransporte from samira.controlPedidos as pedidos
                                             INNER JOIN samira.facturah as facturah ON facturah.NroFactura = pedidos.nrofactura
                                             where pedidos.estado = 0 and pedidos.empaquetado = 1 and (transporte = "" or transporte is null);');
-        if (!empty($empaquetadosTotal[0]->Total)){
-            $empaquetados['empaquetadosVencidos']=$empaquetadosTotal[0]->Total;
+        if (!empty($empaquetadosTotal[0]->suma)){
+            $empaquetados['empaquetadosVencidos']=$empaquetadosTotal[0]->suma;
         } else $empaquetados['empaquetadosVencidos'] = 0;
 
         $empaquetados['empaquetadosPendientes']=$empaquetadosPendientes[0]->Pendientes;
