@@ -201,6 +201,7 @@ Route::post('/carritosAbandonados/finalizarCarrito', 'TiendaNube\CarritosAbandon
 Route::get('/consultaempaquetados', 'Reporte\DashBoard\Consultas@consultaEmpaquetados');
 Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritosAbandanados');
 Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
+Route::get('/tablaPedidos', 'Reporte\DashBoard\Consultas@tablaPedidos');
 
 
 Route::group(['prefix' => 'api'],

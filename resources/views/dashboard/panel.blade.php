@@ -57,15 +57,7 @@
                         <td>
                             <div id = "RecuadroPanel" class="panel panel-primary">
                                 <div id = "Operativa" class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-12 text-left">
-                                            <div class="huge">
-                                                <h4>Venta Salon</h4> <h4>2</h4>
-                                                <h4>Pededidos Facturados</h4> <h4>5</h4>
-                                                <h4>Pedidos Pasados</h4> <h4>2</h4>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div id="example-table"></div>
                                 </div>
                                 <div id="jobs-wrapper">
                                     <a href="#">
@@ -110,23 +102,23 @@
         #Empaquetados{
             background: #36ffb1;
             color: #fff;
-            width: 278px;
+            width: 350px;
         }
         #CarritosAbandonados{
             background: #28b3ff;
             color: #fff;
-            width: 278px;
+            width: 350px;
         }
         #Operativa{
             background: #3526ff;
             color: #fff;
-            width: 278px;
+            width: 350px;
         }
         #jobs-wrapper {
-            width: 278px;
+            width: 350px;
         }
         #RecuadroPanel {
-            width: 280px;
+            width: 353px;
         }
         body, html {
             height: 100%;
@@ -174,8 +166,12 @@
         }
     </style>
 @stop
-<script type="text/javascript" src="../../js/charts/loader.js"></script>
+
 @section('extra-javascript')
+    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
+    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+    <script type="text/javascript" src="../../js/charts/loader.js"></script>
+
     <script type="text/javascript">
         idleTimer = null;
         idleState = false;
@@ -185,6 +181,7 @@
 
             $(document).ready(function () {
                 recargaDatos()
+                llenarTabla()
                 $('*').bind('mousemove keydown scroll', function () {
 
                     clearTimeout(idleTimer);
@@ -262,6 +259,111 @@
                     document.getElementById('pedidosPendientes').textContent = (json[0]['pedidosPendientes']);
                 }
             });
+        }
+        //custom max min header filter
+        var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
+
+            var end;
+
+            var container = document.createElement("span");
+
+            //create and style inputs
+            var start = document.createElement("input");
+            start.setAttribute("type", "number");
+            start.setAttribute("placeholder", "Min");
+            start.setAttribute("min", 0);
+            start.setAttribute("max", 100);
+            start.style.padding = "4px";
+            start.style.width = "50%";
+            start.style.boxSizing = "border-box";
+
+            start.value = cell.getValue();
+
+            function buildValues(){
+                success({
+                    start:start.value,
+                    end:end.value,
+                });
+            }
+
+            function keypress(e){
+                if(e.keyCode == 13){
+                    buildValues();
+                }
+
+                if(e.keyCode == 27){
+                    cancel();
+                }
+            }
+
+            end = start.cloneNode();
+
+            start.addEventListener("change", buildValues);
+            start.addEventListener("blur", buildValues);
+            start.addEventListener("keydown", keypress);
+
+            end.addEventListener("change", buildValues);
+            end.addEventListener("blur", buildValues);
+            end.addEventListener("keydown", keypress);
+
+
+            container.appendChild(start);
+            container.appendChild(end);
+
+            return container;
+        }
+
+        //custom max min filter function
+        function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams){
+            //headerValue - the value of the header filter element
+            //rowValue - the value of the column in this row
+            //rowData - the data for the row being filtered
+            //filterParams - params object passed to the headerFilterFuncParams property
+
+            if(rowValue){
+                if(headerValue.start != ""){
+                    if(headerValue.end != ""){
+                        return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                    }else{
+                        return rowValue >= headerValue.start;
+                    }
+                }else{
+                    if(headerValue.end != ""){
+                        return rowValue <= headerValue.end;
+                    }
+                }
+            }
+
+            return true; //must return a boolean, true if it passes the filter.
+        }
+
+        $("#example-table").tabulator({
+            height: "190px",
+            // initialSort:[
+            //     {column:"NroFactura", dir:"asc"}, //sort by this first
+            //   ],
+            columns: [
+                {title: "Vendedora", field: "vendedoraConsulta", sortable: true, width: 110},
+                {title: "Proceso", field: "EnProceso", sortable: true, width: 90,formatter: function color(cell) {
+                    if (cell.getRow().getData()['VencidosEnPreceso'] == 0) {
+                        cell.getElement().css({"background-color": "red"});
+                    }
+                    return cell.getRow().getData()['EnProceso'];
+                }
+                },
+                {title: "Facturar", field: "ParaFacturar", sortable: true, width: 100, formatter: function color(cell) {
+                    if (cell.getRow().getData()['VencidosParaFacturar'] == 0) {
+                        cell.getElement().css({"background-color": "red"});
+                    }
+                    return cell.getRow().getData()['ParaFacturar'];
+                }
+                },
+            ],
+
+        });
+
+        function llenarTabla() {
+            $("#example-table").tabulator("setData", '/tablaPedidos');
         }
     </script>
 @stop

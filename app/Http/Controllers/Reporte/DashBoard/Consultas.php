@@ -23,7 +23,7 @@ class Consultas extends Controller
                                     INNER JOIN samira.facturah as facturah ON facturah.NroFactura = pedidos.nrofactura
                                     where pedidos.estado = 0 and pedidos.empaquetado = 1
                                     group by suma
-                                    having suma = 1;');
+                                    having suma = 0;');
         $empaquetadosPendientes = DB::select('select count(*) as Pendientes from samira.controlPedidos as pedidos
                                             INNER JOIN samira.facturah as facturah ON facturah.NroFactura = pedidos.nrofactura
                                             where pedidos.estado = 0 and pedidos.empaquetado = 1');
@@ -31,8 +31,8 @@ class Consultas extends Controller
         $empaquetadosSinTransporte = DB::select('select count(*) as SinTransporte from samira.controlPedidos as pedidos
                                             INNER JOIN samira.facturah as facturah ON facturah.NroFactura = pedidos.nrofactura
                                             where pedidos.estado = 0 and pedidos.empaquetado = 1 and (transporte = "" or transporte is null);');
-        if (!empty($empaquetadosTotal[0]->suma)){
-            $empaquetados['empaquetadosVencidos']=$empaquetadosTotal[0]->suma;
+        if (!empty($empaquetadosTotal[0]->Total)){
+            $empaquetados['empaquetadosVencidos']=$empaquetadosTotal[0]->Total;
         } else $empaquetados['empaquetadosVencidos'] = 0;
 
         $empaquetados['empaquetadosPendientes']=$empaquetadosPendientes[0]->Pendientes;
@@ -90,6 +90,44 @@ class Consultas extends Controller
         $consulta['cantidadVentasSalon'] = $cantidadVentasSalon;
         $consulta['cantidadPedidosFacturados'] = $cantidadPedidosFacturados;
         $consulta['cantPedidosPasados'] = $cantPedidosPasados;
+        return Response::json($consulta);
+    }
+
+    public function tablaPedidos()
+    {
+        $fecha_actual = date("Y-m-d");
+        $fecha_limite = (date("Y-m-d",strtotime($fecha_actual."- 3 days")));
+        $consulta = DB::select('SELECT ctrl.vendedora as vendedoraConsulta,
+                                SUM(CASE WHEN ctrl.total < 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "EnProceso",
+                                SUM(CASE WHEN ctrl.total > 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "ParaFacturar",
+                                (SELECT
+                                if ("'.$fecha_limite.'" <= ctrl.fecha, 1, 0) as suma
+                                FROM samira.controlpedidos as ctrl
+                                inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
+                                where ctrl.fecha > "2020-05-01" and
+                                ctrl.vendedora not in ("Veronica"," ")
+                                and vendedores.tipo <> 0
+                                and ctrl.total < 1 and ctrl.estado = 1
+                                and vendedora = vendedoraConsulta
+                                group by suma
+                                having suma = 0) as VencidosEnPreceso,
+                                (SELECT
+                                if ("'.$fecha_limite.'" <= ctrl.fecha, 1, 0) as suma
+                                FROM samira.controlpedidos as ctrl
+                                inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
+                                where ctrl.fecha > "2020-05-01" and
+                                ctrl.vendedora not in ("Veronica"," ")
+                                and vendedores.tipo <> 0
+                                and ctrl.total > 1 and ctrl.estado = 1
+                                and vendedora = vendedoraConsulta
+                                group by suma
+                                having suma = 0) as VencidosParaFacturar
+                                FROM samira.controlpedidos as ctrl
+                                inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
+                                where ctrl.fecha > "2020-05-01" and
+                                ctrl.vendedora not in ("Veronica"," ")
+                                and vendedores.tipo <> 0
+                                group by vendedora;');
         return Response::json($consulta);
     }
 }
