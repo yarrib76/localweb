@@ -197,6 +197,12 @@ Route::get('/carritosAbandonados/notasCarritos', 'TiendaNube\CarritosAbandonados
 Route::get('/carritosAbandonados/agregarNota', 'TiendaNube\CarritosAbandonados@agrrgarNotaCarritoAbandonado');
 Route::post('/carritosAbandonados/finalizarCarrito', 'TiendaNube\CarritosAbandonados@finalizarCarrito');
 
+/*DashBoar Panel de Control*/
+Route::get('/consultaempaquetados', 'Reporte\DashBoard\Consultas@consultaEmpaquetados');
+Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritosAbandanados');
+Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
+
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');
