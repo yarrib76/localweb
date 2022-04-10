@@ -101,18 +101,24 @@
     <style>
         #Empaquetados{
             background: #36ffb1;
-            color: #fff;
+            color: #05353a;
             width: 350px;
         }
         #CarritosAbandonados{
             background: #28b3ff;
-            color: #fff;
+            color: #05353a;
             width: 350px;
         }
         #Operativa{
             background: #3526ff;
             color: #fff;
             width: 350px;
+        }
+        #empaquetados_Vencidos{
+            color: #ff1a0e;
+        }
+        #carritosAbandonadosSinAsignar{
+            color: #ff1a0e;
         }
         #jobs-wrapper {
             width: 350px;
