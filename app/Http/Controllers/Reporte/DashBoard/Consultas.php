@@ -121,7 +121,29 @@ class Consultas extends Controller
                                 and ctrl.total > 1 and ctrl.estado = 1
                                 and vendedora = vendedoraConsulta
                                 group by suma
-                                having suma = 0) as VencidosParaFacturar
+                                having suma = 0) as VencidosParaFacturar,
+								(SELECT
+								if ("'.$fecha_actual.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
+								FROM samira.controlpedidos as ctrl
+								inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
+								where ctrl.fecha > "2020-05-01" and
+								ctrl.vendedora not in ("Veronica"," ")
+								and vendedores.tipo <> 0
+								and ctrl.total < 1 and ctrl.estado = 1
+								and vendedora = vendedoraConsulta
+								group by suma
+								having suma = 0) as NotasVencidosEnPreceso,
+                                (SELECT
+								if ("'.$fecha_actual.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
+								FROM samira.controlpedidos as ctrl
+								inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
+								where ctrl.fecha > "2020-05-01" and
+								ctrl.vendedora not in ("Veronica"," ")
+								and vendedores.tipo <> 0
+								and ctrl.total > 1 and ctrl.estado = 1
+								and vendedora = vendedoraConsulta
+								group by suma
+								having suma = 0) as NotasVencidosParaFacturar
                                 FROM samira.controlpedidos as ctrl
                                 inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
                                 where ctrl.fecha > "2020-05-01" and

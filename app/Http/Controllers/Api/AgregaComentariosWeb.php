@@ -4,10 +4,12 @@ namespace Donatella\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use Donatella\Models\ComentariosPedidos;
+use Donatella\Models\ControlPedidos;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
@@ -22,6 +24,9 @@ class AgregaComentariosWeb extends Controller
             'comentario' => Input::get('textarea'),
             'fecha' => $fecha
         ]);
+        /*Actualizo la fecha en la que se agrego la nota */
+        DB::select('update samira.controlpedidos SET fecha_ultima_nota = "'.$fecha.'"
+                    where id = "'.Input::get('nroControlPedido').'";');
         return Response::json('ok');
     }
 }

@@ -351,14 +351,14 @@
             columns: [
                 {title: "Vendedora", field: "vendedoraConsulta", sortable: true, width: 110},
                 {title: "Proceso", field: "EnProceso", sortable: true, width: 90,formatter: function color(cell) {
-                    if (cell.getRow().getData()['VencidosEnPreceso'] == 0) {
+                    if (cell.getRow().getData()['VencidosEnPreceso'] == 0 && cell.getRow().getData()['NotasVencidosEnPreceso'] == 0) {
                         cell.getElement().css({"background-color": "red"});
                     }
                     return cell.getRow().getData()['EnProceso'];
                 }
                 },
                 {title: "Facturar", field: "ParaFacturar", sortable: true, width: 100, formatter: function color(cell) {
-                    if (cell.getRow().getData()['VencidosParaFacturar'] == 0) {
+                    if (cell.getRow().getData()['VencidosParaFacturar'] == 0 && cell.getRow().getData()['NotasVencidosParaFacturar'] == 0) {
                         cell.getElement().css({"background-color": "red"});
                     }
                     return cell.getRow().getData()['ParaFacturar'];
