@@ -121,7 +121,7 @@ class Consultas extends Controller
                                 and vendedores.tipo <> 0
                                 and ctrl.total > 1 and ctrl.estado = 1
                                 and vendedora = vendedoraConsulta
-                                and fecha_proveedor <= "'.$fecha_limite.'" 
+                                and fecha <= "'.$fecha_limite.'"
                                 group by suma
                                 having suma = 0) as VencidosParaFacturar,
 								(SELECT
@@ -133,7 +133,7 @@ class Consultas extends Controller
 								and vendedores.tipo <> 0
 								and ctrl.total < 1 and ctrl.estado = 1
 								and vendedora = vendedoraConsulta
-								and fecha_proveedor <= "'.$fecha_limite.'"
+								and fecha <= "'.$fecha_limite.'"
 								group by suma
 								having suma = 0) as NotasVencidosEnPreceso,
                                 (SELECT
