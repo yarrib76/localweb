@@ -97,6 +97,7 @@ class Consultas extends Controller
     {
         $fecha_actual = date("Y-m-d");
         $fecha_limite = (date("Y-m-d",strtotime($fecha_actual."- 3 days")));
+        $fecha_limite_notas = (date("Y-m-d",strtotime($fecha_actual."- 3 days")));
         $consulta = DB::select('SELECT ctrl.vendedora as vendedoraConsulta,
                                 SUM(CASE WHEN ctrl.total < 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "EnProceso",
                                 SUM(CASE WHEN ctrl.total > 1 and ctrl.estado = 1  THEN 1 ELSE 0 END) as "ParaFacturar",
@@ -123,7 +124,7 @@ class Consultas extends Controller
                                 group by suma
                                 having suma = 0) as VencidosParaFacturar,
 								(SELECT
-								if ("'.$fecha_actual.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
+								if ("'.$fecha_limite_notas.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
 								FROM samira.controlpedidos as ctrl
 								inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
 								where ctrl.fecha > "2020-05-01" and
@@ -134,7 +135,7 @@ class Consultas extends Controller
 								group by suma
 								having suma = 0) as NotasVencidosEnPreceso,
                                 (SELECT
-								if ("'.$fecha_actual.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
+								if ("'.$fecha_limite_notas.'" <= ctrl.fecha_ultima_nota, 1, 0) as suma
 								FROM samira.controlpedidos as ctrl
 								inner join samira.vendedores as vendedores ON vendedores.nombre = ctrl.vendedora
 								where ctrl.fecha > "2020-05-01" and
