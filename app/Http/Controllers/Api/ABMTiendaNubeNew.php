@@ -74,7 +74,7 @@ class ABMTiendaNubeNew extends Controller
         $connect = $tnConnect->getConnectionTN($store_id);
 
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
-        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
+        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas,$tipo_bajada);
         $id_provEcomerce = ProvEcomerce::Create([
             'proveedor' => 'TiendaNube',
             'id_users' => auth()->user()->id,
@@ -87,7 +87,9 @@ class ABMTiendaNubeNew extends Controller
             try {
                 if($tipo_bajada == 'todo'){
                     $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
-                }else $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
+                }else if ($tipo_bajada == 'visible') {
+                    $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
+                }
                 foreach ($articulosTiendaNube->body as $articulo){
                     $image = 0;
                     if (!empty($articulo->images)){
@@ -267,9 +269,11 @@ class ABMTiendaNubeNew extends Controller
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
     Esta información la urilizo en el FOR para solicitar todas las pagínas que tienen los artículos*/
-    private function obtengoCantConsultas($api,$cantidadPorPaginas)
+    private function obtengoCantConsultas($api,$cantidadPorPaginas,$tipo_bajada)
     {
-        $query = $api->get("products?page=1&per_page=1");
+        if ($tipo_bajada == 'todo'){
+            $query = $api->get("products?page=1&per_page=1");
+        }else $query = $api->get("products?page=1&per_page=1&published=true");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
     }
