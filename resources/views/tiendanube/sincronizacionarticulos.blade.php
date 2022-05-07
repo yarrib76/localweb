@@ -10,8 +10,10 @@
                     <h3 class="panel-title" style="padding:12px 0px;font-size:25px;"><strong>Bajar Lista de Articulos de Tienda Nube</strong></h3>
                 </div>
                 <div class="panel-body" id="sincro">
-                    <input type="button" value="Bajar" class="btn btn-success" onclick="sincro({{$store_id}})">
+                    <input type="button" value="Completa" class="btn btn-success" onclick="sincro({{$store_id}},'todo')">
+                    <input type="button" value="Visibles" class="btn btn-success" onclick="sincro({{$store_id}},'visible')">
                 </div>
+
             </div>
         </div>
 
@@ -96,13 +98,13 @@
         // Get the modal
         var modalFinish = document.getElementById('myModalFinish');
         var modalError = document.getElementById('myModalError');
-        function sincro(store_id){
+        function sincro(store_id,tipo_bajada){
             // Get the modal
             var modal = document.getElementById('myModal');
             // When the user clicks the button, open the modal
             modal.style.display = "block";
             $.ajax({
-                url: '/api/tiendanube?store_id=' + store_id,
+                url: '/api/tiendanube?store_id=' + store_id + '&' + 'tipo_bajada=' + tipo_bajada,
                 dataType : "json",
                 success : function(json) {
                     console.log(json)

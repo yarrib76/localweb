@@ -69,6 +69,7 @@ class ABMTiendaNubeNew extends Controller
         Viamore = 1043936
         */
         $store_id = Input::get('store_id');
+        $tipo_bajada = Input::get('tipo_bajada');
         $tnConnect = new TnubeConnect();
         $connect = $tnConnect->getConnectionTN($store_id);
 
@@ -84,7 +85,9 @@ class ABMTiendaNubeNew extends Controller
 
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             try {
-                $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                if($tipo_bajada == 'todo'){
+                    $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                }else $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
                 foreach ($articulosTiendaNube->body as $articulo){
                     $image = 0;
                     if (!empty($articulo->images)){
