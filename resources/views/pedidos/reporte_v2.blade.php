@@ -43,9 +43,9 @@
                                 @foreach($pedidos as $pedido)
                                     <tr>
                                         @if(!empty($pedido->cantArtiEnPedidos))
-                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}' class="badgeActivo" data-badge="{{$pedido->cantArtiEnPedidos}}"> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
+                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}&cliente_nombre={{$pedido->nombre}}&cliente_apellido={{$pedido->apellido}}' class="badgeActivo" data-badge="{{$pedido->cantArtiEnPedidos}}"> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         @else
-                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}'> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
+                                            <td><a href='/pedidoeficienteindex/?nroPedido={{$pedido->nropedido}}&vendedora={{$pedido->vendedora}}&cliente_nombre={{$pedido->nombre}}&cliente_apellido?{{$pedido->apellido}}'> {{$pedido->nropedido}}  </a></td><td><a onclick="encuesta('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">{{$pedido->nombre}}, {{$pedido->apellido}}</a></td>
                                         @endif
                                         @if ($pedido->empaquetado == 1 and $pedido->estado <> 2)
                                             @if ($pedido->vencimiento == 2)

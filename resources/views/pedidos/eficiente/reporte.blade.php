@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-sm-12 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-cog">Articulos Del Pedido {{$nroPedido}} ({{$vendedora}}), Repetidos En Otros Pedidos </i> <button class="btn btn-primary" onclick="refresh()"><span class="glyphicon glyphicon-refresh"></span></button></div>
+                    <div class="panel-heading"><i class="fa fa-cog">Articulos Del Pedido {{$nroPedido}}, {{$cliente_nombre}} {{$cliente_apellido}} ({{$vendedora}}), Repetidos En Otros Pedidos </i> <button class="btn btn-primary" onclick="refresh()"><span class="glyphicon glyphicon-refresh"></span></button></div>
                     <div class="panel-body">
                         <table id="reporte" class="table table-striped table-bordered records_list">
                             <thead>

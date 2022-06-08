@@ -16,6 +16,8 @@ class PedidoEficiente extends Controller
     {
         $vendedora = Input::get('vendedora');
         $nroPedido = Input::get('nroPedido');
+        $cliente_nombre = Input::get('cliente_nombre');
+        $cliente_apellido = Input::get('cliente_apellido');
         $articulosEnPedidos = DB::SELECT('SELECT ordenArti.articulo as NroArticulo, ordenArti.detalle as Detalle,
                                             (SELECT count(ordenArti.articulo) as EnPedidos FROM samira.controlpedidos as ctrlPedido
                                                 inner join samira.ordenesarticulos as ordenArti ON ordenArti.id_controlPedidos = ctrlPedido.id
@@ -43,7 +45,7 @@ class PedidoEficiente extends Controller
                                             where ctrlPedido.estado = 1 and ctrlPedido.total < 1 and vendedora = "'. $vendedora .'" and ctrlPedido.instancia = 1
                                             and nropedido = "'. $nroPedido . '"
                                             having EnPedidos > 1');
-        return view('pedidos.eficiente.reporte', compact('articulosEnPedidos','vendedora','nroPedido'));
+        return view('pedidos.eficiente.reporte', compact('articulosEnPedidos','vendedora','nroPedido','cliente_nombre','cliente_apellido'));
     }
 
     public function articuloPedidos()
