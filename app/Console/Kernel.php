@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
          Commands\AutoSincTN::class,
          Commands\CompraAuto::class,
          Commands\CarritoAbandonado::class,
+         Commands\AutoSincroWebFull::class,
     ];
 
     /**
