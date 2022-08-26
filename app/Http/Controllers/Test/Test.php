@@ -20,7 +20,7 @@ use mysqli;
 //
 class Test extends Controller
 {
-    //Commit DashBoard.. 
+    //Commit miCorreo
     public function Test()
     {
         $con = '';
