@@ -203,6 +203,10 @@ Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritos
 Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
 Route::get('/tablaPedidos', 'Reporte\DashBoard\Consultas@tablaPedidos');
 
+/*Correo Argentino MiCorreo*/
+Route::get('/miCorreo','CorreoArgentino\miCorreo@index');
+Route::get('/miCorreoCargaDatos','CorreoArgentino\miCorreo@listarEvios');
+Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
 
 Route::group(['prefix' => 'api'],
     function () {

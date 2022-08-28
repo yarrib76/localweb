@@ -87,6 +87,7 @@ class Ordenes extends Controller
                                             ,'TotalWeb' => $orden->total
                                             ,'Tienda' =>$tienda
                                             ,'Articulos' => $orden->products
+                                            ,'CodigoPostal' => $orden->customer->billing_zipcode
                                             ,'FechaProveedor' => $fechaProveedor];
                     $count++;
                 }
@@ -164,6 +165,7 @@ class Ordenes extends Controller
             "Cuit" => $datos->Cuit,
             "Localidad" => $datos->Localidad,
             "Provincia" => "",
+            "CodigoPostal" => $datos->CodigoPostal,
             "Id_provincia" => $id_Provincia
         ]);
         return $cliente_id->id;
