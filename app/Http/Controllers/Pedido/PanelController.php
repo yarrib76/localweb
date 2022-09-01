@@ -116,6 +116,9 @@ class PanelController extends Controller
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
                     group by nropedido');
 
+        ob_start('ob_gzhandler');
+        return Response::json($pedidos);
+
         $estado = 'Todos';
         return view('pedidos.reporte', compact('pedidos','user_id','estado'));
     }
