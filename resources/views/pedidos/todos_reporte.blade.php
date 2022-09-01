@@ -154,6 +154,18 @@
             overflow-y: auto;
         }
     </style>
+    <style>
+        @-webkit-keyframes greenPulse {
+            from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+            50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+            to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+        }
+        #botonComent {
+            -webkit-animation-name: greenPulse;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+        }
+    </style>
 
     <div id="myModal" class="modal">
         <!-- Modal content -->
@@ -243,9 +255,16 @@
                             case "Cancelado": json[i]['Estado'] = "<a  style='background-color: #FF0000'</a>" + json[i]['Estado']
                                 break;
                         }
-                        json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
-                        + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
-                        + "<br/>" +  "<a onclick = comentario(" + json[i]['id'] + "," + json[i]['NroPedido'] +  "," + "'" + json[i]['Cliente']+ "'" + ") target='_blank' class = 'btn btn-success'> <i class='fa fa-book'></i> </a>"
+                        if (json[i]['Comentarios'] == null) {
+                            json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
+                            + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
+                            + "<br/>" +  "<a onclick = comentario(" + json[i]['id'] + "," + json[i]['NroPedido'] +  "," + "'" + json[i]['Cliente']+ "'" + ") id='botonSinComent' target='_blank' class = 'btn btn-success'> <i class='fa fa-book'></i> </a>"
+
+                        }else {
+                            json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
+                            + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
+                            + "<br/>" +  "<a onclick = comentario(" + json[i]['id'] + "," + json[i]['NroPedido'] +  "," + "'" + json[i]['Cliente']+ "'" + ") id='botonComent' target='_blank' class = 'btn btn-success'> <i class='fa fa-book'></i> </a>"
+                        }
                     }
                     $('#reporte').DataTable({
                                 dom: 'Bfrtip',
