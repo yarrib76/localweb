@@ -315,4 +315,7 @@ Route::group(['prefix' => 'api'],
 
         /*ABM Clientes*/
         Route::get('/abmclientes', 'Api\Clientes\GetClientes@consulta');
+
+        /*Reportes Pedidos*/
+        Route::get('/get_todos', 'Api\Pedidos\GetPedidos@todos');
     });
