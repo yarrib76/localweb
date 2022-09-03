@@ -318,4 +318,5 @@ Route::group(['prefix' => 'api'],
 
         /*Reportes Pedidos*/
         Route::get('/get_todos', 'Api\Pedidos\GetPedidos@todos');
+        Route::get('/get_facturados', 'Api\Pedidos\GetPedidos@facturados');
     });
