@@ -242,9 +242,7 @@
                 'contentType': 'application/json',
                 success : function(json) {
                     for ( var i=0, ien=json.length ; i<ien ; i++ ) {
-                  //      json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
-                  //      + "<br/>" +  "<a href='/articuloedit/"+ json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
-                  //      + "<br/>" +  "<a onclick = getFoto(" + json[i]['Articulo'] + ") ' target='_blank' class = 'btn btn-primary'>Foto</a>"
+                        /*
                         switch (json[i]['Estado']) {
                             case "Empaquetado": json[i]['Estado'] = "<a  style='background-color: #87CEFA'</a>" + json[i]['Estado']
                                 break;
@@ -255,6 +253,7 @@
                             case "Cancelado": json[i]['Estado'] = "<a  style='background-color: #FF0000'</a>" + json[i]['Estado']
                                 break;
                         }
+                        */
                         if (json[i]['Comentarios'] == null) {
                             json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
                             + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
@@ -284,7 +283,25 @@
                                     { "data": "OrdenWeb" },
                                     { "data": "Estado" },
                                     { "data": "Accion" }
-                                ]
+                                ],
+                                "rowCallback": function( row, data, index ) {
+                                    if ( data['Estado'] == "Empaquetado" )
+                                    {
+                                        $('td:eq(7)', row).css('background-color', '#87CEFA');
+                                    }
+                                    else if ( data["Estado"] == "Procesando" )
+                                    {
+                                        $('td:eq(7)', row).css('background-color', '#FFFF00');
+                                    }
+                                    else if ( data["Estado"] == "Facturado" )
+                                    {
+                                        $('td:eq(7)', row).css('background-color', '#00FF00');
+                                    }
+                                    else if ( data["Estado"] == "Cancelado" )
+                                    {
+                                        $('td:eq(7)', row).css('background-color', '#FF0000');
+                                    }
+                                }
                             }
                     );
                     modal.style.display = "none";

@@ -6,10 +6,16 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-cog">Facturados</i></div>
                     <div class="panel-body">
+                        <div>
+                            Agregar Columnas :
+                                  <a class="toggle-vis" data-column="7">TotalWeb</a> -
+                                  <a class="toggle-vis" data-column="8">Transporte</a> -
+                                  <a class="toggle-vis" data-column="9">Instancia</a>
+                        </div>
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>
                                 <tr>
-                                    <th>NroPedido</th>
+                                    <th>Pedido</th>
                                     <th>Cliente</th>
                                     <th>Fecha</th>
                                     <th>Vendedora</th>
@@ -234,6 +240,7 @@
     <!-- DataTables -->
 
     <script type="text/javascript">
+        var table;
         $(document).ready( function () {
             // Get the modal
             var modal = document.getElementById('myModal');
@@ -248,6 +255,7 @@
                   //      json[i]['Accion'] = "<a href='/barcode?articulo=" + json[i]['Articulo'] + " 'target='_blank' class = 'fa fa-barcode' style='font-size:38px;color:red'></a>"
                   //      + "<br/>" +  "<a href='/articuloedit/"+ json[i]['Articulo'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
                   //      + "<br/>" +  "<a onclick = getFoto(" + json[i]['Articulo'] + ") ' target='_blank' class = 'btn btn-primary'>Foto</a>"
+                        /*
                         switch (json[i]['Estado']) {
                             case "Empaquetado": json[i]['Estado'] = "<a  style='background-color: #87CEFA'</a>" + json[i]['Estado']
                                 break;
@@ -258,6 +266,7 @@
                             case "Cancelado": json[i]['Estado'] = "<a  style='background-color: #FF0000'</a>" + json[i]['Estado']
                                 break;
                         }
+                        */
                         if (json[i]['Comentarios'] == null) {
                             json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
                             + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
@@ -269,9 +278,8 @@
                             + "<br/>" +  "<a onclick = comentario(" + json[i]['id'] + "," + json[i]['NroPedido'] +  "," + "'" + json[i]['Cliente']+ "'" + ") id='botonComent' target='_blank' class = 'btn btn-success'> <i class='fa fa-book'></i> </a>"
                         }
                     }
-                    $('#reporte').DataTable({
+                    table = $('#reporte').DataTable({
                                 dom: 'Bfrtip',
-                                "autoWidth": false,
                                 buttons: [
                                     'excel'
                                 ],
@@ -290,7 +298,30 @@
                                     { "data": "Instancia" },
                                     { "data": "Estado" },
                                     { "data": "Accion" }
-                                ]
+                                ],
+                                "columnDefs": [
+                                    {
+                                        "targets": [ 7 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 8 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    },
+                                    {
+                                        "targets": [ 9 ],
+                                        "visible": false,
+                                        "searchable": true
+                                    }
+                                ],
+                                "rowCallback": function( row, data, index ) {
+                                   if ( data["Estado"] == "Facturado" )
+                                    {
+                                        $('td:eq(7)', row).css('background-color', '#00FF00');
+                                    }
+                                }
                             }
                     );
                     modal.style.display = "none";
@@ -460,7 +491,15 @@
                 }
             });
         }
+        $('a.toggle-vis').on( 'click', function (e) {
+            e.preventDefault();
 
+            // Get the column API object
+            var column = table.column( $(this).attr('data-column') );
+
+            // Toggle the visibility
+            column.visible( ! column.visible() );
+        } );
     </script>
 
 @stop
