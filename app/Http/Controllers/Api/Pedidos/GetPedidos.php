@@ -16,7 +16,7 @@ class GetPedidos extends Controller
     {
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS Fecha, pedidos.fecha as FechaParaOrden, nroPedido as NroPedido,
-                    concat(clientes.nombre,",",clientes.apellido) as Cliente, pedidos.nrofactura as Factura, pedidos.vendedora as Vendedora,
+                    REPLACE(concat(clientes.nombre,",",clientes.apellido)," ","_") as Cliente, pedidos.nrofactura as Factura, pedidos.vendedora as Vendedora,
                     pedidos.id as id, pedidos.total as Total, pedidos.ordenweb as OrdenWeb, comentarios.comentario as Comentarios,
                     pedidos.empaquetado as Empaquetado, pedidos.transporte as Transporte, pedidos.instancia,clientes.id_clientes,
                     CASE
@@ -38,7 +38,7 @@ class GetPedidos extends Controller
     {
         DB::statement("SET lc_time_names = 'es_ES'");
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS Fecha, pedidos.fecha as FechaParaOrden, nroPedido as NroPedido,
-                    concat(clientes.nombre,",",clientes.apellido) as Cliente, pedidos.nrofactura as Factura, pedidos.vendedora as Vendedora,
+                    REPLACE(concat(clientes.nombre,",",clientes.apellido)," ","_") as Cliente, pedidos.nrofactura as Factura, pedidos.vendedora as Vendedora,
                     pedidos.id as id, pedidos.total as Total, pedidos.ordenweb as OrdenWeb, comentarios.comentario as Comentarios,
                     pedidos.empaquetado as Empaquetado, pedidos.transporte as Transporte, pedidos.totalweb as TotalWeb,
                     clientes.id_clientes, clientes.encuesta,

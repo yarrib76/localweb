@@ -267,11 +267,11 @@
                                 break;
                         }
                         */
-                        if (json[i]['Comentarios'] == null) {
+                       if (json[i]['Comentarios'] == null) {
                             json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
                             + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
                             + "<br/>" +  "<a onclick = comentario(" + json[i]['id'] + "," + json[i]['NroPedido'] +  "," + "'" + json[i]['Cliente']+ "'" + ") id='botonSinComent' target='_blank' class = 'btn btn-success'> <i class='fa fa-book'></i> </a>"
-
+                            console.log(json[i]['Accion'] )
                         }else {
                             json[i]['Accion'] = "<br/>" +  "<a onclick = calcelarPedido(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-warning'>Cancel</a>"
                             + "<br/>" +  "<a onclick = cargoTablaPopup(" + json[i]['NroPedido'] + ") ' target='_blank' class = 'btn btn-info'>Ver</a>"
