@@ -187,6 +187,8 @@ Route::get('/listarfacturas', 'Contabilidad\Facturas@listarfacturas');
 Route::get('/tipo_pagos', 'Contabilidad\Facturas@tipo_pagos');
 Route::get('/estados_financiera', 'Contabilidad\Facturas@estados_financiera');
 Route::post('updateFactura/update','Contabilidad\Facturas@update');
+Route::get ('/reporteinversion','Contabilidad\ReporteInversion@index');
+Route::post ('/consultaInversion','Contabilidad\ReporteInversion@consulta');
 
 /*Carritos Abandonados*/
 Route::get('/carritosAbandonados', 'TiendaNube\CarritosAbandonados@index');
@@ -242,6 +244,7 @@ Route::group(['prefix' => 'api'],
         Route::get('/proveedoresSelect', 'Api\ProveedoresSelect@query');
         Route::get('/provinciasSelect', 'Api\ProvinciasSelect@query');
         Route::get('/relesWebSelect', 'Api\RolesSelect@query');
+        Route::get('/listaSelectProveeor','Api\ProveedoresSelect@selectAllProveedoresMultiple');
 
         Route::get('/getcontrolpedidos', 'Api\GetControlPedidosMobil@query');
         Route::get('/getpedidos', 'Api\GetPedidoMobil@query');
