@@ -100,6 +100,7 @@
                     <li><a href="/reportefacturas"> Facturas</a></li>
                     <li><a href="/reporteFinanciero"> Reporte Financiero</a></li>
                     <li><a href="/reportesalonpedidos"> Reporte Ventas Pedidos</a></li>
+                    <li><a href="/reporteinversion"> Reporte Inversion</a></li>
                 </ul>
             </li>
             <li class="dropdown">

@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Response;
 
 class ReporteInversion extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia');
+    }
+
     public function index()
     {
         return view('contabilidad.reporteinversion');
@@ -28,9 +34,19 @@ class ReporteInversion extends Controller
             return $flatten;
         }
         $flatten = flatten_array($proveedores);
+        $quoted_elements = array_map(function($element){ return '"'.addslashes($element).'"'; }, $flatten);
+        $string_coma = implode(",", $quoted_elements);
 
-        $result = DB::table('samira.reportearticulo')->whereIn('proveedor', $flatten)->get();
+        // $result = DB::table('samira.reportearticulo')->whereIn('proveedor', $flatten)->get();
+        $result = DB::select('SELECT Proveedor,
+                                ROUND(SUM(CASE
+                                    WHEN PrecioConvertido > 0 or PrecioConvertido <> "" THEN  (cantidad * PrecioConvertido)
+                                    ELSE (cantidad * PrecioManual)
+                                END),2) as Total
+                                FROM samira.articulos
+                                WHERE Proveedor IN ('. $string_coma .')
+                                group by proveedor;');
+
         return Response::json($result);
-
     }
 }
