@@ -461,7 +461,7 @@
             <h3>Nº Pedido: </h3>
             <h5 id="cliente"></h5>
             <div id="general">
-                <h4>Articulos en la Tiendo y no en el sistema</h4>
+                <h4>Articulos en la Tienda y no en el sistema</h4>
                 <div id="div_checkOutInTN">
                     <div class="col-xs-12 col-xs-offset-0 well">
                         <table id="checkOutInTN" class="table table-striped table-bordered records_list">
@@ -473,6 +473,7 @@
                                 <th>Detalle</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
+                                <th>Stock</th>
                             </tr>
                             </thead>
                         </table>
@@ -903,6 +904,7 @@
                                     { "data": "detalle" },
                                     { "data": "cantidad" },
                                     { "data": "precio" },
+                                    { "data": "stock" },
                                 ]
                             }
                     );
