@@ -23,6 +23,7 @@ class Test extends Controller
     //Commit DashBoard.. 
     public function Test()
     {
+        //Prueba de COnexion"
         $con = '';
         $res = array();
         try {
@@ -38,6 +39,8 @@ class Test extends Controller
             $res[] = $row;
         }
         dd($res);
+
+
         $carbon = new \Carbon\Carbon();
         $datetime = $carbon->now();
         $datetime = (date(DATE_ISO8601, strtotime($datetime)));
