@@ -205,6 +205,13 @@ Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritos
 Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
 Route::get('/tablaPedidos', 'Reporte\DashBoard\Consultas@tablaPedidos');
 
+/*Clientes Fidelizacion*/
+Route::get('/clientesFidelizacion','ClientesFidelizacion\ClientesFidel@index');
+Route::get('/clientesFidelizacion/query','ClientesFidelizacion\ClientesFidel@query');
+Route::post('/clientesFidelizacion/updateVendedora', 'ClientesFidelizacion\ClientesFidel@updateVendedora');
+Route::get('/clientesFidelizacion/agregarNotas', 'ClientesFidelizacion\ClientesFidel@agregarNotas');
+Route::get('/clientesFidelizacion/notas', 'ClientesFidelizacion\ClientesFidel@notas');
+
 
 Route::group(['prefix' => 'api'],
     function () {

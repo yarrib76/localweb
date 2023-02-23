@@ -40,14 +40,18 @@ class Test extends Controller
             $res[] = $row;
         }
 
+        $count = 0;
         foreach ($res as $respuesta) {
             $query  = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
                               where id_clientes = "'. $respuesta['id'] .'"
                               group by id_clientes
                               having fecha_creacion >= DATE_SUB(NOW(),INTERVAL 3 MONTH);');
             if (!$query){
-                DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion)
-                        VALUE("'. $respuesta['id'] .'","2024-02-22",now())');
+                $count++;
+                if ($count <= 5){
+                    DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion)
+                        VALUE("'. $respuesta['id'] .'","'.$respuesta['Fecha'].'",now())');
+                } else {break;}
             }
         }
 
