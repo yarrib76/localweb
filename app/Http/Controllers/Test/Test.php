@@ -23,7 +23,7 @@ class Test extends Controller
     //Commit DashBoard.. 
     public function Test()
     {
-        //Prueba de COnexion"
+        //Prueba de Conexion"
         $con = '';
         $res = array();
         try {
@@ -34,11 +34,25 @@ class Test extends Controller
         } catch (\Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";
         }
-        $r = $con->query('CALL vendedoras_en_proceso()');
+        $montoMinimo = 12000;
+        $r = $con->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","1000000","3")');
         while ($row = mysqli_fetch_array($r)) {
             $res[] = $row;
         }
-        dd($res);
+
+        foreach ($res as $respuesta) {
+            $query  = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
+                              where id_clientes = "'. $respuesta['id'] .'"
+                              group by id_clientes
+                              having fecha_creacion >= DATE_SUB(NOW(),INTERVAL 3 MONTH);');
+            if (!$query){
+                DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion)
+                        VALUE("'. $respuesta['id'] .'","2024-02-22",now())');
+            }
+        }
+
+
+        dd('Listo');
 
 
         $carbon = new \Carbon\Carbon();
