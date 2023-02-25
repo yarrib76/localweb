@@ -197,6 +197,8 @@
                         return "https://wa.me/" + cell.getData().cel_contacto + "' target='_blank' "}}},
                     {title: "Creado", field: "fecha_creacion", sortable: true, width: 145},
                     {title: "Ultima Compra", field: "fecha_ultima_compra", sortable: true, width: 145},
+                    {title: "Promedio Compras", field: "promedioTotal", sortable: true, width: 120},
+                    {title: "Cantidad", field: "cant_compras", sortable: true, width: 100},
                     {title: "Notas", width:100, align:"center", formatter:function iconFormatter(cell){
                         return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>" + cell.getRow().getData()['cant_notas']}
                         ,cellClick:function(e, cell) {
@@ -205,9 +207,9 @@
 
                     }},
                     {title:"Cerrar",width:110, align:"center", formatter:"buttonTick", cellClick:function(e, cell){
-                        if (confirm("Esta seguro que quiere cerrar el carrito abandonado de " + cell.getRow().getData()['nombre_contacto'] + "?")) {
+                        if (confirm("Esta seguro que quiere cerrar el carrito abandonado de " + cell.getRow().getData()['Cliente'] + "?")) {
                             $.ajax({
-                                url: '/carritosAbandonados/notasCarritos?id_carrito=' + cell.getRow().getData()['id_carritos'],
+                                url: '/clientesFidelizacion/notas?idclientes_fidelizacion=' + cell.getRow().getData()['idclientes_fidelizacion'],
                                 dataType : "json",
                                 success : function(json) {
                                     console.log(isEmptyObject(json))

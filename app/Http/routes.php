@@ -211,7 +211,7 @@ Route::get('/clientesFidelizacion/query','ClientesFidelizacion\ClientesFidel@que
 Route::post('/clientesFidelizacion/updateVendedora', 'ClientesFidelizacion\ClientesFidel@updateVendedora');
 Route::get('/clientesFidelizacion/agregarNotas', 'ClientesFidelizacion\ClientesFidel@agregarNotas');
 Route::get('/clientesFidelizacion/notas', 'ClientesFidelizacion\ClientesFidel@notas');
-
+Route::post('/carritosAbandonados/finalizarCarrito', 'ClientesFidelizacion\ClientesFidel@finalizarClienteFidel');
 
 Route::group(['prefix' => 'api'],
     function () {

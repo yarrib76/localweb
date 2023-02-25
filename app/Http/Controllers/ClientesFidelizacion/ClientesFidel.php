@@ -25,6 +25,7 @@ class ClientesFidel extends Controller
     {
         $conexion = $this->creoConnect();
         $montoMinimo = 12000;
+        //Llamo al StoreProcedure y traigo los datos
         $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","1000000","3")');
         while ($row = mysqli_fetch_array($r)) {
             $res[] = $row;
@@ -38,8 +39,8 @@ class ClientesFidel extends Controller
             if (!$query){
                 $count++;
                 if ($count <= 5){
-                    DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion)
-                        VALUE("'. $respuesta['id'] .'","'.$respuesta['Fecha'].'",now())');
+                    DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion,promedioTotal,cant_compras)
+                        VALUE("'. $respuesta['id'] .'","'.$respuesta['Fecha'].'",now(),"'.$respuesta['PromedioTotal'].'","'.$respuesta['CantCompras'].'")');
                 } else {break;}
             }
         }
@@ -66,7 +67,7 @@ class ClientesFidel extends Controller
         $estado = (Input::get('estado'));
         $clientesFidel = DB::select('SELECT idclientes_fidelizacion, concat(cliente.nombre, ",",cliente.apellido) as Cliente, telefono as cel_contacto, fecha_creacion, fecha_ultima_compra,
                                       vendedora,(select count(*) from samira.notas_clientes_fidel
-                                      where id_clientes_fidelizacion = idclientes_fidelizacion) as cant_notas  FROM samira.clientes_fidelizacion as fidel
+                                      where id_clientes_fidelizacion = idclientes_fidelizacion) as cant_notas, promedioTotal, cant_compras  FROM samira.clientes_fidelizacion as fidel
                                       inner join samira.clientes as cliente ON cliente.id_clientes = fidel.id_clientes
                                       WHERE estado = "'.$estado.'";');
         ob_start('ob_gzhandler');
@@ -109,7 +110,12 @@ class ClientesFidel extends Controller
 
     public function finalizarClienteFidel()
     {
-
+        $id_cliente_fidel = Input::get('idclientes_fidelizacion');
+        $carrito = Cliente_Fidelizacion::where('idclientes_fidelizacion',$id_cliente_fidel);
+        $carrito->update([
+            'estado' => 1,
+        ]);
+        return;
     }
 
     public function agregarNotas()

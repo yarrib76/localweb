@@ -41,6 +41,7 @@ class Test extends Controller
         }
 
         $count = 0;
+        dd($res);
         foreach ($res as $respuesta) {
             $query  = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
                               where id_clientes = "'. $respuesta['id'] .'"
