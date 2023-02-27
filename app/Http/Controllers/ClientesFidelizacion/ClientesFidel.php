@@ -24,9 +24,10 @@ class ClientesFidel extends Controller
     public function cargoClientesFidel()
     {
         $conexion = $this->creoConnect();
-        $montoMinimo = 12000;
+        $montoMinimo = 22000;
+        $cant_meses = 3;
         //Llamo al StoreProcedure y traigo los datos
-        $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","1000000","3")');
+        $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","1000000","'.$cant_meses.'")');
         while ($row = mysqli_fetch_array($r)) {
             $res[] = $row;
         }

@@ -38,7 +38,7 @@
             left: 0;
             top: 0;
             width: 100%; /* Full width */
-            height: 100%; /* Full height */
+            height: 120%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
@@ -94,6 +94,7 @@
     </div>
     <div id="myModalCliente" class="modal">
         <div id="modal-content-cliente" class="modal-content">
+            <h4 id="nombreClientes">Prueba</h4>
             <div class="col-xs-12 col-xs-offset-0 well">
                 <table id="tabla_top_mercaderia" class="table table table-scroll table-striped">
                     <thead>
@@ -105,6 +106,7 @@
                     </thead>
                 </table>
             </div>
+            <h2 id="Promo"></h2>
         </div>
     </div>
 
@@ -421,16 +423,16 @@
 
        function clientesFidel(datos){
            idclientes_fidelizacion = (datos.getData()['idclientes_fidelizacion']);
-           console.log(datos.getData()['Cliente']);
+           promo(datos);
            $.ajax({
                url: '/clientesFidelizacion/biFidel?idclientes_fidelizacion=' + idclientes_fidelizacion,
                dataType : "json",
                success : function(json) {
-                   console.log(json)
                    table = $('#tabla_top_mercaderia').DataTable({
                                dom: 'Bfrtip',
                                "autoWidth": false,
                                "bDestroy": true,
+                               "pageLength" : 5,
                                order: [2,'desc'],
                                "aaData": json,
                                "columns": [
@@ -456,12 +458,25 @@
                modalCliente.style.display = "none";
            }
 
-           // When the user clicks anywhere outside of the modal, close it
+           // When the user clicks anywhere outside of t he modal, close it
            window.onclick = function(event) {
                if (event.target == modalCliente) {
                    modalCliente.style.display = "none";
                }
            }
+
+            $(".modal-content h4").html('Cliente: ' + datos.getData()['Cliente']);
+       }
+
+       function promo(datos){
+           var promedioCompra_cant_compras = 12000;
+           var promedioCompras_sin_cant_compras = 30000;
+           var cant_compras = 3
+           if(datos.getData()['promedioTotal'] >= promedioCompra_cant_compras && datos.getData()['cant_compras'] >= cant_compras){
+               $(".modal-content h2").html('Envio Gratis!!!!');
+           }else if(datos.getData()['promedioTotal'] >= promedioCompras_sin_cant_compras){
+               $(".modal-content h2").html('Envio Gratis!!!!');
+           }else {$(".modal-content h2").html('Sin Ofertas Disponibles')}
        }
     </script>
 @stop
