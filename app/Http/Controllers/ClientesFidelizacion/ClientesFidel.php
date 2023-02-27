@@ -129,5 +129,20 @@ class ClientesFidel extends Controller
         ]);
         return Response::json('ok');
     }
+
+    public function biFidel(){
+        $idclientes_fidelizacion = Input::get('idclientes_fidelizacion');
+        $cliente_id= DB::select('select id_clientes from samira.clientes_fidelizacion
+                                 where idclientes_fidelizacion = "'.$idclientes_fidelizacion.'"');
+        $clienteArticulos = DB::select('SELECT  factura.Articulo as Articulo, factura.Detalle as Descripcion, sum(factura.Cantidad) as Total
+                            FROM samira.facturah as facth
+                            INNER JOIN samira.factura as factura
+                            ON facth.NroFactura = factura.NroFactura
+                            where facth.id_clientes = "'. $cliente_id[0]->id_clientes .'"
+                            GROUP BY factura.Articulo ORDER BY Total DESC
+                            limit 10;');
+
+        return Response::json($clienteArticulos);
+    }
 }
 

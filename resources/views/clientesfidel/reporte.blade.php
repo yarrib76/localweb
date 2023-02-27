@@ -30,8 +30,31 @@
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
+        #myModalCliente {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
         /* Modal Content */
         #modal-content-comentarios {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 3px solid #888;
+            width: 70%;
+            height: 80%;
+            overflow-y: auto;
+        }
+
+        #modal-content-cliente {
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
@@ -43,7 +66,6 @@
     </style>
 
     <div id="myModalComentarios" class="modal">
-
     <!-- Modal content -->
         <div id="modal-content-comentarios" class="modal-content">
             <span class="close1">&times;</span>
@@ -70,6 +92,21 @@
             </div>
         </div>
     </div>
+    <div id="myModalCliente" class="modal">
+        <div id="modal-content-cliente" class="modal-content">
+            <div class="col-xs-12 col-xs-offset-0 well">
+                <table id="tabla_top_mercaderia" class="table table table-scroll table-striped">
+                    <thead>
+                    <tr>
+                        <th>Articulo</th>
+                        <th>Descripcion</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
 
 @stop
 @section('extra-javascript')
@@ -77,9 +114,19 @@
    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
 
+   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
+   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css"/>
+
+   <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+   <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+
+   <!-- DataTables -->
+
    <script>
        var globalFidelizacion_id
        var estado = 0
+       var table;
        $(document).ready( function () {
            llenarTabla(estado);
            document.getElementById('estadoActual').innerText = "Abiertos"
@@ -191,11 +238,12 @@
                {column:"nropedido", dir:"desc"}, //sort by this first
            ],
                 columns: [
-                    {title: "Cliente", field: "Cliente", sortable: true, width: 150, headerFilter:"input"},
+                    {title: "Cliente", field: "Cliente", sortable: true, width: 150, headerFilter:"input", cellClick:function(e,cell){
+                            clientesFidel(cell.getRow())}},
                     {title: "Vendedora", field: "vendedora", width: 115, editor:"select", editorParams:paramLookup,headerFilter:"input"},
+                    {title: "Creado", field: "fecha_creacion", sortable: true, width: 145},
                     {title: "Celular", field: "cel_contacto", sortable: true, width: 120, formatter:"link", formatterParams:{url:function(cell){
                         return "https://wa.me/" + cell.getData().cel_contacto + "' target='_blank' "}}},
-                    {title: "Creado", field: "fecha_creacion", sortable: true, width: 145},
                     {title: "Ultima Compra", field: "fecha_ultima_compra", sortable: true, width: 145},
                     {title: "Promedio Compras", field: "promedioTotal", sortable: true, width: 120},
                     {title: "Cantidad", field: "cant_compras", sortable: true, width: 100},
@@ -216,7 +264,7 @@
                                     if (!isEmptyObject(json)){
                                         cell.getRow().delete()
                                         $.ajax({
-                                            url: "/carritosAbandonados/finalizarCarrito",
+                                            url: "/clientesFidelizacion/finalizarClienteFidel",
                                             data: cell.getRow().getData(),
                                             type: "post"
                                         })
@@ -368,6 +416,51 @@
            {
                llenarTabla(0);
                document.getElementById('estadoActual').innerText = "Abiertos"
+           }
+       }
+
+       function clientesFidel(datos){
+           idclientes_fidelizacion = (datos.getData()['idclientes_fidelizacion']);
+           console.log(datos.getData()['Cliente']);
+           $.ajax({
+               url: '/clientesFidelizacion/biFidel?idclientes_fidelizacion=' + idclientes_fidelizacion,
+               dataType : "json",
+               success : function(json) {
+                   console.log(json)
+                   table = $('#tabla_top_mercaderia').DataTable({
+                               dom: 'Bfrtip',
+                               "autoWidth": false,
+                               "bDestroy": true,
+                               order: [2,'desc'],
+                               "aaData": json,
+                               "columns": [
+                                   {"data": "Articulo"},
+                                   {"data": "Descripcion"},
+                                   {"data": "Total"},
+                               ]
+                           }
+                   )
+               }
+           });
+           // Get the modal
+           var modalCliente = document.getElementById('myModalCliente');
+
+           // Get the <span> element that closes the modal
+           var spanCliente = document.getElementsByClassName("close1")[0];
+
+           // When the user clicks the button, open the modal
+           modalCliente.style.display = "block";
+
+           // When the user clicks on <span> (x), close the modal
+           spanCliente.onclick = function() {
+               modalCliente.style.display = "none";
+           }
+
+           // When the user clicks anywhere outside of the modal, close it
+           window.onclick = function(event) {
+               if (event.target == modalCliente) {
+                   modalCliente.style.display = "none";
+               }
            }
        }
     </script>
