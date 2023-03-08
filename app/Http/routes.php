@@ -214,6 +214,7 @@ Route::get('/clientesFidelizacion/notas', 'ClientesFidelizacion\ClientesFidel@no
 Route::post('/clientesFidelizacion/finalizarClienteFidel', 'ClientesFidelizacion\ClientesFidel@finalizarClienteFidel');
 Route::get('/clientesFidelizacion/biFidel', 'ClientesFidelizacion\ClientesFidel@biFidel');
 Route::get('clientesFidelizacion/setParametros','ClientesFidelizacion\ClientesFidel@setParametros');
+Route::post('clientesFidelizacion/guardarParametros','ClientesFidelizacion\ClientesFidel@guardarParametros');
 
 Route::group(['prefix' => 'api'],
     function () {

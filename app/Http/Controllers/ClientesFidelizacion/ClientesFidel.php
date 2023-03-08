@@ -28,7 +28,8 @@ class ClientesFidel extends Controller
 
     public function setParametros()
     {
-        return view('clientesfidel.edit');
+        $parametros = $this->cargaFormularioParametroInicial();
+        return view('clientesfidel.edit',compact('parametros'));
     }
 
     public function cargoClientesFidel()
@@ -156,6 +157,21 @@ class ClientesFidel extends Controller
                             limit 10;');
 
         return Response::json($clienteArticulos);
+    }
+
+    //APIS
+
+    public function cargaFormularioParametroInicial()
+    {
+        $parametros = DB::SELECT('select * from samira.parametros_clientes_fidel');
+        return $parametros;
+    }
+
+    public function guardarParametros()
+    {
+        $ordenes = (Input::get('parametros'));
+        $ordenes = json_decode($ordenes,true);
+        dd($ordenes[0]);
     }
 }
 
