@@ -15,28 +15,39 @@ use Illuminate\Support\Facades\Input;
 
 class ClientesFidel extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
     public function index()
     {
         $user_id = Auth::user()->id;
         return view('clientesfidel.reporte', compact('user_id'));
     }
 
+    public function setParametros()
+    {
+        return view('clientesfidel.edit');
+    }
+
     public function cargoClientesFidel()
     {
         $conexion = $this->creoConnect();
         $montoMinimo = 22000;
-        $cant_meses = 3;
+        $cant_meses_no_compra = 3;
         //Llamo al StoreProcedure y traigo los datos
-        $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","1000000","'.$cant_meses.'")');
+        $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","20000000","'.$cant_meses_no_compra.'")');
         while ($row = mysqli_fetch_array($r)) {
             $res[] = $row;
         }
         $count = 0;
+        $can_meses_ultima_fidelizacion = 3;
         foreach ($res as $respuesta) {
             $query  = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
                               where id_clientes = "'. $respuesta['id'] .'"
                               group by id_clientes
-                              having fecha_creacion >= DATE_SUB(NOW(),INTERVAL 3 MONTH);');
+                              having fecha_creacion >= DATE_SUB(NOW(),INTERVAL "'.$can_meses_ultima_fidelizacion.'" MONTH);');
             if (!$query){
                 $count++;
                 if ($count <= 5){
@@ -135,10 +146,11 @@ class ClientesFidel extends Controller
         $idclientes_fidelizacion = Input::get('idclientes_fidelizacion');
         $cliente_id= DB::select('select id_clientes from samira.clientes_fidelizacion
                                  where idclientes_fidelizacion = "'.$idclientes_fidelizacion.'"');
-        $clienteArticulos = DB::select('SELECT  factura.Articulo as Articulo, factura.Detalle as Descripcion, sum(factura.Cantidad) as Total
+        $clienteArticulos = DB::select('SELECT  factura.Articulo as Articulo, factura.Detalle as Descripcion,
+                            sum(factura.Cantidad) as Total, Arti.cantidad as Cantidad
                             FROM samira.facturah as facth
-                            INNER JOIN samira.factura as factura
-                            ON facth.NroFactura = factura.NroFactura
+                            INNER JOIN samira.factura as factura ON facth.NroFactura = factura.NroFactura
+                            INNER JOIN samira.articulos as Arti ON Arti.articulo = factura.Articulo
                             where facth.id_clientes = "'. $cliente_id[0]->id_clientes .'"
                             GROUP BY factura.Articulo ORDER BY Total DESC
                             limit 10;');

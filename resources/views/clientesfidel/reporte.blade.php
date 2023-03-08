@@ -63,6 +63,20 @@
             height: 80%;
             overflow-y: auto;
         }
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 
     <div id="myModalComentarios" class="modal">
@@ -94,6 +108,7 @@
     </div>
     <div id="myModalCliente" class="modal">
         <div id="modal-content-cliente" class="modal-content">
+            <span class="close">&times;</span>
             <h4 id="nombreClientes">Prueba</h4>
             <div class="col-xs-12 col-xs-offset-0 well">
                 <table id="tabla_top_mercaderia" class="table table table-scroll table-striped">
@@ -448,7 +463,7 @@
            var modalCliente = document.getElementById('myModalCliente');
 
            // Get the <span> element that closes the modal
-           var spanCliente = document.getElementsByClassName("close1")[0];
+           var spanCliente = document.getElementsByClassName("close")[0];
 
            // When the user clicks the button, open the modal
            modalCliente.style.display = "block";
