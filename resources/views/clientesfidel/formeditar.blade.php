@@ -43,7 +43,7 @@
     </div>
     <div class="col-sm-8 col-sm-offset-5">
         <button id="botonComent" value="Comentario" class="btn btn-success" onclick="guardar()"> Guardar</button>
-        <button id="botonComent" value="Comentario" class="btn btn-success"> Salir</button>
+        <button id="botonComent" value="Comentario" class="btn btn-success" onclick="botonsalir()"> Salir</button>
     </div>
 </div>
 
@@ -55,7 +55,7 @@
         $('#nocompra_id').val("{{$parametros[0]->cant_meses_ult_compra}}")
         $('#fidelizacion_id').val("{{$parametros[0]->cant_meses_ult_fidelizacion}}")
         document.getElementById('montoMinimo').value = {{$parametros[0]->monto_minimo_promedio}}
-         if ({{$parametros[0]->estado == 0}}){
+         if ({{$parametros[0]->estado}} === 1){
             $(".tab-one").text("Habilitado");
             document.getElementById("estado").checked = true;
         }else {
@@ -98,23 +98,26 @@
         if (document.getElementById("estado").checked == true){
             estado = 1;
         } else estado = 0
-        var datos = '{"noCompra" : "' + opcionNoCompra + '",'
-                +'"noFidel"  : "' + opcionNoFidel + '",'
-                +'"montoMinimo" : "' + montoMinimoPromedio + '",'
-                +'"estado" : "' + estado + '"} '
-                ;
+
+        datos = []
+        datos[0]=opcionNoCompra;
+        datos[1]=opcionNoFidel;
+        datos[2]=montoMinimoPromedio;
+        datos[3]=estado;
         console.log(datos)
         var datos =  JSON.stringify(datos)
-        console.log(datos);
         $.ajax({
             'url': "/clientesFidelizacion/guardarParametros",
             'method': 'post',
             data: {parametros: datos  },
             success: function (json) {
-                modal.style.display = "none";
+                alert("Los Parametros Fueron Guardados")
             }
         })
     }
 
+    function botonsalir(){
+        window.location.href = '/panelcontrol'
+    }
 </script>
 

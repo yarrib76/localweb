@@ -34,32 +34,42 @@ class ClientesFidel extends Controller
 
     public function cargoClientesFidel()
     {
-        $conexion = $this->creoConnect();
-        $montoMinimo = 22000;
-        $cant_meses_no_compra = 3;
-        //Llamo al StoreProcedure y traigo los datos
-        $r = $conexion->query('CALL cursor_clientes_fidelizacion("'. $montoMinimo .'","20000000","'.$cant_meses_no_compra.'")');
-        while ($row = mysqli_fetch_array($r)) {
-            $res[] = $row;
-        }
-        $count = 0;
-        $can_meses_ultima_fidelizacion = 3;
-        foreach ($res as $respuesta) {
-            $query  = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
-                              where id_clientes = "'. $respuesta['id'] .'"
-                              group by id_clientes
-                              having fecha_creacion >= DATE_SUB(NOW(),INTERVAL "'.$can_meses_ultima_fidelizacion.'" MONTH);');
-            if (!$query){
-                $count++;
-                if ($count <= 5){
-                    DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion,promedioTotal,cant_compras)
-                        VALUE("'. $respuesta['id'] .'","'.$respuesta['Fecha'].'",now(),"'.$respuesta['PromedioTotal'].'","'.$respuesta['CantCompras'].'")');
-                } else {break;}
+        $estado = DB::SELECT('SELECT estado FROM samira.parametros_clientes_fidel;');
+        $estado = $estado[0]->estado;
+        if ($estado == 1) {
+            $conexion = $this->creoConnect();
+            $montoMinimo = DB::SELECT('select monto_minimo_promedio from samira.parametros_clientes_fidel');
+            $montoMinimo = $montoMinimo[0]->monto_minimo_promedio;
+            $cant_meses_no_compra = DB::SELECT('SELECT cant_meses_ult_compra FROM samira.parametros_clientes_fidel;');
+            $cant_meses_no_compra = $cant_meses_no_compra[0]->cant_meses_ult_compra;
+
+            // $montoMinimo = 22000;
+            //$cant_meses_no_compra = 3;
+            //Llamo al StoreProcedure y traigo los datos
+            $r = $conexion->query('CALL cursor_clientes_fidelizacion("' . $montoMinimo . '","20000000","' . $cant_meses_no_compra . '")');
+            while ($row = mysqli_fetch_array($r)) {
+                $res[] = $row;
             }
-        }
+            $count = 0;
+            $can_meses_ultima_fidelizacion = 3;
+            foreach ($res as $respuesta) {
+                $query = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
+                              where id_clientes = "' . $respuesta['id'] . '"
+                              group by id_clientes
+                              having fecha_creacion >= DATE_SUB(NOW(),INTERVAL "' . $can_meses_ultima_fidelizacion . '" MONTH);');
+                if (!$query) {
+                    $count++;
+                    if ($count <= 5) {
+                        DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion,promedioTotal,cant_compras)
+                        VALUE("' . $respuesta['id'] . '","' . $respuesta['Fecha'] . '",now(),"' . $respuesta['PromedioTotal'] . '","' . $respuesta['CantCompras'] . '")');
+                    } else {
+                        break;
+                    }
+                }
+            }
 
-        dd('Listo');
-
+            dd('Listo');
+        }else dd('Deshabilitado');
     }
 
     private function creoConnect()
@@ -169,9 +179,15 @@ class ClientesFidel extends Controller
 
     public function guardarParametros()
     {
-        $ordenes = (Input::get('parametros'));
-        $ordenes = json_decode($ordenes,true);
-        dd($ordenes[0]);
+        //Formato de Parametro 0 = opcionNoCompra 1 = opcionNoFidel 2 = montoMinimoPromedio 3 = estado
+        $parametros = (Input::get('parametros'));
+        $parametros = json_decode($parametros);
+        $id_parametros = DB::SELECT('select id_parametro_clientes_fidel from samira.parametros_clientes_fidel');
+        $id_parametros =  $id_parametros[0]->id_parametro_clientes_fidel;
+        DB::SELECT ('UPDATE samira.parametros_clientes_fidel SET `cant_meses_ult_compra` = "'.$parametros[0].'",
+                    `cant_meses_ult_fidelizacion` = "'.$parametros[1].'",
+                    `monto_minimo_promedio` = "'.$parametros[2].'", `estado` =  "'.$parametros[3].'" WHERE `id_parametro_clientes_fidel` = "'.$id_parametros.'"');
+
     }
 }
 

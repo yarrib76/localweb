@@ -242,7 +242,6 @@
                        obj[ key ] = item [ key ] //assign the key and value to output obj
                    });
                    vendedoras = obj
-                   console.log (vendedoras)
                }
            });
            //do some processing and return the param object
@@ -251,7 +250,7 @@
 
        $("#example-table").tabulator({
                 height: "550px",
-           initialSort:[
+               initialSort:[
                {column:"nropedido", dir:"desc"}, //sort by this first
            ],
                 columns: [
@@ -267,7 +266,6 @@
                     {title: "Notas", width:100, align:"center", formatter:function iconFormatter(cell){
                         return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>" + cell.getRow().getData()['cant_notas']}
                         ,cellClick:function(e, cell) {
-                        console.log(cell.getRow().getData())
                         notas_carrito(cell.getRow().getData()['idclientes_fidelizacion'],cell.getRow().getData()['Cliente'])
 
                     }},
@@ -299,6 +297,17 @@
                     }}
 
                 ],
+           rowFormatter:function(row){
+               var data = row.getData();
+               var fechaCreacion = data.fecha_creacion
+               var respuesta = fechaMonitoreo(fechaCreacion)
+                if (respuesta == "Amarillo"){
+                    row.getElement().css({"background-color":"yellow"});
+                }
+                if (respuesta == "Rojo"){
+                    row.getElement().css({"background-color":"red"});
+                }
+           },
                 cellEdited:function(cell, value, data){
                     console.log(cell.getData())
                     $.ajax({
@@ -386,7 +395,6 @@
                    'user_id=' + user_id + "&" + 'textarea=' + textarea,
                    dataType : "json",
                    success : function(json) {
-                       console.log(json)
                        document.getElementById("textarea").value = "";
                        refreshfunctionComentario()
                        cambioEstado()
@@ -492,6 +500,37 @@
            }else if(datos.getData()['promedioTotal'] >= promedioCompras_sin_cant_compras){
                $(".modal-content h2").html('Envio Gratis!!!!');
            }else {$(".modal-content h2").html('Sin Ofertas Disponibles')}
+       }
+
+       function fechaMonitoreo(fechaOriginal){
+           // Convertir la fecha original en una instancia de la clase Date
+           let fechaOriginal7Dias = new Date(fechaOriginal);
+           let fechaOriginal4Dias = new Date(fechaOriginal);
+           let fechaActual = new Date();
+           let fechaActualFormateada = fechaActual.toISOString().slice(0, 10);
+           // Sumarle 7 días a la fecha
+           fechaOriginal7Dias.setDate(fechaOriginal7Dias.getDate() + 7);
+           fechaOriginal4Dias.setDate(fechaOriginal4Dias.getDate() + 4);
+
+           // Formatear la fecha resultante en formato yyyy-mm-dd
+           let fecha7dia = ("0" + fechaOriginal7Dias.getDate()).slice(-2);
+           let fecha7mes = ("0" + (fechaOriginal7Dias.getMonth() + 1)).slice(-2);
+           let fecha7anio = fechaOriginal7Dias.getFullYear();
+           let fechaFormateadaOriginal7Dias = fecha7anio + "-" + fecha7mes + "-" + fecha7dia;
+           let fecha4dia = ("0" + fechaOriginal4Dias.getDate()).slice(-2);
+           let fecha4mes = ("0" + (fechaOriginal4Dias.getMonth() + 1)).slice(-2);
+           let fecha4anio = fechaOriginal4Dias.getFullYear();
+           let fechaFormateadaOriginal4Dias = fecha4anio + "-" + fecha4mes + "-" + fecha4dia;
+
+
+           let respuesta = "SinColor"
+           if (fechaFormateadaOriginal4Dias <= fechaActualFormateada){
+               respuesta = "Amarillo"
+           }
+           if (fechaFormateadaOriginal7Dias <= fechaActualFormateada ){
+               respuesta = "Rojo"
+           }
+           return (respuesta); // Es verdadero si la fecha Original + 7 días es Mayor a la fecha Actual.
        }
     </script>
 @stop

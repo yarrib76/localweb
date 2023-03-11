@@ -71,6 +71,13 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="/clientes"> ABM</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Fidelizacion</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/clientesFidelizacion"> Clientes </a></li>
+                            <li><a href="/clientesFidelizacion/setParametros"> Configuracion </a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="dropdown">
