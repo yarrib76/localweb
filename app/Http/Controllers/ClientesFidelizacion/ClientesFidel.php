@@ -51,7 +51,10 @@ class ClientesFidel extends Controller
                 $res[] = $row;
             }
             $count = 0;
-            $can_meses_ultima_fidelizacion = 3;
+            $can_meses_ultima_fidelizacion = DB::SELECT('SELECT cant_meses_ult_fidelizacion FROM samira.parametros_clientes_fidel;');
+            $can_meses_ultima_fidelizacion = $can_meses_ultima_fidelizacion[0]->cant_meses_ult_fidelizacion;
+            $can_clientes_por_vendedora = DB::SELECT('SELECT cant_clientes_por_vendedora FROM samira.parametros_clientes_fidel;');
+            $can_clientes_por_vendedora = $can_clientes_por_vendedora[0]->cant_clientes_por_vendedora;
             foreach ($res as $respuesta) {
                 $query = DB::select('select id_clientes, max(fecha_creacion) as Fecha_Creacion, estado from samira.clientes_fidelizacion
                               where id_clientes = "' . $respuesta['id'] . '"
@@ -59,7 +62,7 @@ class ClientesFidel extends Controller
                               having fecha_creacion >= DATE_SUB(NOW(),INTERVAL "' . $can_meses_ultima_fidelizacion . '" MONTH);');
                 if (!$query) {
                     $count++;
-                    if ($count <= 5) {
+                    if ($count <= $can_clientes_por_vendedora) {
                         DB::select('INSERT INTO samira.clientes_fidelizacion (id_clientes,fecha_ultima_compra,fecha_creacion,promedioTotal,cant_compras)
                         VALUE("' . $respuesta['id'] . '","' . $respuesta['Fecha'] . '",now(),"' . $respuesta['PromedioTotal'] . '","' . $respuesta['CantCompras'] . '")');
                     } else {
@@ -186,7 +189,9 @@ class ClientesFidel extends Controller
         $id_parametros =  $id_parametros[0]->id_parametro_clientes_fidel;
         DB::SELECT ('UPDATE samira.parametros_clientes_fidel SET `cant_meses_ult_compra` = "'.$parametros[0].'",
                     `cant_meses_ult_fidelizacion` = "'.$parametros[1].'",
-                    `monto_minimo_promedio` = "'.$parametros[2].'", `estado` =  "'.$parametros[3].'" WHERE `id_parametro_clientes_fidel` = "'.$id_parametros.'"');
+                    `monto_minimo_promedio` = "'.$parametros[2].'", `estado` =  "'.$parametros[3].'",
+                    `cant_clientes_por_vendedora` = "'.$parametros[4].'"
+                     WHERE `id_parametro_clientes_fidel` = "'.$id_parametros.'"');
 
     }
 }

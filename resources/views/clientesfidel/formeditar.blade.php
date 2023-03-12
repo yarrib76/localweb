@@ -35,9 +35,12 @@
             </select>
         </div>
 
-            <div class="col-sm-9">
-                <input type="number" class="form-control" placeholder="Monto Minimo De Compra" id="montoMinimo" >
-            </div>
+        <div class="col-sm-9">
+            <input type="number" class="form-control" placeholder="Monto Minimo De Compra" id="montoMinimo" >
+        </div>
+        <div class="col-sm-6">
+            <input type="number" class="form-control" placeholder="Cantidad Clientes Por Vendedora" id="cant_clientes_vendedora" >
+        </div>
         <input type="checkbox" id="estado" name="estado" value="estado">
         <label class="tab-one" for="tab-one"></label><br>
     </div>
@@ -54,6 +57,7 @@
         //Defino el valor para el Select
         $('#nocompra_id').val("{{$parametros[0]->cant_meses_ult_compra}}")
         $('#fidelizacion_id').val("{{$parametros[0]->cant_meses_ult_fidelizacion}}")
+        $('#cant_clientes_vendedora').val("{{$parametros[0]->cant_clientes_por_vendedora}}")
         document.getElementById('montoMinimo').value = {{$parametros[0]->monto_minimo_promedio}}
          if ({{$parametros[0]->estado}} === 1){
             $(".tab-one").text("Habilitado");
@@ -63,22 +67,6 @@
             document.getElementById("estado").checked = false;
         }
 
-        $.ajax({
-            type: 'get',
-            url: '/api/provinciasSelect',
-            //    data: {radio_id:category_id , flota_id:flota_id},
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (datos, textStatus, jqXHR) {
-                $.each(datos, function (i, value) {
-                    $('#provincia').append("<option value='" + value['id'] + "'>" + value['nombre'] + '</option>');
-                }); // each
-               },
-            error: function (datos) {
-                console.log("Este callback maneja los errores " + datos);
-            }
-
-        }); // ajax
         //Cambia el Texto del Label CheckBox
         $('#estado').on('change', function() {
             if ($(this).prop('checked')) {
@@ -94,6 +82,7 @@
         var opcionNoCompra = selectNocompra.options[selectNocompra.selectedIndex].value;
         var opcionNoFidel = selectNoFidel.options[selectNoFidel.selectedIndex].value;
         var montoMinimoPromedio = document.getElementById('montoMinimo').value;
+        var cant_clientes_vendedora = document.getElementById('cant_clientes_vendedora').value;
         var estado;
         if (document.getElementById("estado").checked == true){
             estado = 1;
@@ -104,6 +93,7 @@
         datos[1]=opcionNoFidel;
         datos[2]=montoMinimoPromedio;
         datos[3]=estado;
+        datos[4]=cant_clientes_vendedora;
         console.log(datos)
         var datos =  JSON.stringify(datos)
         $.ajax({
