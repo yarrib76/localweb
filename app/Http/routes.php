@@ -204,6 +204,7 @@ Route::get('/consultaempaquetados', 'Reporte\DashBoard\Consultas@consultaEmpaque
 Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritosAbandanados');
 Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
 Route::get('/tablaPedidos', 'Reporte\DashBoard\Consultas@tablaPedidos');
+Route::get('/tablaClienteFidel', 'Reporte\DashBoard\Consultas@tablaClientesFidel');
 
 /*Clientes Fidelizacion*/
 Route::get('/clientesFidelizacion','ClientesFidelizacion\ClientesFidel@index');

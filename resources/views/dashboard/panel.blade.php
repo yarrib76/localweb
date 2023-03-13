@@ -97,6 +97,30 @@
                 </table>
             </div>
         </div>
+        <div id="tres">
+            <div class="panel-body">
+                <table id="reporteFidel" class="table table-striped table-bordered records_list">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div id = "RecuadroPanelClienteFidel" class="panel panel-primary">
+                                <div id = "ClientesFidel" class="panel-heading">
+                                    <div id="cliente_fidel_table"></div>
+                                </div>
+                                <div id="jobs-wrapperClienteFidel">
+                                    <a href="#">
+                                        <div class="panel-footer" data-panel="job-details">
+                                            <span class="pull-left">Fidelizacion</span>
+                                            <a href="/clientesFidelizacion" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            </div>
+        </div>
     </div>
     <style>
         #Empaquetados{
@@ -114,6 +138,11 @@
             color: #fff;
             width: 350px;
         }
+        #ClientesFidel{
+            background: #3526ff;
+            color: #fff;
+            width: 432px;
+        }
         #empaquetados_Vencidos{
             color: #ff1a0e;
         }
@@ -123,8 +152,14 @@
         #jobs-wrapper {
             width: 350px;
         }
+        #jobs-wrapperClienteFidel {
+            width: 431px;
+        }
         #RecuadroPanel {
             width: 353px;
+        }
+        #RecuadroPanelClienteFidel{
+            width: 433px;
         }
         body, html {
             height: 100%;
@@ -162,7 +197,7 @@
             width:49.5%;
             display:inline-block;
             height:49.5%;
-            background-color:yellow;
+            background-color: #d2ff95;
         }
         #cuatro{ border:1px solid black;
             width:49.5%;
@@ -367,9 +402,23 @@
             ],
 
         });
+        $("#cliente_fidel_table").tabulator({
+            height: "190px",
+            initialSort:[
+                {column:"Proceso", dir:"desc"}, //sort by this first
+            ],
+            columns: [
+                {title: "Vendedora", field: "Vende", sortable: true, width: 110},
+                {title: "Proceso", field: "Proceso", sortable: true, width: 90,bottomCalc:"sum"},
+                {title: "Alertados", field: "Alertados", sortable: true, width: 100},
+                {title: "Vencidos", field: "Vencidos", sortable: true, width: 100}
+            ],
+
+        });
 
         function llenarTabla() {
             $("#example-table").tabulator("setData", '/tablaPedidos');
+            $("#cliente_fidel_table").tabulator("setData", '/tablaClienteFidel');
         }
     </script>
 @stop

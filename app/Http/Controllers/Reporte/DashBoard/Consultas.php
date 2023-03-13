@@ -155,4 +155,24 @@ class Consultas extends Controller
                                 group by vendedora;');
         return Response::json($consulta);
     }
+
+    public function tablaClientesFidel()
+    {
+        $fecha_actual = date("Y-m-d");
+        $consulta = DB::SELECT('select vendedora as Vende,
+                                (select count(*) from samira.clientes_fidelizacion where vendedora = Vende
+                                and estado = 0) as Proceso,
+                                (select count(*) from samira.clientes_fidelizacion
+                                    where if ( date_add(fecha_creacion, interval 7 day) <= "'.$fecha_actual.'", "2723-03-13" , date_format(date_add(fecha_creacion, interval 4 day),"%Y-%m-%d")) <= "'.$fecha_actual.'"
+                                                and vendedora = Vende
+                                                and estado = 0) as Alertados,
+                                (select count(*) from samira.clientes_fidelizacion
+                                    where date_add(fecha_creacion, interval 7 day) <= "'.$fecha_actual.'"
+                                    and vendedora = Vende
+                                    and estado = 0) as Vencidos
+                                from samira.clientes_fidelizacion
+                                where estado = 0
+                                group by vendedora;');
+        return Response::json($consulta);
+    }
 }
