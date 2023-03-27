@@ -20,7 +20,7 @@
                                     </div>
                                 </div>
                                 <div id="jobs-wrapper">
-                                    <a href="#">
+                                    <a href="/empaquetados" target="_blank">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Empaquetados</span>
                                             <a href="/empaquetados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                                 <div id="jobs-wrapper">
-                                    <a href="#">
+                                    <a href="/carritosAbandonados" target="_blank">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Carritos Abandonados</span>
                                             <a href="/carritosAbandonados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
@@ -60,7 +60,7 @@
                                     <div id="example-table"></div>
                                 </div>
                                 <div id="jobs-wrapper">
-                                    <a href="#">
+                                    <a href="/reportevendedoras" target="_blank">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Pedidos</span>
                                             <a href="/reportevendedoras" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
@@ -108,7 +108,7 @@
                                     <div id="cliente_fidel_table"></div>
                                 </div>
                                 <div id="jobs-wrapperClienteFidel">
-                                    <a href="#">
+                                    <a href="/clientesFidelizacion" target="_blank">
                                         <div class="panel-footer" data-panel="job-details">
                                             <span class="pull-left">Fidelizacion</span>
                                             <a href="/clientesFidelizacion" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
