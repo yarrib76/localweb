@@ -58,8 +58,8 @@
         $('#nocompra_id').val("{{$parametros[0]->cant_meses_ult_compra}}")
         $('#fidelizacion_id').val("{{$parametros[0]->cant_meses_ult_fidelizacion}}")
         $('#cant_clientes_vendedora').val("{{$parametros[0]->cant_clientes_por_vendedora}}")
-        document.getElementById('montoMinimo').value = {{$parametros[0]->monto_minimo_promedio}}
-         if ({{$parametros[0]->estado}} === 1){
+        document.getElementById('montoMinimo').value = "{{$parametros[0]->monto_minimo_promedio}}"
+         if ("{{$parametros[0]->estado}}" === 1){
             $(".tab-one").text("Habilitado");
             document.getElementById("estado").checked = true;
         }else {

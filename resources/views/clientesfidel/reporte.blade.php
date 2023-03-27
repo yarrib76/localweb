@@ -492,6 +492,7 @@
        }
 
        function promo(datos){
+           //22-03-2023 Reemplazar obteniendo valores del panel de Configuracion
            var promedioCompra_cant_compras = 12000;
            var promedioCompras_sin_cant_compras = 30000;
            var cant_compras = 3
