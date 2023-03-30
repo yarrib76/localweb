@@ -163,11 +163,11 @@ class Consultas extends Controller
                                 (select count(*) from samira.clientes_fidelizacion where vendedora = Vende
                                 and estado = 0) as Proceso,
                                 (select count(*) from samira.clientes_fidelizacion
-                                    where if ( date_add(fecha_creacion, interval 7 day) <= "'.$fecha_actual.'", "2723-03-13" , date_format(date_add(fecha_creacion, interval 4 day),"%Y-%m-%d")) <= "'.$fecha_actual.'"
+                                    where if (DATE_FORMAT(date_add(fecha_creacion, interval 7 day),"%Y-%m-%d") <= "'.$fecha_actual.'", "2723-03-13" , date_format(date_add(fecha_creacion, interval 4 day),"%Y-%m-%d")) <= "'.$fecha_actual.'"
                                                 and vendedora = Vende
                                                 and estado = 0) as Alertados,
                                 (select count(*) from samira.clientes_fidelizacion
-                                    where date_add(fecha_creacion, interval 7 day) <= "'.$fecha_actual.'"
+                                    where DATE_FORMAT(date_add(fecha_creacion, interval 7 day),"%Y-%m-%d") <= "'.$fecha_actual.'"
                                     and vendedora = Vende
                                     and estado = 0) as Vencidos
                                 from samira.clientes_fidelizacion
