@@ -148,6 +148,7 @@
            llenarTabla(estado);
            document.getElementById('estadoActual').innerText = "Abiertos"
            paramLookup();
+           etapasLookup();
        })
 
        //custom max min header filter
@@ -247,7 +248,26 @@
            //do some processing and return the param object
            return vendedoras;
        }
-
+       var etapas = {}
+       //define lookup function
+       function etapasLookup(cell){
+           //cell - the cell component
+           $.ajax({
+               url: '/clientesFidelizacion/etapasFidel',
+               dataType : "json",
+               success : function(json) {
+                   var arr= json
+                   var obj = {}; //create the empty output object
+                   arr.forEach( function(item){
+                       var key = Object.keys(item)[0]; //take the first key from every object in the array
+                       obj[ key ] = item [ key ] //assign the key and value to output obj
+                   });
+                   etapas = obj
+               }
+           });
+           //do some processing and return the param object
+           return etapas;
+       }
        $("#example-table").tabulator({
                 height: "550px",
                initialSort:[
@@ -263,6 +283,7 @@
                     {title: "Ultima Compra", field: "fecha_ultima_compra", sortable: true, width: 145},
                     {title: "Promedio Compras", field: "promedioTotal", sortable: true, width: 120},
                     {title: "Cantidad", field: "cant_compras", sortable: true, width: 100},
+                    {title: "Etapa", field: "nombre_etapa", sortable: true, width: 110,editor:"select",editorParams:etapasLookup,headerFilter:"input"},
                     {title: "Notas", width:100, align:"center", formatter:function iconFormatter(cell){
                         return "<img class='infoImage' src='refresh/agenda.png' height='50' width='50'>" + cell.getRow().getData()['cant_notas']}
                         ,cellClick:function(e, cell) {
@@ -311,7 +332,7 @@
                 cellEdited:function(cell, value, data){
                     console.log(cell.getData())
                     $.ajax({
-                        url: "/clientesFidelizacion/updateVendedora",
+                        url: "/clientesFidelizacion/update",
                         data: cell.getRow().getData(),
                         type: "post"
                     })

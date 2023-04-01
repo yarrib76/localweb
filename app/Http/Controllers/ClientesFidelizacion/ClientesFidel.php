@@ -7,6 +7,7 @@ use Donatella\Models\Cliente_Fidelizacion;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Donatella\Models\Etapas_Fidel;
 use Donatella\Models\Notas_Clientes_Fidel;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
@@ -93,8 +94,9 @@ class ClientesFidel extends Controller
         $estado = (Input::get('estado'));
         $clientesFidel = DB::select('SELECT idclientes_fidelizacion, concat(cliente.nombre, ",",cliente.apellido) as Cliente, telefono as cel_contacto, fecha_creacion, fecha_ultima_compra,
                                       vendedora,(select count(*) from samira.notas_clientes_fidel
-                                      where id_clientes_fidelizacion = idclientes_fidelizacion) as cant_notas, promedioTotal, cant_compras  FROM samira.clientes_fidelizacion as fidel
+                                      where id_clientes_fidelizacion = idclientes_fidelizacion) as cant_notas, promedioTotal, cant_compras, etapas.nombre_etapa  FROM samira.clientes_fidelizacion as fidel
                                       inner join samira.clientes as cliente ON cliente.id_clientes = fidel.id_clientes
+                                      inner join samira.clientes_fidel_etapas as etapas ON etapas.id_clientes_fidel_etapas = fidel.id_clientes_fidel_etapas
                                       WHERE estado = "'.$estado.'";');
         ob_start('ob_gzhandler');
         return Response::json($clientesFidel);
@@ -110,12 +112,15 @@ class ClientesFidel extends Controller
         return Response::json($arrVendedoras);
     }
 
-    public function updateVendedora()
+    public function update()
     {
         $datos = Input::all();
+        $id_clientes_fidel_etapas = DB::select('select id_clientes_fidel_etapas from samira.clientes_fidel_etapas
+                                                where nombre_etapa = "'.$datos['nombre_etapa'].'"');
         $articulo = Cliente_Fidelizacion::where('idclientes_fidelizacion', $datos['idclientes_fidelizacion']);
         $articulo->update([
-            'vendedora' => $datos['vendedora']
+            'vendedora' => $datos['vendedora'],
+            'id_clientes_fidel_etapas' => $id_clientes_fidel_etapas[0]->id_clientes_fidel_etapas
         ]);
         return;
     }
@@ -193,6 +198,16 @@ class ClientesFidel extends Controller
                     `cant_clientes_por_vendedora` = "'.$parametros[4].'"
                      WHERE `id_parametro_clientes_fidel` = "'.$id_parametros.'"');
 
+    }
+
+    public function etapas_fidel()
+    {
+        $etapas_fidel = Etapas_Fidel::get();
+        for ($i = 0; $i < $etapas_fidel->count(); $i++ ){
+            $arrEtapasFidel[$i] = [$etapas_fidel[$i]->nombre_etapa => $etapas_fidel[$i]->nombre_etapa];
+        }
+        ob_start('ob_gzhandler');
+        return Response::json($arrEtapasFidel);
     }
 }
 

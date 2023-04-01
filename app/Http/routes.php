@@ -209,12 +209,13 @@ Route::get('/tablaClienteFidel', 'Reporte\DashBoard\Consultas@tablaClientesFidel
 /*Clientes Fidelizacion*/
 Route::get('/clientesFidelizacion','ClientesFidelizacion\ClientesFidel@index');
 Route::get('/clientesFidelizacion/query','ClientesFidelizacion\ClientesFidel@query');
-Route::post('/clientesFidelizacion/updateVendedora', 'ClientesFidelizacion\ClientesFidel@updateVendedora');
+Route::post('/clientesFidelizacion/update', 'ClientesFidelizacion\ClientesFidel@update');
 Route::get('/clientesFidelizacion/agregarNotas', 'ClientesFidelizacion\ClientesFidel@agregarNotas');
 Route::get('/clientesFidelizacion/notas', 'ClientesFidelizacion\ClientesFidel@notas');
 Route::post('/clientesFidelizacion/finalizarClienteFidel', 'ClientesFidelizacion\ClientesFidel@finalizarClienteFidel');
 Route::get('/clientesFidelizacion/biFidel', 'ClientesFidelizacion\ClientesFidel@biFidel');
 Route::get('clientesFidelizacion/setParametros','ClientesFidelizacion\ClientesFidel@setParametros');
+Route::get('clientesFidelizacion/etapasFidel','ClientesFidelizacion\ClientesFidel@etapas_fidel');
 Route::post('clientesFidelizacion/guardarParametros','ClientesFidelizacion\ClientesFidel@guardarParametros');
 
 Route::group(['prefix' => 'api'],
