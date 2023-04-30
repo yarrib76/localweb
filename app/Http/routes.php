@@ -218,6 +218,13 @@ Route::get('clientesFidelizacion/setParametros','ClientesFidelizacion\ClientesFi
 Route::get('clientesFidelizacion/etapasFidel','ClientesFidelizacion\ClientesFidel@etapas_fidel');
 Route::post('clientesFidelizacion/guardarParametros','ClientesFidelizacion\ClientesFidel@guardarParametros');
 
+/*Personal*/
+Route::get('/fichaje','Personal\Fichaje@index');
+Route::get('/fichajeCodigo','Personal\Fichaje@consultaEmpleado');
+Route::get('/ingreso','Personal\Fichaje@ingreso');
+Route::get('/egreso','Personal\Fichaje@egreso');
+
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');
