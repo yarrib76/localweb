@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Response;
 
 class AbmPersonal extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia');
+    }
     public function index()
     {
         $usuarios = DB::select('SELECT users.id, name,email,codigo, rolesweb.tipo_role as rol FROM samira.users

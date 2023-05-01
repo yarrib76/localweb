@@ -35,6 +35,7 @@
                     <li><a href="/reportevendedoras"> Vendedoras </a></li>
                     <li><a href="/notasadmin">Administrar Notas</a></li>
                     <li><a href="/panelcontrol"> DashBoard </a></li>
+                    <li><a href="/abmpersonal"> Personal </a></li>
                 </ul>
             </li>
             <li class="dropdown">
