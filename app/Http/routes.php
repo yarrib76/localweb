@@ -223,6 +223,10 @@ Route::get('/fichaje','Personal\Fichaje@index');
 Route::get('/fichajeCodigo','Personal\Fichaje@consultaEmpleado');
 Route::get('/ingreso','Personal\Fichaje@ingreso');
 Route::get('/egreso','Personal\Fichaje@egreso');
+/*ABMPersonal*/
+Route::get('abmpersonal','Personal\AbmPersonal@index');
+Route::get('getcodigo','Personal\AbmPersonal@obtngoCodigoBarra');
+Route::get('guardarPersonal','Personal\AbmPersonal@guardar');
 
 
 Route::group(['prefix' => 'api'],
