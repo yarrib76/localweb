@@ -111,7 +111,7 @@
                             <input type="text" class="form-control" id="codio" style= "font-size:15px" pattern="\d*" maxlength="8" minlength="8" placeholder="Codigo Barras" onfocus="limpiarInput()">
                         </div>
                         <div class="col-xs-3 col-sm-3 col-md-3">
-                            <button class="round-button" onclick="generarCodigoBarras()">Generar</button>
+                            <button id="btnGenerador" class="round-button" onclick="generarCodigoBarras()">Generar</button>
                         </div>
                         <h3>Codigo de Barras</h3>
                         <!-- <img id="imgCodigoBarras" src="" width="150" height="80"> -->
@@ -140,6 +140,7 @@
         var emailInput = document.getElementById('email')
         var rolInput = document.getElementById('rol')
         var codigoInput = document.getElementById('codio')
+        var btnGenerador = document.getElementById('btnGenerador')
         let codigoBarrasConBit;
         var user_id;
         $(document).ready( function () {
@@ -169,6 +170,7 @@
         function modal(usuario_id, nombre, email, rol, codigo){
             llenarInput(usuario_id, nombre, email, rol, codigo)
             imgCodigoBarras.hidden = true
+            btnGenerador.disabled  = true
             user_id = usuario_id
             // Get the modal
             var modal = document.getElementById('myModal');
@@ -232,6 +234,7 @@
 
         function limpiarInput(){
             codigoInput.value = ""
+            btnGenerador.disabled = false
         }
     </script>
 @stop
