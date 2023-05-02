@@ -108,7 +108,7 @@
                             <h4>7799</h4>
                         </div>
                         <div class="col-xs-7 col-sm-7 col-md-7">
-                            <input type="text" class="form-control" id="codio" style= "font-size:15px" pattern="\d*" maxlength="8" minlength="8" placeholder="Codigo Barras">
+                            <input type="text" class="form-control" id="codio" style= "font-size:15px" pattern="\d*" maxlength="8" minlength="8" placeholder="Codigo Barras" onfocus="limpiarInput()">
                         </div>
                         <div class="col-xs-3 col-sm-3 col-md-3">
                             <button class="round-button" onclick="generarCodigoBarras()">Generar</button>
@@ -140,6 +140,7 @@
         var emailInput = document.getElementById('email')
         var rolInput = document.getElementById('rol')
         var codigoInput = document.getElementById('codio')
+        let codigoBarrasConBit;
         var user_id;
         $(document).ready( function () {
             var table =  $('#reporte').DataTable({
@@ -195,7 +196,7 @@
             nombreInput.value = nombre
             emailInput.value = email
             rolInput.value = rol
-            codigoInput.value = codigo
+            codigoInput.value = codigo.substring(4)
         }
 
         function generarCodigoBarras(){
@@ -212,6 +213,7 @@
                     /*Utilizo la creación del codigo de barras provisto a travez de una pagina Web
                      https://free-barcode.com/howto/addbarcodetowebpage.asp?gclid=CjwKCAjwxr2iBhBJEiwAdXECw2e8JMIQm0tc_zrLUcJvh1J-YeK9ldSc8diR8YpQ4Bls5aVndPmnhxoCNzEQAvD_BwE
                      */
+                    codigoBarrasConBit = json
                     imgCodigoBarras.src=src="https://www.free-barcode.com/barcodemaker.asp?bc1="+ json + "&bc2=0&bc3=3&bc4=0.6&bc5=0&bc6=1&bc7=Arial&bc8=15&bc9=1"
                 },
             });
@@ -219,13 +221,17 @@
 
         function guardar(){
             $.ajax({
-                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoInput.value + '&user_id=' + user_id,
+                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarrasConBit + '&user_id=' + user_id,
                 dataType: "json",
                 success: function (json){
                     alert("Guardado Correctamente")
                     location.reload()
                 }
             });
+        }
+
+        function limpiarInput(){
+            codigoInput.value = ""
         }
     </script>
 @stop
