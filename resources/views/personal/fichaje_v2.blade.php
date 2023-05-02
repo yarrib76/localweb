@@ -36,6 +36,7 @@
                     <td>
                         <input type="password" class="form-control" id="codigo" required="required" style= "font-size:15px" autocomplete="off">
                         <input type="text" class="form-control" id="vendedora" disabled style= "font-size:15px">
+                        <img src="" id="fotoPersonal" style="margin-left: 50px" width="90" height="90">
                     </td>
                     <td>
                         <button id="botonFichada"  disabled></button>
@@ -175,6 +176,8 @@
     });
 
     function callModal(tipo){
+        var imgFotoPersonal = document.getElementById('fotoPersonal')
+        imgFotoPersonal.hidden = true
         // Get the modal
         var modal = document.getElementById('myModal');
 
@@ -216,17 +219,20 @@
         });
     }
     function consultaIngreso(codigo){
-        console.log(codigo)
         var vendedora = document.getElementById('vendedora')
         var btnIngreso = document.getElementById('botonFichada')
+        var imgFotoPersonal = document.getElementById('fotoPersonal')
         vendedora.value = ""
         $.ajax({
             url: '/fichajeCodigo?codigo=' + codigo,
             dataType: "json",
             success: function (json) {
                 if (json.length ==! 0){
+                    console.log(json)
                     vendedora.value = json[0]['name'];
                     btnIngreso.disabled = false;
+                    imgFotoPersonal.hidden = false
+                    imgFotoPersonal.src = "imagenes/" + json[0]['foto'];
                 }else {
                     alert('La vendedoras No Existe')
                     location.reload()

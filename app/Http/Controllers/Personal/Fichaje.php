@@ -22,7 +22,7 @@ class Fichaje extends Controller
     public function consultaEmpleado()
     {
         $codigo = Input::get('codigo');
-        $empleado = DB::select('select name from samira.users
+        $empleado = DB::select('select name, foto from samira.users
                                 where codigo = "'.$codigo.'"');
         return Response::json($empleado);
     }
