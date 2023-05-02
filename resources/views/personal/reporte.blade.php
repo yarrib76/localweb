@@ -23,7 +23,7 @@
                                         <td>{{$usuario->email}}</td>
                                         <td>{{$usuario->rol}}</td>
                                         <td>{{$usuario->codigo}}</td>
-                                        <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}', '{{$usuario->rol}}', '{{$usuario->codigo}}')">Editar</button></td>
+                                        <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}', '{{$usuario->rol}}', '{{$usuario->codigo}}', '{{$usuario->foto}}')">Editar</button></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -95,7 +95,18 @@
         <div id="modal-content" class="modal-content">
             <span id="close" class="close">&times;</span>
             <h4 align="center">Usuario</h4>
-            <img src="refresh/yamil.jpg"  width="80" height="80">
+            <table>
+                <tr>
+                    <td>
+                        <img id="imgFotoPersonal" src="" width="80" height="80">
+                        <form id="formulario-imagen" enctype="multipart/form-data">
+                            <input type="file" name="imagen" id="imagen" style="visibility:hidden;">
+                            <button id="btnSubirImagen" type="button" class="btn btn-info" onclick="subirImagen()">Subir</button>
+                            <label for="imagen" class="btn btn-info">Archivo</label>
+                        </form>
+                    </td>
+                </tr>
+            </table>
             <table>
                 <tr>
                     <td>
@@ -141,6 +152,11 @@
         var rolInput = document.getElementById('rol')
         var codigoInput = document.getElementById('codio')
         var btnGenerador = document.getElementById('btnGenerador')
+        var btnSubirImagen = document.getElementById('btnSubirImagen')
+        var imagenInput = document.getElementById('imagen')
+        var imgFotoPersonal = document.getElementById('imgFotoPersonal')
+        var fotoPersonal
+        let codigoBarrasGuardado;
         let codigoBarrasConBit;
         var user_id;
         $(document).ready( function () {
@@ -167,10 +183,14 @@
                 }
             });
         });
-        function modal(usuario_id, nombre, email, rol, codigo){
-            llenarInput(usuario_id, nombre, email, rol, codigo)
+        function modal(usuario_id, nombre, email, rol, codigo, foto){
+            llenarInput(usuario_id, nombre, email, rol, codigo, foto)
             imgCodigoBarras.hidden = true
             btnGenerador.disabled  = true
+            btnSubirImagen.disabled = true
+            imagenInput.addEventListener('input', function (evt) {
+                btnSubirImagen.disabled = false
+            });
             user_id = usuario_id
             // Get the modal
             var modal = document.getElementById('myModal');
@@ -194,11 +214,15 @@
                 }
             }
         }
-        function llenarInput(usuario_id, nombre, email, rol, codigo){
+        function llenarInput(usuario_id, nombre, email, rol, codigo, foto){
             nombreInput.value = nombre
             emailInput.value = email
             rolInput.value = rol
-            codigoInput.value = codigo.substring(4)
+            codigoBarrasGuardado = codigo
+            codigoInput.value = codigo.slice(4,-1)
+            imgFotoPersonal.src = "imagenes/" + foto
+            fotoPersonal = foto
+            console.log(fotoPersonal)
         }
 
         function generarCodigoBarras(){
@@ -222,8 +246,11 @@
         }
 
         function guardar(){
+            if (btnGenerador.disabled == true){
+                codigoBarras = codigoBarrasGuardado
+            }else codigoBarras = codigoBarrasConBit
             $.ajax({
-                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarrasConBit + '&user_id=' + user_id,
+                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras + '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal,
                 dataType: "json",
                 success: function (json){
                     alert("Guardado Correctamente")
@@ -233,8 +260,30 @@
         }
 
         function limpiarInput(){
-            codigoInput.value = ""
+           // codigoInput.value = codigoInput.value.slice(0,- 1)
             btnGenerador.disabled = false
+        }
+
+        function subirImagen() {
+            var formData = new FormData($('#formulario-imagen')[0]);
+            $.ajax({
+                url: '/guardar-imagen',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response)
+                    imgFotoPersonal.src = "imagenes/" + response
+                    fotoPersonal = response
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
         }
     </script>
 @stop

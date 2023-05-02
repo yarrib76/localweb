@@ -227,7 +227,7 @@ Route::get('/egreso','Personal\Fichaje@egreso');
 Route::get('abmpersonal','Personal\AbmPersonal@index');
 Route::get('getcodigo','Personal\AbmPersonal@obtngoCodigoBarra');
 Route::get('guardarPersonal','Personal\AbmPersonal@guardar');
-
+Route::post('/guardar-imagen', 'Personal\ImagenController@guardar');
 
 Route::group(['prefix' => 'api'],
     function () {

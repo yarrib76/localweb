@@ -20,7 +20,7 @@ class AbmPersonal extends Controller
     }
     public function index()
     {
-        $usuarios = DB::select('SELECT users.id, name,email,codigo, rolesweb.tipo_role as rol FROM samira.users
+        $usuarios = DB::select('SELECT users.id, name,email,codigo, rolesweb.tipo_role as rol, foto FROM samira.users
                             inner join samira.rolesweb on rolesweb.id_roles = users.id_roles;');
         return view ('personal.reporte',compact('usuarios'));
     }
@@ -41,8 +41,10 @@ class AbmPersonal extends Controller
         $email = Input::get('email');
         $codigo = Input::get('codigo');
         $user_id = Input::get('user_id');
+        $fotoPersonal = Input::get('fotoPersonal');
 
-        DB::select('UPDATE samira.users SET name = "'.$nombre.'", email = "'.$email.'", codigo = "'.$codigo.'"
+        DB::select('UPDATE samira.users SET name = "'.$nombre.'", email = "'.$email.'", codigo = "'.$codigo.'",
+                    foto = "'.$fotoPersonal.'"
                     where id = "'.$user_id.'"');
         return Response::json("OK");;
     }
