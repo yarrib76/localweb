@@ -38,7 +38,6 @@ class Fichaje extends Controller
         if ($consulta['estado']){
             FichajeDB::create([
                 'fecha_ingreso' => $fecha,
-                'tipo' => 'I',
                 'id_user' => $user_id[0]->id,
             ]);
             return "Que tenga un buen dia. Gracias!!!";
