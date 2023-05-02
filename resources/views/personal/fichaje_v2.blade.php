@@ -34,7 +34,7 @@
                         <img src="refresh/codigo-de-barras.gif" width="90" height="90">
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="codigo" required="required" style= "font-size:15px" autocomplete="off">
+                        <input type="password" class="form-control" id="codigo" required="required" style= "font-size:15px" autocomplete="off">
                         <input type="text" class="form-control" id="vendedora" disabled style= "font-size:15px">
                     </td>
                     <td>
@@ -210,10 +210,13 @@
         input.focus()
         input.value = ""
         input.addEventListener('input', function (evt) {
-            consultaIngreso(this.value);
+            if (this.value.length == 13){
+                consultaIngreso(this.value)
+            }
         });
     }
     function consultaIngreso(codigo){
+        console.log(codigo)
         var vendedora = document.getElementById('vendedora')
         var btnIngreso = document.getElementById('botonFichada')
         vendedora.value = ""
@@ -221,7 +224,6 @@
             url: '/fichajeCodigo?codigo=' + codigo,
             dataType: "json",
             success: function (json) {
-                console.log(json.length)
                 if (json.length ==! 0){
                     vendedora.value = json[0]['name'];
                     btnIngreso.disabled = false;
