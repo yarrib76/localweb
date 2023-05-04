@@ -114,7 +114,8 @@
                     <td>
                         <input type="text" class="form-control" id="nombre" required="required" style= "font-size:15px" placeholder="Nombre">
                         <input type="text" class="form-control" id="email" style= "font-size:15px" placeholder="Email">
-                        <input type="text" class="form-control" id="rol" style= "font-size:15px" placeholder="Rol">
+                    <!--    <input type="text" class="form-control" id="rol" style= "font-size:15px" placeholder="Rol"> -->
+                        <select id="rol_select" class="form-control" name="rol_select_name"></select>
                         <div class="col-xs-2 col-sm-2 col-md-2 ">
                             <h4>7799</h4>
                         </div>
@@ -149,7 +150,7 @@
         var imgCodigoBarras = document.getElementById('imgCodigoBarras')
         var nombreInput = document.getElementById('nombre')
         var emailInput = document.getElementById('email')
-        var rolInput = document.getElementById('rol')
+        var rolSelect = document.getElementById('rol_select')
         var codigoInput = document.getElementById('codio')
         var btnGenerador = document.getElementById('btnGenerador')
         var btnSubirImagen = document.getElementById('btnSubirImagen')
@@ -160,6 +161,7 @@
         let codigoBarrasConBit;
         var user_id;
         $(document).ready( function () {
+            cargaSelectRol()
             var table =  $('#reporte').DataTable({
                 "lengthMenu": [ [8,  16, 32, -1], [8, 16, 32, "Todos"] ],
                 language: {
@@ -217,7 +219,7 @@
         function llenarInput(usuario_id, nombre, email, rol, codigo, foto){
             nombreInput.value = nombre
             emailInput.value = email
-            rolInput.value = rol
+            rolSelect.value = rol
             codigoBarrasGuardado = codigo
             codigoInput.value = codigo.slice(4,-1)
             imgFotoPersonal.src = "imagenes/" + foto
@@ -250,7 +252,7 @@
                 codigoBarras = codigoBarrasGuardado
             }else codigoBarras = codigoBarrasConBit
             $.ajax({
-                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras + '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal,
+                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras + '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal + '&tipo_role=' + rolSelect.value,
                 dataType: "json",
                 success: function (json){
                     alert("Guardado Correctamente")
@@ -284,6 +286,24 @@
                     console.log(textStatus, errorThrown);
                 }
             });
+        }
+
+        function cargaSelectRol(){
+            $.ajax({
+                type: 'get',
+                url: '/api/relesWebSelect',
+                //    data: {radio_id:category_id , flota_id:flota_id},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (datos, textStatus, jqXHR) {
+                    $.each(datos, function (i, value) {
+                        $('#rol_select').append("<option value='" + value['tipo_role'] + "'>" + value['tipo_role'] + '</option>');
+                    });
+                    //Selecciono en el combo como default el proveedor que tiene definido
+                    $("#rol_select").val(rolSelect.value);
+
+                }
+            })
         }
     </script>
 @stop

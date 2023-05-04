@@ -41,10 +41,11 @@ class AbmPersonal extends Controller
         $email = Input::get('email');
         $codigo = Input::get('codigo');
         $user_id = Input::get('user_id');
+        $tipo_rol = Input::get('tipo_role');
         $fotoPersonal = Input::get('fotoPersonal');
-
+        $id_role = DB::select('select id_roles from samira.rolesweb where tipo_role="'.$tipo_rol.'" ');
         DB::select('UPDATE samira.users SET name = "'.$nombre.'", email = "'.$email.'", codigo = "'.$codigo.'",
-                    foto = "'.$fotoPersonal.'"
+                    foto = "'.$fotoPersonal.'", id_roles = "'.$id_role[0]->id_roles.'"
                     where id = "'.$user_id.'"');
         return Response::json("OK");;
     }
