@@ -228,7 +228,6 @@
             dataType: "json",
             success: function (json) {
                 if (json.length ==! 0){
-                    console.log(json)
                     vendedora.value = json[0]['name'];
                     btnIngreso.disabled = false;
                     imgFotoPersonal.hidden = false
