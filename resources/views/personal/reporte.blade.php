@@ -13,6 +13,7 @@
                                     <th>Email</th>
                                     <th>Rol</th>
                                     <th>Codigo</th>
+                                    <th>Vendedora</th>
                                     <th>Accion</th>
                                 </tr>
                                 </thead>
@@ -23,7 +24,10 @@
                                         <td>{{$usuario->email}}</td>
                                         <td>{{$usuario->rol}}</td>
                                         <td>{{$usuario->codigo}}</td>
-                                        <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}', '{{$usuario->rol}}', '{{$usuario->codigo}}', '{{$usuario->foto}}')">Editar</button>
+                                        <td>{{$usuario->vendedora}}</td>
+                                        <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}',
+                                                                                            '{{$usuario->rol}}', '{{$usuario->codigo}}',
+                                                                                            '{{$usuario->foto}}', '{{$usuario->vendedora}}')">Editar</button>
                                             <button class="btn btn-primary"> <i class="fa fa-line-chart"></i></button>
                                         </td>
                                     </tr>
@@ -118,6 +122,7 @@
                         <input type="text" class="form-control" id="email" style= "font-size:15px" placeholder="Email">
                     <!--    <input type="text" class="form-control" id="rol" style= "font-size:15px" placeholder="Rol"> -->
                         <select id="rol_select" class="form-control" name="rol_select_name"></select>
+                        <select id="vendedora_select" class="form-control" name="vendedora_select_name"></select>
                         <div class="col-xs-2 col-sm-2 col-md-2 ">
                             <h4>7799</h4>
                         </div>
@@ -154,6 +159,7 @@
         var nombreInput = document.getElementById('nombre')
         var emailInput = document.getElementById('email')
         var rolSelect = document.getElementById('rol_select')
+        var vendedoraSelect = document.getElementById('vendedora_select')
         var codigoInput = document.getElementById('codio')
         var btnGenerador = document.getElementById('btnGenerador')
         var btnSubirImagen = document.getElementById('btnSubirImagen')
@@ -165,6 +171,7 @@
         var user_id;
         $(document).ready( function () {
             cargaSelectRol()
+            cargarSelectVendedoras()
             var table =  $('#reporte').DataTable({
                 "lengthMenu": [ [8,  16, 32, -1], [8, 16, 32, "Todos"] ],
                 language: {
@@ -188,14 +195,15 @@
                 }
             });
         });
-        function modal(usuario_id, nombre, email, rol, codigo, foto){
-            llenarInput(usuario_id, nombre, email, rol, codigo, foto)
+        function modal(usuario_id, nombre, email, rol, codigo, foto, id_vendedora){
+            llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora)
             imgCodigoBarras.hidden = true
             btnGenerador.disabled  = true
             btnSubirImagen.disabled = true
             imagenInput.addEventListener('input', function (evt) {
                 btnSubirImagen.disabled = false
             });
+
             user_id = usuario_id
             // Get the modal
             var modal = document.getElementById('myModal');
@@ -219,10 +227,11 @@
                 }
             }
         }
-        function llenarInput(usuario_id, nombre, email, rol, codigo, foto){
+        function llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora){
             nombreInput.value = nombre
             emailInput.value = email
             rolSelect.value = rol
+            vendedoraSelect.value = id_vendedora
             codigoBarrasGuardado = codigo
             codigoInput.value = codigo.slice(4,-1)
             imgFotoPersonal.src = "imagenes/" + foto
@@ -255,7 +264,8 @@
                 codigoBarras = codigoBarrasGuardado
             }else codigoBarras = codigoBarrasConBit
             $.ajax({
-                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras + '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal + '&tipo_role=' + rolSelect.value,
+                url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras +
+                '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal + '&tipo_role=' + rolSelect.value + '&vendedora=' + vendedoraSelect.value,
                 dataType: "json",
                 success: function (json){
                     alert("Guardado Correctamente")
@@ -304,7 +314,22 @@
                     });
                     //Selecciono en el combo como default el proveedor que tiene definido
                     $("#rol_select").val(rolSelect.value);
-
+                }
+            })
+        }
+        function cargarSelectVendedoras(){
+            console.log(vendedoraSelect.value)
+            $.ajax({
+                type: 'get',
+                url: '/api/listavendedoras',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (datos) {
+                    $.each(datos, function (i, value) {
+                        $('#vendedora_select').append("<option value='" + value['Nombre'] + "'>" + value['Nombre'] + '</option>');
+                    });
+                    //Selecciono en el combo como default el proveedor que tiene definido
+                    $("#vendedora_select").val(vendedoraSelect.value);
                 }
             })
         }
