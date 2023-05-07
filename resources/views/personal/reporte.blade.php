@@ -28,7 +28,7 @@
                                         <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}',
                                                                                             '{{$usuario->rol}}', '{{$usuario->codigo}}',
                                                                                             '{{$usuario->foto}}', '{{$usuario->vendedora}}')">Editar</button>
-                                            <button class="btn btn-primary"> <i class="fa fa-line-chart"></i></button>
+                                            <a href='{{ url('estadisticas', $usuario->id) }}' class = 'btn btn-primary'><i class="fa fa-line-chart"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

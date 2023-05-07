@@ -229,6 +229,13 @@ Route::get('getcodigo','Personal\AbmPersonal@obtngoCodigoBarra');
 Route::get('guardarPersonal','Personal\AbmPersonal@guardar');
 Route::post('/guardar-imagen', 'Personal\ImagenController@guardar');
 
+/*Estadisticas*/
+Route::get('estadisticas/{users_id}','Personal\Estadisticas@index');
+Route::get('estadisticaPedidos','Personal\Estadisticas@pedidos');
+Route::get('obtengoFoto','Personal\Estadisticas@obtengoFoto');
+Route::get('obtengoDatosPersonales','Personal\Estadisticas@obtengoDatosPersonales');
+Route::get('obtengoCantPedidos','Personal\Estadisticas@obtengoCantPedidos');
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');
