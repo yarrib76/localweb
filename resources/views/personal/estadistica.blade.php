@@ -34,6 +34,37 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                            <table id="reporte" class="table table-striped table-bordered records_list">
+                                <thead>
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <h4>Ventas Totales</h4>
+                                                    <di id="ResultadoVentasTotales"></di>
+                                                    <h4>Ventas Promedio</h4>
+                                                    <div id="ResultadoPromedioVentas"></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                 </tr>
+                                <tr>
+                                    <td>
+                                        <h4>Ventas Salon</h4>
+                                        <div id="lineChart_VentasSalon"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id="reporte" class="table table-striped table-bordered records_list">
+                                <tr>
+                                    <td>
+                                        <h4>Pedidos Cancelados</h4>
+                                        <div id="lineChart_PedidosCancelados"></div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -57,12 +88,17 @@
         var nombre;
         var pedidos;
         var totalPedidos;
+        var ventasSalon;
+        var ventasSalonTotales;
+        var pedidosCancelados;
         $(document).ready( function () {
             var img_foto = document.getElementById('img_foto')
             nombre = document.getElementById('nombre')
             obtengoPedidosAnual({{$id}})
+            obtengoVentasSalon({{$id}})
             obtengoFoto({{$id}})
             obtengoDatosPersonales({{$id}})
+            obtengoPedidosCancelados({{$id}})
         });
         function obtengoFoto(usuario_id){
             $.ajax({
@@ -73,12 +109,31 @@
                 }
             });
         }
-        function obtengoPedidosAnual(usuaio_id){
+        function obtengoPedidosAnual(usuario_id){
             $.ajax({
-                url: '/estadisticaPedidos?usuario_id=' + usuaio_id,
+                url: '/estadisticaPedidos?usuario_id=' + usuario_id,
                 dataType : "json",
                 success : function(json) {
                     graficoPedidos(json);
+                }
+            });
+        }
+
+        function obtengoVentasSalon(usuario_id){
+            $.ajax({
+                url: '/obtengoVentasSalon?usuario_id=' + usuario_id,
+                dataType : "json",
+                success : function(json) {
+                    graficoVentasSalon(json);
+                }
+            });
+        }
+        function obtengoPedidosCancelados(usuario_id){
+            $.ajax({
+                url: '/obtengoPedidosCancelados?usuario_id=' + usuario_id,
+                dataType : "json",
+                success : function(json) {
+                    graficoPedidosCancelados(json);
                 }
             });
         }
@@ -96,6 +151,22 @@
                 chart.draw(data, options);
             }
             obtengoCantPedidos()
+        }
+
+        function graficoVentasSalon(json){
+            ventasSalon = json;
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(donut_chart);
+            function donut_chart() {
+                var data = google.visualization.arrayToDataTable(ventasSalon);
+                var options = {
+                    // title: 'Pedidos Realizados',
+                    is3D: true,
+                }
+                var chart = new google.visualization.LineChart(document.getElementById('lineChart_VentasSalon'));
+                chart.draw(data, options);
+            }
+            obtengoVentasTotales()
         }
         function obtengoDatosPersonales(usuario_id){
             $.ajax({
@@ -128,7 +199,44 @@
                 e += "<td>" + "[" + pedidos[i+1]['0'].substring(3,0) + " = " + (Math.round(pedidos[i+1]['1'] * 100 / totalPedidos[i]['cantidad'])) + "%] " + "</td>";
             }
             document.getElementById("ResultadoPromedio").innerHTML = e;
+        }
+        function obtengoVentasTotales(){
+            $.ajax({
+                url: '/obtengoVentasSalonTotales',
+                dataType: "json",
+                success: function(json) {
+                    ventasSalonTotales = json
+                    var e = "</td>";
+                    for (var i = 0; i < json.length; i++) {
+                        e += "<td>" + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
+                    }
+                    document.getElementById("ResultadoVentasTotales").innerHTML = e;
+                    obtengoPromedioVentas()
+                }
+            })
+        }
+        function obtengoPromedioVentas(){
+            var e = "</td>";
+        //      console.log(pedidos[0+1][0])
+            for (var i = 0; i < ventasSalonTotales.length; i++){
+                e += "<td>" + "[" + ventasSalon[i+1]['0'].substring(3,0) + " = " + (Math.round(ventasSalon[i+1]['1'] * 100 / ventasSalonTotales[i]['cantidad'])) + "%] " + "</td>";
+            }
+            document.getElementById("ResultadoPromedioVentas").innerHTML = e;
+        }
 
+        function graficoPedidosCancelados(json){
+            pedidosCancelados = json;
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(donut_chart);
+            function donut_chart() {
+                var data = google.visualization.arrayToDataTable(pedidosCancelados);
+                var options = {
+                    // title: 'Pedidos Realizados',
+                    is3D: true,
+                }
+                var chart = new google.visualization.LineChart(document.getElementById('lineChart_PedidosCancelados'));
+                chart.draw(data, options);
+            }
         }
     </script>
 @stop

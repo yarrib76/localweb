@@ -235,6 +235,10 @@ Route::get('estadisticaPedidos','Personal\Estadisticas@pedidos');
 Route::get('obtengoFoto','Personal\Estadisticas@obtengoFoto');
 Route::get('obtengoDatosPersonales','Personal\Estadisticas@obtengoDatosPersonales');
 Route::get('obtengoCantPedidos','Personal\Estadisticas@obtengoCantPedidos');
+Route::get('obtengoVentasSalon','Personal\Estadisticas@ventasSalon');
+Route::get('obtengoVentasSalonTotales','Personal\Estadisticas@obtengoVentasSalonTotales');
+Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCancelados');
+Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
 
 Route::group(['prefix' => 'api'],
     function () {
