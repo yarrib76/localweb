@@ -239,6 +239,7 @@ Route::get('obtengoVentasSalon','Personal\Estadisticas@ventasSalon');
 Route::get('obtengoVentasSalonTotales','Personal\Estadisticas@obtengoVentasSalonTotales');
 Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCancelados');
 Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
+Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengoCantidadTotalesParaNoEncuesta');
 
 Route::group(['prefix' => 'api'],
     function () {

@@ -48,6 +48,9 @@ class Estadisticas extends Controller
                                 where id_vendedoras <> 31
                                 and users.id = "'.$usuario_id.'"
                                 and fecha >= "'. $this->anio.'""-01-01" and fecha <= "'. $this->anio.'""-12-31"
+                                and nrofactura is not null
+                                and ordenWeb is not null
+								and ordenWeb <> 0
                                 group by (month(fecha));');
 
         $result = $this->formatoParaGrafico($pedidos);
@@ -85,6 +88,9 @@ class Estadisticas extends Controller
         DB::statement("SET lc_time_names = 'es_ES'");
         $cantidadPedidos = DB::select('select left(upper(date_format(fecha, "%M")),3) mes, count(*) as cantidad from samira.controlpedidos
                                        where fecha >= "'.$this->anio.'""-01-01" and fecha <= "'.$this->anio.'""-12-31"
+                                       and nrofactura is not null
+                                       and ordenWeb is not null
+									   and ordenWeb <> 0
                                        group by (month(fecha));');
         return Response::json($cantidadPedidos);
     }
@@ -138,6 +144,24 @@ class Estadisticas extends Controller
         $result = $this->formatoParaGrafico($noEncuestados);
         return $result;
     }
+
+    public function obtengoCantidadTotalesParaNoEncuesta()
+    {
+        $usuario_id = Input::get('usuario_id');
+        DB::statement("SET lc_time_names = 'es_ES'");
+        $cantidadTotalesNoEncuesta = DB::select('select left(upper(date_format(facth.fecha, "%M")),3) mes, count(*) as cantidad from samira.facturah as Facth
+                                        left join samira.controlpedidos as Control ON Control.nrofactura = Facth.NroFactura
+                                        inner join samira.clientes as clientes on clientes.id_clientes = facth.id_clientes
+                                        inner join samira.vendedores On vendedores.nombre = Control.vendedora
+                                        inner join samira.users on users.id_vendedoras = vendedores.id
+                                        where control.Fecha >= "'.$this->anio.'""-01-01" and control.Fecha <= "'.$this->anio.'""-12-31"
+                                            and Control.ordenWeb is Not null
+                                            and Control.ordenWeb <> 0
+                                            and users.id = "'.$usuario_id.'"
+                                            group by month(control.fecha)');
+        return Response::json($cantidadTotalesNoEncuesta);
+    }
+
     public function formatoParaGrafico($datos)
     {
         $result[] = ['Mes', 'Cantidad'];

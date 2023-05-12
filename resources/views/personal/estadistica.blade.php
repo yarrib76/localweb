@@ -65,6 +65,28 @@
                                     </td>
                                 </tr>
                             </table>
+                            <table id="reporte" class="table table-striped table-bordered records_list">
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <h4>Total Pedidos</h4>
+                                                    <di id="ResultadoTotalesNoEncuesta"></di>
+                                                    <h4>Promedio No Encuestado</h4>
+                                                    <div id="ResultadoPromedioNoEncuesta"></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h4>Clintes No Encuestados</h4>
+                                        <div id="lineChart_NoEncuestados"></div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -91,6 +113,8 @@
         var ventasSalon;
         var ventasSalonTotales;
         var pedidosCancelados;
+        var pedidosSinEncuesta;
+        var pedidosTotalesSinEncuesta;
         $(document).ready( function () {
             var img_foto = document.getElementById('img_foto')
             nombre = document.getElementById('nombre')
@@ -99,6 +123,7 @@
             obtengoFoto({{$id}})
             obtengoDatosPersonales({{$id}})
             obtengoPedidosCancelados({{$id}})
+            obtengoPedidosSinEncuesta({{$id}})
         });
         function obtengoFoto(usuario_id){
             $.ajax({
@@ -134,6 +159,15 @@
                 dataType : "json",
                 success : function(json) {
                     graficoPedidosCancelados(json);
+                }
+            });
+        }
+        function obtengoPedidosSinEncuesta(usuario_id){
+            $.ajax({
+                url: '/obtengoCantidadNoEncuesta?usuario_id=' + usuario_id,
+                dataType : "json",
+                success : function(json) {
+                    graficoPedidosSinEncuesta(json,usuario_id);
                 }
             });
         }
@@ -224,6 +258,29 @@
             document.getElementById("ResultadoPromedioVentas").innerHTML = e;
         }
 
+        function obtengoTotalesNoEncuesta(usuario_id){
+            $.ajax({
+                url: '/obtengoCantidadTotalesParaNoEncuesta?usuario_id=' + usuario_id,
+                dataType: "json",
+                success: function(json) {
+                    pedidosTotalesSinEncuesta = json
+                    var e = "</td>";
+                    for (var i = 0; i < json.length; i++) {
+                        e += "<td>" + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
+                    }
+                    document.getElementById("ResultadoTotalesNoEncuesta").innerHTML = e;
+                    obtengoPromedioNoEncuesta()
+                }
+            })
+        }
+        function obtengoPromedioNoEncuesta(){
+            var e = "</td>";
+            for (var i = 0; i < pedidosTotalesSinEncuesta.length; i++){
+                e += "<td>" + "[" + pedidosSinEncuesta[i+1]['0'].substring(3,0) + " = " + (Math.round(pedidosSinEncuesta[i+1]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])) + "%] " + "</td>";
+            }
+            document.getElementById("ResultadoPromedioNoEncuesta").innerHTML = e;
+        }
+
         function graficoPedidosCancelados(json){
             pedidosCancelados = json;
             google.charts.load('current', {'packages': ['corechart']});
@@ -237,6 +294,21 @@
                 var chart = new google.visualization.LineChart(document.getElementById('lineChart_PedidosCancelados'));
                 chart.draw(data, options);
             }
+        }
+        function graficoPedidosSinEncuesta(json,usuario_id) {
+            pedidosSinEncuesta = json;
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(donut_chart);
+            function donut_chart() {
+                var data = google.visualization.arrayToDataTable(pedidosSinEncuesta);
+                var options = {
+                    // title: 'Pedidos Realizados',
+                    is3D: true,
+                }
+                var chart = new google.visualization.LineChart(document.getElementById('lineChart_NoEncuestados'));
+                chart.draw(data, options);
+            }
+            obtengoTotalesNoEncuesta(usuario_id)
         }
     </script>
 @stop
