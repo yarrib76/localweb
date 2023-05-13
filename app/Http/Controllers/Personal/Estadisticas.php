@@ -135,12 +135,12 @@ class Estadisticas extends Controller
                                         inner join samira.clientes as clientes on clientes.id_clientes = facth.id_clientes
                                         inner join samira.vendedores On vendedores.nombre = Control.vendedora
                                         inner join samira.users on users.id_vendedoras = vendedores.id
-                                        where Facth.Fecha >= "'.$this->anio.'""-01-01" and Facth.Fecha <= "'.$this->anio.'""-12-31"
+                                        where control.Fecha >= "'.$this->anio.'""-01-01" and control.Fecha <= "'.$this->anio.'""-12-31"
                                             and Control.ordenWeb is Not null
                                             and Control.ordenWeb <> 0
                                             and clientes.encuesta = "Ninguna"
                                             and users.id = "'.$usuario_id.'"
-                                            group by month(facth.fecha)');
+                                            group by month(control.fecha)');
         $result = $this->formatoParaGrafico($noEncuestados);
         return $result;
     }
