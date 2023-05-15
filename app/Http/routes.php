@@ -241,6 +241,10 @@ Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCance
 Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
 Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengoCantidadTotalesParaNoEncuesta');
 
+/*Control Fichaje*/
+Route::get('/listaFichaje','Personal\ControlFichaje@control');
+
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');

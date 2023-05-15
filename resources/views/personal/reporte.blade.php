@@ -27,7 +27,8 @@
                                         <td>{{$usuario->vendedora}}</td>
                                         <td><button class="btn btn-primary" onclick="modal('{{$usuario->id}}', '{{$usuario->name}}', '{{$usuario->email}}',
                                                                                             '{{$usuario->rol}}', '{{$usuario->codigo}}',
-                                                                                            '{{$usuario->foto}}', '{{$usuario->vendedora}}')">Editar</button>
+                                                                                            '{{$usuario->foto}}', '{{$usuario->vendedora}}', '{{$usuario->hora_ingreso}}',
+                                                                                            '{{$usuario->hora_egreso}}')">Editar</button>
                                             <a href='{{ url('estadisticas', $usuario->id) }}' class = 'btn btn-primary'><i class="fa fa-line-chart"></i></a>
                                         </td>
                                     </tr>
@@ -123,6 +124,23 @@
                     <!--    <input type="text" class="form-control" id="rol" style= "font-size:15px" placeholder="Rol"> -->
                         <select id="rol_select" class="form-control" name="rol_select_name"></select>
                         <select id="vendedora_select" class="form-control" name="vendedora_select_name"></select>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <h5>Hora Ingreso</h5>
+                                        <input type="time" id="hora_ingreso" step="1">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <h5>Hora Egreso</h5>
+                                        <input type="time" id="hora_egreso" step="1">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
                         <div class="col-xs-2 col-sm-2 col-md-2 ">
                             <h4>7799</h4>
                         </div>
@@ -165,6 +183,8 @@
         var btnSubirImagen = document.getElementById('btnSubirImagen')
         var imagenInput = document.getElementById('imagen')
         var imgFotoPersonal = document.getElementById('imgFotoPersonal')
+        var hora_ingresoInput = document.getElementById('hora_ingreso')
+        var hora_egresoInput = document.getElementById('hora_egreso')
         var fotoPersonal
         let codigoBarrasGuardado;
         let codigoBarrasConBit;
@@ -195,8 +215,8 @@
                 }
             });
         });
-        function modal(usuario_id, nombre, email, rol, codigo, foto, id_vendedora){
-            llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora)
+        function modal(usuario_id, nombre, email, rol, codigo, foto, id_vendedora, hora_ingreso, hora_egreso){
+            llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora, hora_ingreso, hora_egreso)
             imgCodigoBarras.hidden = true
             btnGenerador.disabled  = true
             btnSubirImagen.disabled = true
@@ -227,7 +247,7 @@
                 }
             }
         }
-        function llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora){
+        function llenarInput(usuario_id, nombre, email, rol, codigo, foto, id_vendedora, hora_ingreso,hora_egreso){
             nombreInput.value = nombre
             emailInput.value = email
             rolSelect.value = rol
@@ -236,7 +256,8 @@
             codigoInput.value = codigo.slice(4,-1)
             imgFotoPersonal.src = "imagenes/" + foto
             fotoPersonal = foto
-            console.log(fotoPersonal)
+            hora_ingresoInput.value = hora_ingreso
+            hora_egresoInput.value = hora_egreso
         }
 
         function generarCodigoBarras(){
@@ -265,7 +286,8 @@
             }else codigoBarras = codigoBarrasConBit
             $.ajax({
                 url:'/guardarPersonal?nombre=' + nombreInput.value + '&email=' + emailInput.value + '&codigo=' + codigoBarras +
-                '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal + '&tipo_role=' + rolSelect.value + '&vendedora=' + vendedoraSelect.value,
+                '&user_id=' + user_id + '&fotoPersonal=' + fotoPersonal + '&tipo_role=' + rolSelect.value + '&vendedora=' +
+                vendedoraSelect.value + '&hora_ingreso=' + hora_ingresoInput.value + '&hora_egreso=' + hora_egresoInput.value ,
                 dataType: "json",
                 success: function (json){
                     alert("Guardado Correctamente")

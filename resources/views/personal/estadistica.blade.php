@@ -13,6 +13,21 @@
                                         <img id="img_foto" width="80" height="80">
                                         <input type="text" id="nombre" style="border: hidden; font-size:25px">
                                     </td>
+                                    <table id="reporte" class="table table-striped table-bordered records_list">
+                                        <thead>
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <h4>Fichaje</h4>
+                                                            <h5>Llegadas Tardes</h5>
+                                                            <di id="ResultadoFichajes"></di>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                    </table>
                                 </tr>
                                 <tr>
                                     <td>
@@ -124,6 +139,7 @@
             obtengoDatosPersonales({{$id}})
             obtengoPedidosCancelados({{$id}})
             obtengoPedidosSinEncuesta({{$id}})
+            obtengoControlFichaje({{$id}})
         });
         function obtengoFoto(usuario_id){
             $.ajax({
@@ -309,6 +325,24 @@
                 chart.draw(data, options);
             }
             obtengoTotalesNoEncuesta(usuario_id)
+        }
+
+        function obtengoControlFichaje(usuario_id){
+            $.ajax({
+                url: '/listaFichaje?usuario_id=' + usuario_id,
+                dataType: "json",
+                success: function(json) {
+                    console.log(json)
+                    var e = "</td>";
+                    for (var i = 0; i < json.length; i++) {
+                        e += "<td>"+ "<a onclick='prueba(\"" + json[i]['numMes'] + "," + usuario_id + "\")'>"  + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
+                    }
+                    document.getElementById("ResultadoFichajes").innerHTML = e;
+                }
+            })
+        }
+        function prueba(numMes,usuario_id){
+            alert(numMes, usuario_id)
         }
     </script>
 @stop
