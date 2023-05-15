@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
 class ControlFichaje extends Controller
@@ -14,6 +15,7 @@ class ControlFichaje extends Controller
     protected $anio = '2023';
     public function control()
     {
+        $usuario_id = Input::get('usuario_id');
         DB::statement("SET lc_time_names = 'es_ES'");
         $control = DB::select('SELECT left(upper(date_format(fecha_ingreso, "%M")),3) as mes,date_format(fecha_ingreso, "%m") as numMes,
                                 SUM(CASE
@@ -23,7 +25,7 @@ class ControlFichaje extends Controller
                                 END) as cantidad
                                 FROM samira.fichaje
                                 inner join samira.users on users.id = fichaje.id_user
-                                where id_user = 19
+                                where id_user = "'.$usuario_id.'"
                                 and year(fecha_ingreso) = "'.$this->anio.'"
                                 group by month(fecha_ingreso);');
         return Response::json($control);
