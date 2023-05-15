@@ -36,7 +36,7 @@ class ControlFichaje extends Controller
         $usuario_id = Input::get('usuario_id');
         $mes = Input::get('numMes');
         DB::statement("SET lc_time_names = 'es_ES'");
-        $listaMensual = DB::select('SELECT upper(date_format(fecha_ingreso, "%W %e")) as mes, TIME(fecha_ingreso) Horario,
+        $listaMensual = DB::select('SELECT upper(date_format(fecha_ingreso, "%W %e")) as mes, TIME(fecha_ingreso) horarioIngreso, TIME(fecha_egreso) horarioEgreso,
                                     CASE
                                         WHEN dayofweek(fecha_ingreso) = 7 AND TIMEDIFF(TIME(fecha_ingreso), "09:00:00") > "00:05:00" THEN 1
                                         WHEN dayofweek(fecha_ingreso) <> 7 AND TIMEDIFF(TIME(fecha_ingreso), hora_ingreso) > "00:05:00" THEN 1

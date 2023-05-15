@@ -136,7 +136,7 @@
             margin: auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 30%;
+            width: 34%;
             overflow-y: auto;
             border-radius: 10%;
         }
@@ -505,14 +505,15 @@
             height: "210px",
             columns: [
                 {title: "Mes", field: "mes", sortable: true, width: 140},
-                {title: "Ingreso", field: "Horario", sortable: true, width: 110,formatter: function color(cell) {
+                {title: "Ingreso", field: "horarioIngreso", sortable: true, width: 80,formatter: function color(cell) {
                     console.log(cell.getRow().getData())
                     if (cell.getRow().getData()['fichaje'] == 1) {
                         cell.getElement().css({"background-color": "red"});
                     }
-                    return cell.getRow().getData()['Horario'];
+                    return cell.getRow().getData()['horarioIngreso'];
                 }
                 },
+                {title: "Egreso", field: "horarioEgreso", sortable: true, width: 80},
             ],
 
         });
