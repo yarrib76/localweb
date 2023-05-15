@@ -243,6 +243,7 @@ Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengo
 
 /*Control Fichaje*/
 Route::get('/listaFichaje','Personal\ControlFichaje@control');
+Route::get('listaMensual','Personal\ControlFichaje@listaMensual');
 
 
 Route::group(['prefix' => 'api'],

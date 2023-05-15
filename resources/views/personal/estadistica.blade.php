@@ -108,17 +108,66 @@
             </div>
         </div>
     </div>
+    <div id="myModal" class="modal">
+        <!-- Modal Ingreso -->
+        <div id="modal-content" class="modal-content">
+            <span id="close" class="close">&times;</span>
+            <div id="example-table"></div>
+        </div>
+    </div>
 
     <style>
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        .modal-content {
+            background-color: rgba(243, 255, 242, 0.91);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            overflow-y: auto;
+            border-radius: 10%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
 
+    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
+
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
     <!-- DataTables -->
 
     <script type="text/javascript">
@@ -332,17 +381,144 @@
                 url: '/listaFichaje?usuario_id=' + usuario_id,
                 dataType: "json",
                 success: function(json) {
-                    console.log(json)
                     var e = "</td>";
                     for (var i = 0; i < json.length; i++) {
-                        e += "<td>"+ "<a onclick='prueba(\"" + json[i]['numMes'] + "," + usuario_id + "\")'>"  + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
+                        e += "<td>"+ "<a onclick='listaMensual(\"" + json[i]['numMes']  + "\", \"" + usuario_id + "\")'>"  + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
                     }
                     document.getElementById("ResultadoFichajes").innerHTML = e;
                 }
             })
         }
-        function prueba(numMes,usuario_id){
-            alert(numMes, usuario_id)
+
+        /*Funciones para Tabulator En Modal*/
+        function listaMensual(numMes,usuario_id){
+            llenarTabla(numMes,usuario_id)
+            var modal = document.getElementById('myModal');
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementById("close");
+
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    location.reload()
+                }
+            }
+
+            /*
+            $.ajax({
+                url: '/listaMensual?usuario_id=' + usuario_id + '&numMes=' + numMes,
+                dataType: 'json',
+                success: function(json) {
+                    console.log(json)
+                }
+            })
+            */
         }
+
+        var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
+
+            var end;
+
+            var container = document.createElement("span");
+
+            //create and style inputs
+            var start = document.createElement("input");
+            start.setAttribute("type", "number");
+            start.setAttribute("placeholder", "Min");
+            start.setAttribute("min", 0);
+            start.setAttribute("max", 100);
+            start.style.padding = "4px";
+            start.style.width = "50%";
+            start.style.boxSizing = "border-box";
+
+            start.value = cell.getValue();
+
+            function buildValues(){
+                success({
+                    start:start.value,
+                    end:end.value,
+                });
+            }
+
+            function keypress(e){
+                if(e.keyCode == 13){
+                    buildValues();
+                }
+
+                if(e.keyCode == 27){
+                    cancel();
+                }
+            }
+
+            end = start.cloneNode();
+
+            start.addEventListener("change", buildValues);
+            start.addEventListener("blur", buildValues);
+            start.addEventListener("keydown", keypress);
+
+            end.addEventListener("change", buildValues);
+            end.addEventListener("blur", buildValues);
+            end.addEventListener("keydown", keypress);
+
+
+            container.appendChild(start);
+            container.appendChild(end);
+
+            return container;
+        }
+
+        //custom max min filter function
+        function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams){
+            //headerValue - the value of the header filter element
+            //rowValue - the value of the column in this row
+            //rowData - the data for the row being filtered
+            //filterParams - params object passed to the headerFilterFuncParams property
+
+            if(rowValue){
+                if(headerValue.start != ""){
+                    if(headerValue.end != ""){
+                        return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                    }else{
+                        return rowValue >= headerValue.start;
+                    }
+                }else{
+                    if(headerValue.end != ""){
+                        return rowValue <= headerValue.end;
+                    }
+                }
+            }
+
+            return true; //must return a boolean, true if it passes the filter.
+        }
+
+        $("#example-table").tabulator({
+            height: "210px",
+            columns: [
+                {title: "Mes", field: "mes", sortable: true, width: 140},
+                {title: "Ingreso", field: "Horario", sortable: true, width: 110,formatter: function color(cell) {
+                    console.log(cell.getRow().getData())
+                    if (cell.getRow().getData()['fichaje'] == 1) {
+                        cell.getElement().css({"background-color": "red"});
+                    }
+                    return cell.getRow().getData()['Horario'];
+                }
+                },
+            ],
+
+        });
+        function llenarTabla(numMes, usuario_id) {
+            $("#example-table").tabulator("setData", '/listaMensual?usuario_id=' + usuario_id + '&numMes=' + numMes);
+        }
+
     </script>
 @stop
