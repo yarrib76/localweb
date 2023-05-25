@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-sm-15 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Panel de Usuarios</div>
+                    <div class="panel-heading">Panel de Usuarios A&ntildeo {{$anioActual}}</div>
                         <div class="panel-body">
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>
@@ -102,6 +102,21 @@
                                     </td>
                                 </tr>
                             </table>
+                            <table id="reporte" class="table table-striped table-bordered records_list">
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <h4>Fidelizacion de Clientes</h4>
+                                                    <div id="piechart_fidelizacion" style="width: 400px; height: 300px;"></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -179,6 +194,7 @@
         var pedidosCancelados;
         var pedidosSinEncuesta;
         var pedidosTotalesSinEncuesta;
+        var fidelizacion;
         $(document).ready( function () {
             var img_foto = document.getElementById('img_foto')
             nombre = document.getElementById('nombre')
@@ -189,6 +205,7 @@
             obtengoPedidosCancelados({{$id}})
             obtengoPedidosSinEncuesta({{$id}})
             obtengoControlFichaje({{$id}})
+            obtengoFidelizacion({{$id}})
         });
         function obtengoFoto(usuario_id){
             $.ajax({
@@ -389,7 +406,30 @@
                 }
             })
         }
-
+        function obtengoFidelizacion(usuario_id){
+            $.ajax({
+                url: '/obtengoFidelClientes?usuario_id=' + usuario_id,
+                dataType : "json",
+                success : function(json) {
+                    graficoFielizacion(json,usuario_id);
+                }
+            });
+        }
+        function graficoFielizacion(json,usuario_id) {
+            fidelizacion = json;
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(donut_chart);
+            function donut_chart() {
+                var data = google.visualization.arrayToDataTable(fidelizacion);
+                var options = {
+                    // title: 'Pedidos Realizados',
+                    is3D: true,
+                }
+                var chart = new google.visualization.PieChart(document.getElementById('piechart_fidelizacion'));
+                chart.draw(data, options);
+            }
+            obtengoTotalesNoEncuesta(usuario_id)
+        }
         /*Funciones para Tabulator En Modal*/
         function listaMensual(numMes,usuario_id){
             llenarTabla(numMes,usuario_id)
@@ -410,7 +450,6 @@
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
-                    location.reload()
                 }
             }
 

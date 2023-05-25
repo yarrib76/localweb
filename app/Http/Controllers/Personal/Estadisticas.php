@@ -13,11 +13,16 @@ use Illuminate\Support\Facades\Response;
 
 class Estadisticas extends Controller
 {
-    protected $anio = '2023';
+    protected $anio;
+    public function __construct()
+    {
+        $this->anio = date('Y');
+    }
     public function index($id)
     {
-        // $pathFoto = DB::select('select foto from samira.users where id= "'.$id.'"');
-        return view('personal.estadistica', compact('id'));
+        // $pathFoto = DB::select('select foto from samira.users where id= "'.$id.'"');.
+        $anioActual = $this->anio;
+        return view('personal.estadistica', compact('id','anioActual'));
     }
 
     public function pedidos()
@@ -162,6 +167,23 @@ class Estadisticas extends Controller
         return Response::json($cantidadTotalesNoEncuesta);
     }
 
+    public function obtengoFidelClientes()
+    {
+        $usuario_id = Input::get('usuario_id');
+        $consulta_fidel = DB::select('SELECT vendedora, nombre_etapa, fecha_creacion, count(*) as cantidad FROM samira.clientes_fidelizacion as cliFidel
+                                        inner join samira.clientes_fidel_etapas as etapas ON etapas.id_clientes_fidel_etapas = cliFidel.id_clientes_fidel_etapas
+                                        inner join samira.vendedores ON vendedores.nombre = cliFidel.vendedora
+                                        inner join samira.users ON users.id_vendedoras = vendedores.id
+                                        where estado = 1
+                                        and users.id = "'.$usuario_id.'"
+                                        and year(fecha_creacion) = "'.$this->anio.'"
+                                        group by nombre_etapa;');
+        $result[] = ['Etapa','Cantidad'];
+        foreach ($consulta_fidel as $key => $value) {
+            $result[++$key] = [$value->nombre_etapa, (int)$value->cantidad];
+        }
+        return json_encode($result);
+    }
     public function formatoParaGrafico($datos)
     {
         $result[] = ['Mes', 'Cantidad'];

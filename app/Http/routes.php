@@ -240,6 +240,7 @@ Route::get('obtengoVentasSalonTotales','Personal\Estadisticas@obtengoVentasSalon
 Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCancelados');
 Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
 Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengoCantidadTotalesParaNoEncuesta');
+Route::get('obtengoFidelClientes','Personal\Estadisticas@obtengoFidelClientes');
 
 /*Control Fichaje*/
 Route::get('/listaFichaje','Personal\ControlFichaje@control');
