@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-sm-15 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Panel de Usuarios A&ntildeo {{$anioActual}}</div>
+                    <div class="panel-heading">Panel de Usuarios A&ntildeo {{$anioActual}} <button onclick="cargaModalObjetivos()"> OBJ </button> </div>
                         <div class="panel-body">
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>
@@ -123,6 +123,7 @@
             </div>
         </div>
     </div>
+
     <div id="myModal" class="modal">
         <!-- Modal Ingreso -->
         <div id="modal-content" class="modal-content">
@@ -171,6 +172,7 @@
             cursor: pointer;
         }
     </style>
+
 @stop
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -564,4 +566,6 @@
         }
 
     </script>
+    <!-- Incluir archivo reporteobjetivo --!>
+    @include('personal.objetivos.reporteobjetivo')
 @stop
