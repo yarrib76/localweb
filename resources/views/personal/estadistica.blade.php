@@ -545,9 +545,12 @@
             columns: [
                 {title: "Mes", field: "mes", sortable: true, width: 140},
                 {title: "Ingreso", field: "horarioIngreso", sortable: true, width: 85,formatter: function color(cell) {
-                    console.log(cell.getRow().getData())
+                    console.log(cell.getRow().getData()['horarioIngreso'])
                     if (cell.getRow().getData()['fichaje'] == 1) {
                         cell.getElement().css({"background-color": "red"});
+                    }
+                    if ((cell.getRow().getData()['horarioIngreso'] > '08:00:00') && (cell.getRow().getData()['horarioIngreso'] < '08:05:00')){
+                        cell.getElement().css({"background-color": "yellow"});
                     }
                     return cell.getRow().getData()['horarioIngreso'];
                 }
