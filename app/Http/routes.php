@@ -246,6 +246,12 @@ Route::get('obtengoFidelClientes','Personal\Estadisticas@obtengoFidelClientes');
 Route::get('/listaFichaje','Personal\ControlFichaje@control');
 Route::get('listaMensual','Personal\ControlFichaje@listaMensual');
 
+/*Control Objetivo*/
+Route::get('listaObjetivos','Personal\Objetivos\ControlObjetivos@listarObjetivos');
+Route::post('objetivosUpdate','Personal\Objetivos\ControlObjetivos@update');
+Route::get('crearObjetivo','Personal\Objetivos\ControlObjetivos@crearObjetivo');
+Route::get('resetObjetivos','Personal\Objetivos\ControlObjetivos@resetObjetivos');
+
 
 Route::group(['prefix' => 'api'],
     function () {

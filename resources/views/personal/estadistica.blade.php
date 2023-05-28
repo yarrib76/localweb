@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-sm-15 ">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Panel de Usuarios A&ntildeo {{$anioActual}} <button onclick="cargaModalObjetivos()"> OBJ </button> </div>
+                    <div class="panel-heading">Panel de Usuarios A&ntildeo {{$anioActual}} <button onclick="cargaModalObjetivos({{$id}})" style="color: #0000FF"> OBJETIVOS </button> </div>
                         <div class="panel-body">
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>

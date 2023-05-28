@@ -1,15 +1,34 @@
 <div id="myModalObjetivo" class="modal">
     <!-- Modal Ingreso -->
     <div id="modal-content" class="modal-content-objetivos">
-        <span class="close">&times;</span>
+        <span class="closeObjetivos" id="closeObjetivos">&times;</span>
+        <button class="modal-minimize" onclick="minimizeModal()">_</button>
+        <button class="modal_maximize" onclick="maximizeModal()">[]</button>
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 ">
                     <div class="panel panel-primary">
                         <div class="panel-heading">Objetivo
+                            <input type="text" id="nombreVendedora" style="border: hidden; color: white; background-color: #347bb7">
                         </div>
                         <div class="panel-body">
-                            <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
+                            <button id="download-xlsx-Objetivos" type="button" class="btn btn-primary">Bajar xlsx</button>
+                            <select id="selectObjetivos">
+                                <option>Enero</option>
+                                <option>Febrero</option>
+                                <option>Marzo</option>
+                                <option>Abril</option>
+                                <option>Mayo</option>
+                                <option>Junio</option>
+                                <option>Julio</option>
+                                <option>Agostos</option>
+                                <option>Septiembre</option>
+                                <option>Octubre</option>
+                                <option>Noviembre</option>
+                                <option>Diciembre</option>
+                            </select>
+                            <button id="resetObjetivos" onclick="crearObjetivos()" style="color: #0000FF">Crear Objetivo</button>
+                            <button onclick="resetObjetivos()" style="color: #0000FF">Reset</button>
                             <div id="example-table-objetivos"></div>
                         </div>
                     </div>
@@ -33,30 +52,45 @@
     }
 
     /* The Close Button */
-    .close {
+    .closeObjetivos {
         color: #aaaaaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
     }
 
-    .close:hover,
-    .close:focus {
+    .closeObjetivos:hover,
+    .closeObjetivos:focus {
         color: #000;
         text-decoration: none;
         cursor: pointer;
+    }
+    .modal-minimize {
+        background: none;
+        border: none;
+        color: #aaaaaa;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .modal_maximize {
+        background: none;
+        border: none;
+        color: #aaaaaa;
+        font-size: 28px;
+        font-weight: bold;
     }
 </style>
 
 
 <script>
-    function cargaModalObjetivos() {
-        // llenarTabla(numMes,usuario_id)
-        llenarTabla()
+    function cargaModalObjetivos(usuario_id) {
+        llenarTablaObjetivos(usuario_id)
+        document.getElementById('nombreVendedora').value = nombre.value
         var modal = document.getElementById('myModalObjetivo');
 
         // Get the <span> element that closes the modal
-        var span = document.getElementById("close");
+        var span = document.getElementById("closeObjetivos");
 
         // When the user clicks the button, open the modal
         modal.style.display = "block";
@@ -147,81 +181,131 @@
         return true; //must return a boolean, true if it passes the filter.
     }
 
-    var vendedoras = {}
-    //define lookup function
-    function paramLookup(cell) {
-        //cell - the cell component
-        $.ajax({
-            url: '/tipo_pagos',
-            dataType: "json",
-            success: function (json) {
-                var arr = json
-                var obj = {}; //create the empty output object
-                arr.forEach(function (item) {
-                    var key = Object.keys(item)[0]; //take the first key from every object in the array
-                    obj[key] = item [key]; //assign the key and value to output obj
-                });
-                vendedoras = obj
-            }
-        });
-        //do some processing and return the param object
-        return vendedoras;
-    }
-    var estados = {}
-    function estadosLookup(cell) {
-        //cell - the cell component
-        $.ajax({
-            url: '/estados_financiera',
-            dataType: "json",
-            success: function (json) {
-                var arr = json
-                var obj = {}; //create the empty output object
-                arr.forEach(function (item) {
-                    var key = Object.keys(item)[0]; //take the first key from every object in the array
-                    obj[key] = item [key]; //assign the key and value to output obj
-                });
-                estados = obj
-            }
-        });
-        //do some processing and return the param object
-        return estados;
-    }
-
     $("#example-table-objetivos").tabulator({
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
         columns: [
-            {title: "Cliente", field: "Cliente", sortable: true, width: 200, headerFilter: "input"},
-            {title: "Fecha", field: "fecha", sortable: true, width: 100, headerFilter: "input"},
-            {title: "NroFactura", field: "NroFactura", sortable: true, width: 110, headerFilter: "input"},
-            {title: "Total", field: "Totales", sortable: true, width: 110, headerFilter: "input"},
-            {title: "Envio", field: "Envio", sortable: true, width: 80},
-            {title: "TotalEnvio", field: "TotalConEnvio", sortable: true, width: 110, headerFilter: "input"},
-            {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110, headerFilter: "input", bottomCalc: "sum"},
-            {
-                title: "Tipo de Pago",
-                field: "tipo_pago",
-                width: 150,
-                editor: "select",
-                editorParams: paramLookup,
-                headerFilter: "input"
+            {title:"Fecha", field:"mes", width:100},
+            {//create column group
+                title:"Fichaje",
+                columns:[
+                    {title:"Objetivo", field:"fich_obj", editor:"input", sorter:"number", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = "<=" + value  // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"fich_alcance", editor:"input", sorter:"number", width:90},
+                ],
             },
-            {
-                title: "Estado",
-                field: "nombre",
-                sortable: true,
-                width: 110,
-                editor: "select",
-                editorParams: estadosLookup,
-                headerFilter: "input"
+            {//create column group
+                title:"Pedidos",
+                columns:[
+                    {title:"Objetivo", field:"ped_obj", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = ">=" + value + "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"ped_alcance", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value += "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                ],
             },
-            {title: "Comentario", field: "comentario", width: 115, editor: "textarea"},
+            {//create column group
+                title:"Venta Salon",
+                columns:[
+                    {title:"Objetivo", field:"v_salon_obj", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = ">=" + value + "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"v_salon_alcance", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value += "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                ],
+            },
+            {//create column group
+                title:"Pedidos Cancelados",
+                columns:[
+                    {title:"Objetivo", field:"cancel_obj", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = "<=" + value  // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"cancel_alcance", editor:"input", width:90},
+                ],
+            },
+            {//create column group
+                title:"No Encuestados",
+                columns:[
+                    {title:"Objetivo", field:"no_encuesta_obj", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = "<=" + value + "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"no_encuesta_alcance", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value + "%"; // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                ],
+            },
+            {//create column group
+                title:"Fidelizacion",
+                columns:[
+                    {title:"Objetivo", field:"fidel_obj", editor:"input", width:90,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            var value = cell.getValue();
+                            if (value !== null && value !== undefined) {
+                                value = ">=" + value  // Agregar el símbolo % al valor
+                            }
+                            return value;
+                        },
+                    },
+                    {title:"Alcance", field:"fidel_alcance", editor:"input", width:90},
+                ],
+            },
         ],
         cellEdited: function (cell, value, data) {
             $.ajax({
-                url: "/updateFactura/update",
+                url: "/objetivosUpdate",
                 data: cell.getRow().getData(),
                 type: "post"
             })
@@ -229,15 +313,47 @@
 
     });
 
-    function llenarTabla() {
-        $("#example-table-objetivos").tabulator("setData", '/listaobjetivos');
+    function llenarTablaObjetivos(usuario_id) {
+        $("#example-table-objetivos").tabulator("setData", '/listaObjetivos?usuario_id=' + usuario_id );
     }
     $(window).resize(function () {
         $("#example-table-objetivos").tabulator("redraw");
     });
-    $("#download-xlsx").click(function () {
-        $("#example-table-objetivos").tabulator("download", "xlsx", "data.xlsx", {sheetName: "ReporteFinanciera"});
+    $("#download-xlsx-Objetivos").click(function () {
+        $("#download-xlsx-Objetivos").tabulator("download", "xlsx", "data.xlsx", {sheetName: "ReporteFinanciera"});
     });
 
+    function crearObjetivos(){
+        var selectMes = document.getElementById('selectObjetivos')
+        var mes = selectMes.options[selectMes.selectedIndex].text
+        $.ajax({
+            url: "/crearObjetivo?mes=" + mes + "&usuario_id=" + '{{$id}}',
+            dataType : "json",
+            success : function(json) {
+                alert(json)
+                llenarTablaObjetivos({{$id}})
+            }
+        })
+    }
+
+    function resetObjetivos(){
+        $.ajax({
+            url: "/resetObjetivos?usuario_id=" + '{{$id}}',
+            dataType: "json",
+            success: function(json){
+                llenarTablaObjetivos({{$id}})
+            }
+        })
+    }
+
+    function  minimizeModal()
+    {
+        var modal = document.getElementById("myModalObjetivo");
+        modal.style.height = "50px"; // Ajusta la altura del modal para minimizarlo
+    }
+     function maximizeModal(){
+         var modal = document.getElementById("myModalObjetivo");
+         modal.style.height = "auto"; // Ajusta la altura del modal para minimizarlo
+     }
 </script>
 
