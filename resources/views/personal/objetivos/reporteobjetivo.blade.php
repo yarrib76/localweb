@@ -320,7 +320,7 @@
         $("#example-table-objetivos").tabulator("redraw");
     });
     $("#download-xlsx-Objetivos").click(function () {
-        $("#download-xlsx-Objetivos").tabulator("download", "xlsx", "data.xlsx", {sheetName: "ReporteFinanciera"});
+        $("#example-table-objetivos").tabulator("download", "xlsx", "data.xlsx", {sheetName: "ReporteFinanciera"});
     });
 
     function crearObjetivos(){

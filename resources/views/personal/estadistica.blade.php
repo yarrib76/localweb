@@ -185,6 +185,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+    <script type="text/javascript" src="../../js/tabulador/xlsx.full.min.js"></script>
     <!-- DataTables -->
 
     <script type="text/javascript">
