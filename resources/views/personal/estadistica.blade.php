@@ -378,6 +378,23 @@
                 }
                 var chart = new google.visualization.LineChart(document.getElementById('lineChart_PedidosCancelados'));
                 chart.draw(data, options);
+                // Agrega un controlador de eventos para el evento 'select'
+                google.visualization.events.addListener(chart, 'select', handleClick);
+                // Función controladora de eventos para el clic en el gráfico
+                function handleClick() {
+                    // Obtén la selección actual del gráfico
+                    var selection = chart.getSelection();
+
+                    // Verifica si hay alguna selección
+                    if (selection.length > 0) {
+                        // Llama a tu función personalizada pasando la selección u otro dato relevante
+                        var mes = (data.getFormattedValue(selection[0].row, 0))
+                        var usuario_id = '{{$id}}'
+                        var url = "../reportePedidosCancelados?usuario_id=" + usuario_id + "&&mes=" + mes
+                        // Abrir la URL en un nuevo tab del navegador
+                        window.open(url, "_blank");
+                    }
+                }
             }
         }
         function graficoPedidosSinEncuesta(json,usuario_id) {

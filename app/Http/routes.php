@@ -241,6 +241,7 @@ Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCance
 Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
 Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengoCantidadTotalesParaNoEncuesta');
 Route::get('obtengoFidelClientes','Personal\Estadisticas@obtengoFidelClientes');
+Route::get('reportePedidosCancelados','Personal\Estadisticas@reportePedidosCancelados');
 
 /*Control Fichaje*/
 Route::get('/listaFichaje','Personal\ControlFichaje@control');
