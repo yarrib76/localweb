@@ -252,6 +252,7 @@ Route::get('listaObjetivos','Personal\Objetivos\ControlObjetivos@listarObjetivos
 Route::post('objetivosUpdate','Personal\Objetivos\ControlObjetivos@update');
 Route::get('crearObjetivo','Personal\Objetivos\ControlObjetivos@crearObjetivo');
 Route::get('resetObjetivos','Personal\Objetivos\ControlObjetivos@resetObjetivos');
+Route::get('autoCargaObjetivos','Personal\Objetivos\ControlObjetivos@autoCargaObjetivos');
 
 
 Route::group(['prefix' => 'api'],

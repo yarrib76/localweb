@@ -198,6 +198,7 @@
         var pedidosSinEncuesta;
         var pedidosTotalesSinEncuesta;
         var fidelizacion;
+        var fichaje;
         $(document).ready( function () {
             var img_foto = document.getElementById('img_foto')
             nombre = document.getElementById('nombre')
@@ -313,7 +314,6 @@
         }
         function obtengoPromedioPedidos(){
             var e = "</td>";
-            console.log(pedidos[0+1][0])
             for (var i = 0; i < totalPedidos.length; i++){
                 e += "<td>" + "[" + pedidos[i+1]['0'].substring(3,0) + " = " + (Math.round(pedidos[i+1]['1'] * 100 / totalPedidos[i]['cantidad'])) + "%] " + "</td>";
             }
@@ -418,6 +418,7 @@
                 url: '/listaFichaje?usuario_id=' + usuario_id,
                 dataType: "json",
                 success: function(json) {
+                    fichaje = json
                     var e = "</td>";
                     for (var i = 0; i < json.length; i++) {
                         e += "<td>"+ "<a onclick='listaMensual(\"" + json[i]['numMes']  + "\", \"" + usuario_id + "\")'>"  + "[" + json[i]['mes'] + " = " + json[i]['cantidad'] + "] " + "</td>";
@@ -431,11 +432,11 @@
                 url: '/obtengoFidelClientes?usuario_id=' + usuario_id,
                 dataType : "json",
                 success : function(json) {
-                    graficoFielizacion(json,usuario_id);
+                    graficoFidelizacion(json,usuario_id);
                 }
             });
         }
-        function graficoFielizacion(json,usuario_id) {
+        function graficoFidelizacion(json,usuario_id) {
             fidelizacion = json;
             google.charts.load('current', {'packages': ['corechart']});
             google.charts.setOnLoadCallback(donut_chart);
@@ -447,6 +448,17 @@
                 }
                 var chart = new google.visualization.PieChart(document.getElementById('piechart_fidelizacion'));
                 chart.draw(data, options);
+                google.visualization.events.addListener(chart,'select',handleClick);
+                function handleClick(){
+                    // Obtén la selección actual del gráfico
+                    var selection = chart.getSelection();
+
+                    // Verifica si hay alguna selección
+                    if (selection.length > 0) {
+                        // Llama a tu función personalizada pasando la selección u otro dato relevante
+                        console.log(data.getValue(selection[0].row, 1))
+                    }
+                }
             }
             obtengoTotalesNoEncuesta(usuario_id)
         }

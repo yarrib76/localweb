@@ -61,4 +61,43 @@ class ControlObjetivos extends Controller
         DB::select('delete from samira.objetivos where id_users = "'.$usuario_id.'" ');
         return Response::json("OK");
     }
+
+    public function autoCargaObjetivos()
+    {
+        $mes = Input::get('mes');
+        $usuario_id = Input::get('usuario_id');
+        $porcentaje = Input::get('porcentaje');
+        $tipo = Input::get('tipo');
+        $data = Objetivos::whereRaw("LEFT(UPPER(mes), 3) = ". DB::raw("'$mes'"))
+            ->where('id_users',$usuario_id);
+
+        switch ($tipo){
+            case "SinEncuesta":
+                $data->update([
+                    'no_encuesta_alcance' => $porcentaje
+                ]);
+                break;
+            case "Pedidos":
+                $data->update([
+                    'ped_alcance' => $porcentaje
+                ]);
+                break;
+            case "Salon":
+                $data->update([
+                    'v_salon_alcance' => $porcentaje
+                ]);
+                break;
+            case "Cancelado":
+                $data->update([
+                    'cancel_alcance' => $porcentaje
+            ]);
+                break;
+            case "Fichaje":
+                $data->update([
+                    'fich_alcance' => $porcentaje
+                ]);
+                break;
+        }
+
+    }
 }

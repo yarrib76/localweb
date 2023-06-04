@@ -261,7 +261,8 @@
                             return value;
                         },
                     },
-                    {title:"Alcance", field:"cancel_alcance", editor:"input", width:90},
+                    {title:"Alcance", field:"cancel_alcance", editor:"input", width:90}
+
                 ],
             },
             {//create column group
@@ -280,7 +281,7 @@
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
                             if (value !== null && value !== undefined) {
-                                value + "%"; // Agregar el símbolo % al valor
+                                value += "%"; // Agregar el símbolo % al valor
                             }
                             return value;
                         },
@@ -314,6 +315,62 @@
     });
 
     function llenarTablaObjetivos(usuario_id) {
+        var mes;
+        var porcentaje;
+        var i = 0;
+        pedidosTotalesSinEncuesta.forEach(function(item){
+            porcentaje = Math.round(pedidosSinEncuesta[i+1]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])
+            $.ajax({
+                url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item['mes'] + "&porcentaje=" + porcentaje
+                + "&tipo=SinEncuesta",
+                dataType: "json",
+                async: false,
+            })
+            i++
+        })
+        i = 0;
+        totalPedidos.forEach(function(item) {
+            porcentaje = Math.round(pedidos[i + 1]['1'] * 100 / totalPedidos[i]['cantidad'])
+            $.ajax({
+                url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item['mes'] + "&porcentaje=" + porcentaje
+                + "&tipo=Pedidos",
+                dataType: "json",
+                async: false,
+            })
+            i++
+        })
+        i = 0;
+        ventasSalonTotales.forEach(function (item) {
+            porcentaje = Math.round(ventasSalon[i + 1]['1'] * 100 / ventasSalonTotales[i]['cantidad'])
+            $.ajax({
+                url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item['mes'] + "&porcentaje=" + porcentaje
+                + "&tipo=Salon",
+                dataType: "json",
+                async: false,
+            })
+            i++
+        })
+        i = 0;
+        pedidosCancelados.forEach(function (item) {
+            porcentaje = item[1]
+            $.ajax({
+                url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item[0].substring(0,3).toUpperCase() + "&porcentaje=" + porcentaje
+                + "&tipo=Cancelado",
+                dataType: "json",
+                async: false,
+            })
+            i++
+        })
+        fichaje.forEach(function (item) {
+            porcentaje = item['cantidad']
+            $.ajax({
+                url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item['mes'] + "&porcentaje=" + porcentaje
+                + "&tipo=Fichaje",
+                dataType: "json",
+                async: false,
+            })
+        })
+
         $("#example-table-objetivos").tabulator("setData", '/listaObjetivos?usuario_id=' + usuario_id );
     }
     $(window).resize(function () {
