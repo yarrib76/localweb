@@ -25,6 +25,12 @@
                                                             <di id="ResultadoFichajes"></di>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <h5>Dias No Trabajados</h5>
+                                                            <di id="FaltasFichajes"></di>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </td>
                                     </table>
@@ -199,6 +205,7 @@
         var pedidosTotalesSinEncuesta;
         var fidelizacion;
         var fichaje;
+        var faltas;
         $(document).ready( function () {
             var img_foto = document.getElementById('img_foto')
             nombre = document.getElementById('nombre')
@@ -209,6 +216,7 @@
             obtengoPedidosCancelados({{$id}})
             obtengoPedidosSinEncuesta({{$id}})
             obtengoControlFichaje({{$id}})
+            obtengoFaltasMes({{$id}})
             obtengoFidelizacion({{$id}})
         });
         function obtengoFoto(usuario_id){
@@ -427,6 +435,23 @@
                 }
             })
         }
+
+        function obtengoFaltasMes(usuario_id){
+            $.ajax({
+                url: '/cantDiasAusentes?usuario_id=' + usuario_id,
+                dataType: "json",
+                success: function(json) {
+                    faltas = json
+                    var e = "</td>";
+                    for (var i = 0; i < json.length; i++) {
+                        e += "<td>"+ "<a onclick='listaNoTrabajados(\"" + json[i]['mes']  + "\", \"" + usuario_id + "\")'>"  + "[" + json[i]['mesName'] + " = " + json[i]['diferencia'] + "] " + "</td>";
+                    }
+                    document.getElementById("FaltasFichajes").innerHTML = e;
+                }
+            })
+        }
+
+
         function obtengoFidelizacion(usuario_id){
             $.ajax({
                 url: '/obtengoFidelClientes?usuario_id=' + usuario_id,
@@ -484,18 +509,30 @@
                     modal.style.display = "none";
                 }
             }
-
-            /*
-            $.ajax({
-                url: '/listaMensual?usuario_id=' + usuario_id + '&numMes=' + numMes,
-                dataType: 'json',
-                success: function(json) {
-                    console.log(json)
-                }
-            })
-            */
         }
 
+        function listaNoTrabajados(mes){
+            llenarTablaDiasFaltantes(mes,'{{$id}}')
+            var modal = document.getElementById('myModal');
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementById("close");
+
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
         var minMaxFilterEditor = function(cell, onRendered, success, cancel, editorParams){
 
             var end;
@@ -595,6 +632,9 @@
             $("#example-table").tabulator("setData", '/listaMensual?usuario_id=' + usuario_id + '&numMes=' + numMes);
         }
 
+        function llenarTablaDiasFaltantes(numMes, usuario_id) {
+            $("#example-table").tabulator("setData", '/listaDiasAusentes?usuario_id=' + usuario_id + '&numMes=' + numMes);
+        }
     </script>
     <!-- Incluir archivo reporteobjetivo --!>
     @include('personal.objetivos.reporteobjetivo')

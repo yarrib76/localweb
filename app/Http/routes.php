@@ -246,6 +246,8 @@ Route::get('reportePedidosCancelados','Personal\Estadisticas@reportePedidosCance
 /*Control Fichaje*/
 Route::get('/listaFichaje','Personal\ControlFichaje@control');
 Route::get('listaMensual','Personal\ControlFichaje@listaMensual');
+Route::get('cantDiasAusentes','Personal\ControlFichaje@cantDiasAusentes');
+Route::get('listaDiasAusentes','Personal\ControlFichaje@listaDiasAusentes');
 
 /*Control Objetivo*/
 Route::get('listaObjetivos','Personal\Objetivos\ControlObjetivos@listarObjetivos');
