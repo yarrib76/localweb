@@ -194,6 +194,9 @@
                     {title:"Objetivo", field:"fich_obj", editor:"input", sorter:"number", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
+                            if (cell.getRow().getData()['fidel_alcance'] <= cell.getRow().getData()['fich_obj']){
+                                cell.getElement().css({"background-color": "green"});
+                            } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
                                 value = "<=" + value  // Agregar el símbolo % al valor
                             }
@@ -209,6 +212,9 @@
                     {title:"Objetivo", field:"ped_obj", editor:"input", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
+                            if (cell.getRow().getData()['ped_alcance'] >= cell.getRow().getData()['ped_obj']){
+                                cell.getElement().css({"background-color": "green"});
+                            } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
                                 value = ">=" + value + "%"; // Agregar el símbolo % al valor
                             }
@@ -232,6 +238,9 @@
                     {title:"Objetivo", field:"v_salon_obj", editor:"input", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
+                            if (cell.getRow().getData()['v_salon_alcance'] >= cell.getRow().getData()['v_salon_obj']){
+                                cell.getElement().css({"background-color": "green"});
+                            } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
                                 value = ">=" + value + "%"; // Agregar el símbolo % al valor
                             }
@@ -255,6 +264,9 @@
                     {title:"Objetivo", field:"cancel_obj", editor:"input", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
+                            if (cell.getRow().getData()['cancel_alcance'] <= cell.getRow().getData()['cancel_obj']){
+                                cell.getElement().css({"background-color": "green"});
+                            } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
                                 value = "<=" + value  // Agregar el símbolo % al valor
                             }
@@ -271,6 +283,9 @@
                     {title:"Objetivo", field:"no_encuesta_obj", editor:"input", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
+                            if (cell.getRow().getData()['no_encuesta_alcance'] <= cell.getRow().getData()['no_encuesta_obj']){
+                                cell.getElement().css({"background-color": "green"});
+                            } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
                                 value = "<=" + value + "%"; // Agregar el símbolo % al valor
                             }
