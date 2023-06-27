@@ -194,7 +194,7 @@
                     {title:"Objetivo", field:"fich_obj", editor:"input", sorter:"number", width:90,
                         formatter: function(cell, formatterParams, onRendered) {
                             var value = cell.getValue();
-                            if (cell.getRow().getData()['fidel_alcance'] <= cell.getRow().getData()['fich_obj']){
+                            if (cell.getRow().getData()['fich_alcance'] <= cell.getRow().getData()['fich_obj']){
                                 cell.getElement().css({"background-color": "green"});
                             } else cell.getElement().css({"background-color": "red"});
                             if (value !== null && value !== undefined) {
