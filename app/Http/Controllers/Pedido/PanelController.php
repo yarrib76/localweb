@@ -22,8 +22,9 @@ class PanelController extends Controller
         $procesos = DB::select('SELECT count(*) as count from samira.controlPedidos where estado = 1');
         $empaquetados = DB::select('SELECT count(*) as count from samira.controlPedidos where estado = 0 and empaquetado = 1');
         $cancelados = DB::select('SELECT count(*) as count from samira.controlPedidos where estado = 2');
+        $pedidosPagados = DB::select('select count(*)as count from samira.controlpedidos where estado = 1 and pagado = 1');
         $todos = DB::select('SELECT count(*) as count from samira.controlPedidos');
-        return view('pedidos.panel_v2',compact('facturados','procesos','empaquetados','cancelados','todos'));
+        return view('pedidos.panel_v2',compact('facturados','procesos','empaquetados','cancelados','pedidosPagados','todos'));
     }
 
     public function facturados()
@@ -39,7 +40,7 @@ class PanelController extends Controller
         $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
                     clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
                     pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb,
-                    pedidos.instancia, clientes.id_clientes, clientes.encuesta
+                    pedidos.instancia, clientes.id_clientes, clientes.encuesta, pedidos.pagado
                     from samira.controlPedidos as pedidos
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
@@ -47,6 +48,24 @@ class PanelController extends Controller
                     group by nropedido');
 
         $estado = 'Procesados';
+        return view('pedidos.reporte_v2', compact('pedidos','user_id','estado'));
+    }
+
+    public function pedidosPagos()
+    {
+        $user_id = Auth::user()->id;
+        DB::statement("SET lc_time_names = 'es_ES'");
+        $pedidos = DB::select('SELECT DATE_FORMAT(pedidos.fecha, "%d de %M %Y") AS fecha, pedidos.fecha as fechaParaOrden, nroPedido as nropedido, clientes.nombre as nombre,
+                    clientes.apellido as apellido, pedidos.nrofactura, pedidos.vendedora, pedidos.estado, pedidos.id as id, pedidos.total as total,
+                    pedidos.ordenweb as ordenweb, comentarios.comentario as comentarios, pedidos.empaquetado as empaquetado, pedidos.transporte as transporte, pedidos.totalweb,
+                    pedidos.instancia, clientes.id_clientes, clientes.encuesta, pedidos.pagado
+                    from samira.controlPedidos as pedidos
+                    INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
+                    left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
+                    where pedidos.estado = 1 and pedidos.pagado = 1
+                    group by nropedido');
+
+        $estado = 'Pagos';
         return view('pedidos.reporte_v2', compact('pedidos','user_id','estado'));
     }
     public function empaquetados()

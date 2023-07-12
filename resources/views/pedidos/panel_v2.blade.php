@@ -13,63 +13,94 @@
                                 <tbody>
                                 <tr>
                                     <td>
-                            <div class="row">
-                                <div class="col-lg-3 col-md-6">
-                                    <div id = "RecuadroPanel" class="panel panel-primary">
-                                        <div id = "Facturados" class="panel-heading">
-                                            <div class="row">
-                                                <div class="col-xs-3">
-                                                    <i class="fa fa-money fa-5x"></i>
-                                                </div>
-                                                <div class="col-xs-9 text-right">
-                                                    <div class="huge">
-                                                        <h2><?php echo $facturados[0]->count ?></h2>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-6">
+                                                <div id = "RecuadroPanel" class="panel panel-primary">
+                                                    <div id = "Facturados" class="panel-heading">
+                                                        <div class="row">
+                                                            <div class="col-xs-3">
+                                                                        <i class="fa fa-money fa-5x"></i>
+                                                            </div>
+                                                            <div class="col-xs-9 text-right">
+                                                                <div class="huge">
+                                                                    <h2><?php echo $facturados[0]->count ?></h2>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="jobs-wrapper">
+                                                        <a href="#">
+                                                            <div class="panel-footer" data-panel="job-details">
+                                                                <span class="pull-left">Facturados</span>
+                                                                <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="jobs-wrapper">
-                                            <a href="#">
-                                                <div class="panel-footer" data-panel="job-details">
-                                                    <span class="pull-left">Facturados</span>
-                                                    <a href="/facturados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                                     </td>
                                     <td>
-                            <div class="row">
-                                <div class="col-lg-3 col-md-6">
-                                    <div id = "RecuadroPanel" class="panel panel-primary">
-                                        <div id = "Proceso" class="panel-heading">
-                                            <div class="row">
-                                                <div class="col-xs-3">
-                                                    <i class="fa fa-cogs fa-5x"></i>
-                                                </div>
-                                                <div class="col-xs-9 text-right">
-                                                    <div class="huge">
-                                                        <h2><?php echo $procesos[0]->count ?></h2>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-6">
+                                                <div id = "RecuadroPanel" class="panel panel-primary">
+                                                    <div id = "Proceso" class="panel-heading">
+                                                        <div class="row">
+                                                            <div class="col-xs-3">
+                                                                <i class="fa fa-cogs fa-5x"></i>
+                                                            </div>
+                                                            <div class="col-xs-9 text-right">
+                                                                <div class="huge">
+                                                                    <h2><?php echo $procesos[0]->count ?></h2>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="jobs-wrapper">
+                                                        <a href="#">
+                                                            <div class="panel-footer" data-panel="job-details">
+                                                                <span class="pull-left">En Proceso</span>
+                                                                <a href="/procesados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="jobs-wrapper">
-                                            <a href="#">
-                                                <div class="panel-footer" data-panel="job-details">
-                                                    <span class="pull-left">En Proceso</span>
-                                                    <a href="/procesados" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                                     </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-6">
+                                                <div id = "RecuadroPanel" class="panel panel-primary">
+                                                    <div id = "PedidosPagos" class="panel-heading">
+                                                        <div class="row">
+                                                            <div class="col-xs-3">
+                                                                <i class="fa fa-university fa-5x"></i>
+                                                            </div>
+                                                            <div class="col-xs-9 text-right">
+                                                                <div class="huge">
+                                                                    <h2><?php echo $pedidosPagados[0]->count ?></h2>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="jobs-wrapper">
+                                                        <a href="#">
+                                                            <div class="panel-footer" data-panel="job-details">
+                                                                <span class="pull-left">Ya Estan Pagos</span>
+                                                                <a href="/pedidospagos" target="_blank"><span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>    
+                                <tr>
                                     <td>
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6">
@@ -175,6 +206,11 @@
         }
         #Proceso{
             background: #ffe941;
+            color: #fff;
+            width: 200px;
+        }
+        #PedidosPagos {
+            background: #400915;
             color: #fff;
             width: 200px;
         }

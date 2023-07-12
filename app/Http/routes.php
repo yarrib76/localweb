@@ -82,6 +82,7 @@ Route::resource('pedidos', 'Pedido\PedidosController');
 Route::get('panelPedidos', 'Pedido\PanelController@panel');
 Route::get('facturados', 'Pedido\PanelController@facturados');
 Route::get('procesados', 'Pedido\PanelController@procesados');
+Route::get('pedidospagos', 'Pedido\PanelController@pedidosPagos');
 Route::get('empaquetados', 'Pedido\PanelController@empaquetados');
 Route::get('cancelados', 'Pedido\PanelController@cancelados');
 Route::get('todos', 'Pedido\PanelController@todos');
@@ -373,4 +374,7 @@ Route::group(['prefix' => 'api'],
         /*Reportes Pedidos*/
         Route::get('/get_todos', 'Api\Pedidos\GetPedidos@todos');
         Route::get('/get_facturados', 'Api\Pedidos\GetPedidos@facturados');
+
+        /*Define pago del pedido*/
+        Route::get('/estadopago', 'Api\EstadoPagoPedido@modificoEstadoPago');
     });

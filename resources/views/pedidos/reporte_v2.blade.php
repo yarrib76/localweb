@@ -112,6 +112,13 @@
                                             @elseif($pedido->instancia == 1)
                                                  <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
                                             @endif
+                                            @if($pedido->pagado == 0)
+                                                <button type="button" id="botonNoPago{{$a}}" class="btn btn-danger" onclick="cambioPago('{{$pedido->nropedido}}',0,'{{$a}}');"><i class="fa fa-frown-o"></i></button>
+                                                <button type="button" id="botonPago{{$a}}" style="display:none" class="btn btn-success" onclick="cambioPago('{{$pedido->nropedido}}',1,'{{$a}}');"><i class="fa fa-smile-o"></i></button>
+                                                @else
+                                                        <button type="button" id="botonNoPago{{$a}}" style="display:none"  class="btn btn-danger" onclick="cambioPago('{{$pedido->nropedido}}',0,'{{$a}}');"><i class="fa fa-frown-o"></i></button>
+                                                        <button type="button" id="botonPago{{$a}}" class="btn btn-success" onclick="cambioPago('{{$pedido->nropedido}}',1,'{{$a}}');"><i class="fa fa-smile-o"></i></button>
+                                                @endif
                                                     <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');"><i class="fa fa-check"></i></button>
                                                 </td>
                                         @else
@@ -1037,6 +1044,22 @@
                     $('#encuesta_id').val(json[0]['encuesta'])
                 }
             });
+        }
+
+        function cambioPago(nroPedido,estado, posicionBoton){
+            $.ajax({
+                url:'api/estadopago?nroPedido=' + nroPedido + '&estado=' + estado,
+                dataType: 'json',
+                success: function(json){
+                    if (json == 0) {
+                        document.getElementById("botonNoPago" + posicionBoton).style.display = 'block'
+                        document.getElementById("botonPago" + posicionBoton).style.display = 'none'
+                    }else {
+                        document.getElementById("botonPago" + posicionBoton).style.display = 'block'
+                        document.getElementById("botonNoPago" + posicionBoton).style.display = 'none'
+                    }
+                }
+            })
         }
     </script>
 
