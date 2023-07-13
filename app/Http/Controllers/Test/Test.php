@@ -21,7 +21,7 @@ use mysqli;
 class Test extends Controller
 {
     //Commit DashBoard..
-    //Primer Commit..
+    //Primer Commit Etiquetas Dobles
     public function Test()
     {
         //Prueba de Conexion"
