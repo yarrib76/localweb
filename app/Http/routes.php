@@ -180,6 +180,7 @@ Route::get('/autosinc','Api\Automation\ReplicaTN@view');
 
 /*codigos de Barra*/
 Route::get('/barcode', 'Articulo\Barcode@crearCodigo');
+Route::get('/barcodeDoble', 'Articulo\Barcode@crearCodigoDoble');
 
 /*Reporte Contabilidad*/
 Route::get('/reportesalonpedidos', 'Contabilidad\VistaPedidosSalon@index');
