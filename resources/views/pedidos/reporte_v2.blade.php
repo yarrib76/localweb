@@ -28,7 +28,11 @@
                                     <th>Cliente</th>
                                     <th>Fecha</th>
                                     <th>Vendedora</th>
-                                    <th>Factura</th>
+                                    @if($estado != "Pagos")
+                                        <th>Factura</th>
+                                    @else
+                                        <th>Fecha_Pago</th>
+                                    @endif
                                     <th>Total</th>
                                     <th>OrdenWeb</th>
                                     <th>TotalWeb</th>
@@ -57,7 +61,11 @@
                                             <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         @endif
                                         <td>{{$pedido->vendedora}}</td>
-                                        <td>{{$pedido->nrofactura}}</td>
+                                        @if($estado != "Pagos")
+                                            <td>{{$pedido->nrofactura}}</td>
+                                        @else
+                                             <td>{{$pedido->fecha_pago}}</td>
+                                        @endif
                                         <td>{{$pedido->total}}</td>
                                         @if ($pedido->ordenweb != Null)
                                             <td>{{$pedido->ordenweb}}</td>
