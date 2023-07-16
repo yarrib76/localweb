@@ -369,7 +369,7 @@
         function obtengoPromedioNoEncuesta(){
             var e = "</td>";
             for (var i = 0; i < pedidosTotalesSinEncuesta.length; i++){
-                e += "<td>" + "[" + pedidosSinEncuesta[i+1]['0'].substring(3,0) + " = " + (Math.round(pedidosSinEncuesta[i+1]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])) + "%] " + "</td>";
+                e += "<td>" + "[" + pedidosTotalesSinEncuesta[i]['mes'] + " = " + (Math.round(pedidosSinEncuesta[parseInt(pedidosTotalesSinEncuesta[i]['mesNum'])]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])) + "%] " + "</td>";
             }
             document.getElementById("ResultadoPromedioNoEncuesta").innerHTML = e;
         }

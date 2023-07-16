@@ -177,7 +177,7 @@ class Estadisticas extends Controller
     {
         $usuario_id = Input::get('usuario_id');
         DB::statement("SET lc_time_names = 'es_ES'");
-        $cantidadTotalesNoEncuesta = DB::select('select left(upper(date_format(facth.fecha, "%M")),3) mes, count(*) as cantidad from samira.facturah as Facth
+        $cantidadTotalesNoEncuesta = DB::select('select left(upper(date_format(facth.fecha, "%M")),3) mes, date_format(facth.fecha, "%m") as mesNum, count(*) as cantidad from samira.facturah as Facth
                                         left join samira.controlpedidos as Control ON Control.nrofactura = Facth.NroFactura
                                         inner join samira.clientes as clientes on clientes.id_clientes = facth.id_clientes
                                         inner join samira.vendedores On vendedores.nombre = Control.vendedora

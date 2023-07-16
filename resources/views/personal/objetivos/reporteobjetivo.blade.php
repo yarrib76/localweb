@@ -334,7 +334,7 @@
         var porcentaje;
         var i = 0;
         pedidosTotalesSinEncuesta.forEach(function(item){
-            porcentaje = Math.round(pedidosSinEncuesta[i+1]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])
+            porcentaje = Math.round(pedidosSinEncuesta[parseInt(pedidosTotalesSinEncuesta[i]['mesNum'])]['1'] * 100 / pedidosTotalesSinEncuesta[i]['cantidad'])
             $.ajax({
                 url: "/autoCargaObjetivos?usuario_id=" + usuario_id + "&mes=" + item['mes'] + "&porcentaje=" + porcentaje
                 + "&tipo=SinEncuesta",
