@@ -15,7 +15,7 @@ class CierreCajaFacturaWeb extends Controller
     public function query()
     {
         $nroFactura = Input::get('nroFactura');
-        $cierresDiarios = DB::select('SELECT NroFactura, Articulo, Detalle, Cantidad, ROUND(PrecioArgen,2) as PrecioArgen, ROUND(PrecioUnitario,2) as PrecioUnitario, ROUND(PrecioVenta,2) as PrecioVenta, ROUND(Ganancia,2) as Ganancia, Cajera, Vendedora FROM samira.factura
+        $cierresDiarios = DB::select('SELECT NroFactura, Articulo, Detalle, Cantidad, ROUND(PrecioUnitario,2) as PrecioUnitario, ROUND(PrecioVenta,2) as PrecioVenta FROM samira.factura
                                       where NroFactura = "' .$nroFactura. '"');
         return Response::json($cierresDiarios);
     }
