@@ -32,6 +32,7 @@ class ControlCierreDiario extends Controller
                                 WHEN tipo_pago = "TransferenciaBco" THEN "bancos.jpeg"
                                 WHEN tipo_pago = "MercadoPago" THEN "mercadopago.png"
                                 WHEN tipo_pago = "Prestigio" THEN "financiera.png"
+                                WHEN tipo_pago = "CobroSur" THEN "gaston.png"
                               END as tipo_pago_imagen,id_tipo_pago,
                               count(*) as cantidad, ROUND(SUM(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE total END),2) as Total FROM samira.facturah
                               inner join samira.tipo_pagos ON tipo_pagos.id_tipo_pagos = facturah.id_tipo_pago
