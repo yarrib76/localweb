@@ -21,7 +21,7 @@
                                 <option>Mayo</option>
                                 <option>Junio</option>
                                 <option>Julio</option>
-                                <option>Agostos</option>
+                                <option>Agosto</option>
                                 <option>Septiembre</option>
                                 <option>Octubre</option>
                                 <option>Noviembre</option>
