@@ -24,7 +24,7 @@ use mysqli;
 class Test extends Controller
 {
     //Commit DashBoard..
-    //Primer Commit ExportFacturas
+    //Primer Commit diasNoTrabajdos
     public function Test()
     {
         $path = 'public/export/facturas/';
