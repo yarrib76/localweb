@@ -60,14 +60,24 @@ class ControlFichaje extends Controller
         $consulta = DB::select('SELECT
                                         COUNT(*) AS dias_trabajados,
                                             left(upper(date_format(fecha_ingreso, "%M")),3) AS mesName,
-                                            date_format(fecha_ingreso, "%m") AS mes,
-                                            DAY(LAST_DAY(fecha_ingreso)) - (SELECT COUNT(*) FROM fichaje WHERE MONTH(fecha_ingreso) = MONTH(f.fecha_ingreso) AND YEAR(fecha_ingreso) = YEAR(f.fecha_ingreso) AND DAYOFWEEK(fecha_ingreso) = 1) - 4 AS dias_faltantes,
-                                            (DAY(LAST_DAY(fecha_ingreso)) - (SELECT COUNT(*) FROM fichaje WHERE MONTH(fecha_ingreso) = MONTH(f.fecha_ingreso) AND YEAR(fecha_ingreso) = YEAR(f.fecha_ingreso) AND DAYOFWEEK(fecha_ingreso) = 1) - 4) - COUNT(*) AS diferencia
-                                        FROM fichaje f
+                                            date_format(fecha_ingreso, "%m") AS mes
+                                            FROM fichaje f
                                         WHERE DAYOFWEEK(fecha_ingreso) BETWEEN 2 AND 7
                                         and id_user	= "'.$usuario_id.'"
                                         GROUP BY mes');
-        return Response::json($consulta);
+// Procesar el resultado de la consulta
+        foreach ($consulta as $fila) {
+            // Llamar a la función prueba() con el valor de $mes
+            $diferencia = $this->procesoFecha($usuario_id,$fila->mes);
+            // Agregar los resultados al arreglo
+            $resultados[] = array(
+                'dias_trabajados' => $fila->dias_trabajados,
+                'mesName' => $fila->mesName,
+                'mes' => $fila->mes,
+                'diferencia' => $diferencia
+            );
+        }
+        return Response::json($resultados);
     }
 
     public function listaDiasAusentes(){
@@ -99,5 +109,39 @@ class ControlFichaje extends Controller
                                     ORDER BY n;
                                     ');
         return Response::json($consulta);
+    }
+
+    //La función devuelve la cantidad de días que no se ficho descartando los domingos. Serían los días que faltaron
+    public function procesoFecha($usuario_id,$mes)
+    {
+        $consulta = DB::select('SELECT COUNT(*) AS cantidad_resultados
+                FROM (SELECT fecha as mes
+                                    FROM (
+                                        SELECT DATE_ADD(CONCAT("'.$this->anio.'", "-", "'.$mes.'", "-01"), INTERVAL n.n DAY) AS fecha, n.n
+                                        FROM (
+                                            SELECT a.N + b.N * 10 n
+                                            FROM (
+                                                SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
+                                            ) a
+                                            CROSS JOIN (
+                                                SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
+                                            ) b
+                                        ) n
+                                        WHERE MONTH(DATE_ADD(CONCAT("'.$this->anio.'", "-", "'.$mes.'", "-01"), INTERVAL n.n DAY)) = "'.$mes.'"
+                                            AND DAY(DATE_ADD(CONCAT("'.$this->anio.'", "-", "'.$mes.'", "-01"), INTERVAL n.n DAY)) >= 1
+                                            AND DAYOFWEEK(DATE_ADD(CONCAT("'.$this->anio.'", "-", "'.$mes.'", "-01"), INTERVAL n.n DAY)) != 1
+                                    ) subquery
+                                    WHERE fecha NOT IN (
+                                        SELECT DATE_FORMAT(fecha_ingreso, "%Y-%m-%d")
+                                        FROM fichaje
+                                        WHERE YEAR(fecha_ingreso) = "'.$this->anio.'"
+                                            AND MONTH(fecha_ingreso) = "'.$mes.'"
+                                            AND id_user = "'.$usuario_id.'"
+                                    )
+                                    ORDER BY n
+                                    ) result_count;
+                ');
+
+        return $consulta[0]->cantidad_resultados;
     }
 }
