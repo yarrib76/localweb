@@ -7,11 +7,11 @@
 
         #fila21columna{
             margin-top: 0px;
-            margin-left: 120px;
+            margin-left: 30px;
         }
         #fila22columna{
             margin-top: 0px;
-            margin-left: 50px;
+            margin-left: 0px;
         }
         h5{
             margin-top: -4px;
