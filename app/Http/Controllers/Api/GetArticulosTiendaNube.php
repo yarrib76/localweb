@@ -68,14 +68,13 @@ class GetArticulosTiendaNube extends Controller
 
         //obtengo todas las categorìas
         $allCategorias = $this->obtengoSubCategoria($api);
-
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             try {
                 $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
                 foreach ($articulosTiendaNube->body as $articulo){
                     // dd($articulo->categories);
+                    // dd($articulo->categories);
                     $categorias = $this->obtengoCategorias($articulo->categories,$api,$allCategorias);
-
                     $newDescriptions = "";
                     if (Input::get('local') == 'Viamore'){
                         $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN FLORES";
@@ -207,13 +206,21 @@ class GetArticulosTiendaNube extends Controller
                 if (!is_null($categoria->parent)) {
                     // $subCategoria = $this->obtengoSubCategorias($categoria->parent,$api);
                     //obtengo el nombre de la categorìa Padre
-                    $subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
+
+                    // Funcion Descontinuada porque no soporta mas de una Subcategoria
+                    //$subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
+
+                    $categorias = $this->obtengoCatPadre2($categoria->parent,$catogories);
+                    // dd($subCategoria);
                     // dd($subCategoria->body->name->es . " > " . $categoria->name->es . ",");
-                    $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
+
+                    // Variable Descontinuada ya que no soporta mas de una Subcategoria
+                    // $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
                 } else {
                     $categorias .= $categoria->name->es . ",";
                 }
         }
+        // dd(substr($categorias, 0, -1));
         return (substr($categorias, 0, -1));
     }
 
@@ -261,6 +268,7 @@ class GetArticulosTiendaNube extends Controller
         return $query->body;
     }
 
+    //Funcion descontinuada pporque no soportaba mas de una subCategoria
     private function obtengoCatPadre($parent_id,$allCategorias)
     {
         foreach ($allCategorias as $categoria) {
@@ -269,5 +277,25 @@ class GetArticulosTiendaNube extends Controller
             }
         }
 
+    }
+
+    //Nueva Funcion que soporta mas de una SubCategoria
+    private function obtengoCatPadre2($parent_id,$allCategorias)
+    {
+        $categorias= "";
+        $id = 0;
+        foreach ($allCategorias as $categoria) {
+            if ($categoria->id == $parent_id){
+                $categorias .= $categoria->name->es . " > ";
+                $id = $categoria->id;
+            }
+            if ($categoria->parent == $id){
+                $categorias .= $categoria->name->es . " > ";
+                $id = $categoria->id;
+            }
+        }
+        $categorias = (substr($categorias,0,-3));
+
+        return $categorias . ",";
     }
 }
