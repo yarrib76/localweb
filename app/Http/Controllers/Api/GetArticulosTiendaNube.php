@@ -206,22 +206,26 @@ class GetArticulosTiendaNube extends Controller
                 if (!is_null($categoria->parent)) {
                     // $subCategoria = $this->obtengoSubCategorias($categoria->parent,$api);
                     //obtengo el nombre de la categorìa Padre
+                    $subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
+                    $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
 
-                    // Funcion Descontinuada porque no soporta mas de una Subcategoria
-                    //$subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
-
-                    $categorias = $this->obtengoCatPadre2($categoria->parent,$catogories);
-                    // dd($subCategoria);
-                    // dd($subCategoria->body->name->es . " > " . $categoria->name->es . ",");
-
-                    // Variable Descontinuada ya que no soporta mas de una Subcategoria
-                    // $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
+                    // Funcion de Prueba que permite mas de una sub-Categoria pero con algunos inconvenientes si por error se agregan
+                      // Mas categerías al Artículo.
+                     //  $categorias = $this->obtengoCatPadre2($categoria->parent,$catogories);
                 } else {
                     $categorias .= $categoria->name->es . ",";
                 }
         }
         // dd(substr($categorias, 0, -1));
-        return (substr($categorias, 0, -1));
+
+        $categorias = substr($categorias, 0, -1);
+        // Quita o reemplaza por nada, de la variable de tipo String la palabra repetida "BAÑO EN ORO," adaptación para mas de 2 sub-Categorias
+        $categorias = str_replace("BAÑO EN ORO,","",$categorias);
+        // Quita o reemplaza por nada, de tipo String la palabra repetida "BAÑO EN PLATA, adaptación para mas de 2 sub-Categorias
+        $categorias = str_replace("BAÑO EN PLATA,","",$categorias);
+        // Agregar cuando se inciropre la categería BAÑO EN ACERO
+        $categorias = str_replace("BAÑO ACERO,","",$categorias);
+        return $categorias;
     }
 
     private function creoVariantes($articulo)
@@ -264,11 +268,11 @@ class GetArticulosTiendaNube extends Controller
 
     private function obtengoSubCategoria($api)
     {
-        $query = $api->get("categories");
+        $query = $api->get("categories?page=1&per_page=200");
         return $query->body;
     }
 
-    //Funcion descontinuada pporque no soportaba mas de una subCategoria
+
     private function obtengoCatPadre($parent_id,$allCategorias)
     {
         foreach ($allCategorias as $categoria) {
@@ -279,7 +283,7 @@ class GetArticulosTiendaNube extends Controller
 
     }
 
-    //Nueva Funcion que soporta mas de una SubCategoria
+    //Nueva Funcion que soporta mas de una SubCategoria, pero queda en desuso ya que no sopprta varias categorías padres
     private function obtengoCatPadre2($parent_id,$allCategorias)
     {
         $categorias= "";
@@ -295,7 +299,6 @@ class GetArticulosTiendaNube extends Controller
             }
         }
         $categorias = (substr($categorias,0,-3));
-
         return $categorias . ",";
     }
 }
