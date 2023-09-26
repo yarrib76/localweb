@@ -259,6 +259,14 @@ Route::get('crearObjetivo','Personal\Objetivos\ControlObjetivos@crearObjetivo');
 Route::get('resetObjetivos','Personal\Objetivos\ControlObjetivos@resetObjetivos');
 Route::get('autoCargaObjetivos','Personal\Objetivos\ControlObjetivos@autoCargaObjetivos');
 
+/*Control Ordenes de Compra*/
+Route::get('ordenescomprascontrol','Articulo\OrdenesComprasControl@index');
+Route::get('ordenescomprasconsulta','Articulo\OrdenesComprasControl@consulta');
+Route::get('/ordenescomprasconsulta/todas','Articulo\OrdenesComprasControl@consultaTodas');
+Route::get('ordenescomprasnotas ','Articulo\OrdenesComprasControl@notas');
+Route::get('ordenescomprasnotas/agregar','Articulo\OrdenesComprasControl@agregarNotas');
+Route::post('ordenescompra/fincontrol','Articulo\OrdenesComprasControl@finalizarControl');
+
 
 Route::group(['prefix' => 'api'],
     function () {

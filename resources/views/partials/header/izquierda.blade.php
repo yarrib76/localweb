@@ -45,7 +45,13 @@
                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                     <li><a href="/articulos"> ABM</a></li>
                     <li><a href="/sincroArticulos"> SincronizacionLocales</a></li>
-                    <li><a href="/ordenesCompras"> Ordenes de Compra</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Ordenes de Compra</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/ordenesCompras">Todas</a></li>
+                            <li><a href="/ordenescomprascontrol">Control Ordenes</a></li>
+                        </ul>
+                    </li>
                     <li><a href="/compraauto"> Compra Automatica</a></li>
                     <li class="divider"></li>
                     <li class="dropdown-submenu">
