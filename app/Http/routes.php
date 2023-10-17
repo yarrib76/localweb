@@ -163,7 +163,8 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
-    Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
+Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
+Route::get('/cambioPrecios','Articulo\CambioPreciosControl@index');
 /*Notas Adhesivas*/
 Route::resource('notasadmin','Notas\NotasAdhesivasAdmin');
 Route::get('/notasadhesivas', 'Notas\NotasAdhesivas@index');
@@ -266,6 +267,9 @@ Route::get('/ordenescomprasconsulta/todas','Articulo\OrdenesComprasControl@consu
 Route::get('ordenescomprasnotas ','Articulo\OrdenesComprasControl@notas');
 Route::get('ordenescomprasnotas/agregar','Articulo\OrdenesComprasControl@agregarNotas');
 Route::post('ordenescompra/fincontrol','Articulo\OrdenesComprasControl@finalizarControl');
+
+/*Cambio de Precias*/
+Route::post ('/cambioprecios','Articulo\CambioPreciosControl@proceso');
 
 
 Route::group(['prefix' => 'api'],
