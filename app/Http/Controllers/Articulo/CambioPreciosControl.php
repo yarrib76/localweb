@@ -37,79 +37,110 @@ class CambioPreciosControl extends Controller
     public function verificacion($proveedores,$calculo)
     {
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
-
-        // $articulos = DB::select('SELECT *
-        //                        FROM samira.articulos
-        //                        WHERE Proveedor IN ('. $string_coma .')');
-
-
+        //Solo si el cambio de precio es por porcentaje, ejemplo China Ana
         if ($calculo['tipo'] == 'porcentaje'){
-            $resultadoPreview = DB::select("SELECT Articulo, PrecioConvertido as PrecioConvertidoViejo,
-                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND(precioConvertido * 940, 2), precioConvertido) AS nuevoPrecioConvertido,
-                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND(precioManual * 940, 2), precioManual) AS nuevoPrecioManual,
-                                PrecioOrigen as PrecioOrigenViejo, PrecioOrigen as PrecioOrigenViejo, ROUND(precioOrigen * 940, 2) AS nuevoPrecioOrigen
-                            FROM articulos
-                            WHERE Proveedor IN ($proveedores)");
-
-            return $resultadoPreview;
-        }
-        if ($calculo['tipo'] == 'dolar'){
+            $valor = $calculo['valor'];
+            $resultadoPreview = DB::select("SELECT :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND(precioConvertido * $valor, 2), precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND(precioManual * $valor, 2), precioManual) AS nuevoPrecioManual,
+                                PrecioOrigen as PrecioOrigenViejo, ROUND(precioOrigen * $valor, 2) AS nuevoPrecioOrigen, proveedor as Proveedor
+                                FROM articulos
+                                WHERE Proveedor IN ($proveedores)", ['fecha' => $fecha]);
 
         }
+        //Solo si el cambio de precios es en dolares, ejemplo marcelo.
+        if ($calculo['tipo'] == 'dolar' and $calculo['porcentajeDescuento'] == ""){
+            $valor = $calculo['valor'];
+            $resultadoPreview = DB::select("SELECT :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND(precioOrigen * $valor, 2), precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND(precioOrigen * $valor, 2), precioManual) AS nuevoPrecioManual,
+                                PrecioOrigen as PrecioOrigenViejo, PrecioOrigen AS nuevoPrecioOrigen, proveedor as Proveedor
+                                FROM articulos
+                                WHERE Proveedor IN ($proveedores)", ['fecha' => $fecha]);
+        }
+        //En este caso aplica si al cambio de precio hay que hacerle el descuento ejemplo Linda Moda 2
+        elseif ($calculo['tipo'] == 'dolar' and $calculo['porcentajeDescuento'] != "") {
+            $valor = $calculo['valor'];
+            $porcentajeDescuento = $calculo['porcentajeDescuento'];
+            $resultadoPreview = DB::select("SELECT :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND((precioOrigen * $valor)* $porcentajeDescuento, 2), precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND((precioOrigen * $valor)* $porcentajeDescuento,2), precioManual) AS nuevoPrecioManual,
+                                PrecioOrigen as PrecioOrigenViejo, PrecioOrigen AS nuevoPrecioOrigen, proveedor as Proveedor
+                                FROM articulos
+                                WHERE Proveedor IN ($proveedores)", ['fecha' => $fecha]);
+        }
+        //Solo si el cambio de precio debe quitar el ultimo porcentaje de aumento y sumar el nuevo ejemplo Zacky
+        if ($calculo['tipo'] == 'agregoQuito' ){
+            $valorAgrego = $calculo['valorAgrego'];
+            $valorQuito = $calculo['valorQuito'];
+            $resultadoPreview = DB::select("SELECT  :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND((precioConvertido / $valorQuito) * $valorAgrego,2), precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND((precioManual / $valorQuito) * $valorAgrego,2), precioManual) AS nuevoPrecioManual,
+                                PrecioOrigen as PrecioOrigenViejo, ROUND((precioOrigen / $valorQuito) * $valorAgrego,2) AS nuevoPrecioOrigen, proveedor as Proveedor
+                                FROM articulos
+                                WHERE Proveedor IN ($proveedores)",  ['fecha' => $fecha]);
+
+        }
+
+        return $resultadoPreview;
     }
 
-    public function produccion($string_coma,$calculo)
+    public function produccion($proveedores,$calculo)
     {
+        //Solo si el cambio de precio es por porcentaje, ejemplo China Ana
         if ($calculo['tipo'] == 'porcentaje' ){
-            DB::transaction(function () use ($string_coma,$calculo){
+            DB::transaction(function () use ($proveedores,$calculo){
                 $valor = $calculo['valor'];
                 // Actualiza precioConvertido cuando precioManual es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND(precioConvertido * $valor,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND(precioConvertido * $valor,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioManual x 1.5 cuando precioManual no es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioManual = ROUND(precioManual * $valor,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioManual = ROUND(precioManual * $valor,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioOrigen x 1.5 independientemente de las condiciones anteriores y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioOrigen = ROUND(precioOrigen * $valor,2) WHERE Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioOrigen = ROUND(precioOrigen * $valor,2) WHERE Proveedor IN ($proveedores)");
             });
         }
+        //Solo si el cambio de precios es en dolares, ejemplo marcelo.
         if ($calculo['tipo'] == 'dolar' and $calculo['porcentajeDescuento'] == ""){
-            DB::transaction(function () use ($string_coma,$calculo){
+            DB::transaction(function () use ($proveedores,$calculo){
                 $valor = $calculo['valor'];
                 // Actualiza precioConvertido cuancalculo['porcentajeDescuento']o precioManual es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND(precioOrigen * $valor,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND(precioOrigen * $valor,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioManual x 1.5 cuando precioManual no es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioManual = ROUND(precioOrigen * $valor,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($string_coma)");
-            });
-        } elseif ($calculo['tipo'] == 'dolar' and $calculo['porcentajeDescuento'] != "") {
-            DB::transaction(function () use ($string_coma,$calculo){
-                $valor = $calculo['valor'];
-                $porcentajeDescuento = $calculo['porcentajeDescuento'];
-                // Actualiza precioConvertido cuando precioManual es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND((precioOrigen * $valor)* $porcentajeDescuento,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($string_coma)");
-
-                // Actualiza precioManual x 1.5 cuando precioManual no es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioManual = ROUND((precioOrigen * $valor)* $porcentajeDescuento,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioManual = ROUND(precioOrigen * $valor,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
             });
         }
+            //En este caso aplica si al cambio de precio hay que hacerle el descuento ejemplo Linda Moda 2
+            elseif ($calculo['tipo'] == 'dolar' and $calculo['porcentajeDescuento'] != "") {
+                DB::transaction(function () use ($proveedores,$calculo){
+                    $valor = $calculo['valor'];
+                    $porcentajeDescuento = $calculo['porcentajeDescuento'];
+                    // Actualiza precioConvertido cuando precioManual es nulo y el proveedor está en la lista
+                    DB::unprepared("UPDATE articulos SET precioConvertido = ROUND((precioOrigen * $valor)* $porcentajeDescuento,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
 
+                    // Actualiza precioManual x 1.5 cuando precioManual no es nulo y el proveedor está en la lista
+                    DB::unprepared("UPDATE articulos SET precioManual = ROUND((precioOrigen * $valor)* $porcentajeDescuento,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
+                });
+            }
+        //Solo si el cambio de precio debe quitar el ultimo porcentaje de aumento y sumar el nuevo ejemplo Zacky
         if ($calculo['tipo'] == 'agregoQuito' ){
-            DB::transaction(function () use ($string_coma,$calculo){
+            DB::transaction(function () use ($proveedores,$calculo){
                 $valorAgrego = $calculo['valorAgrego'];
                 $valorQuito = $calculo['valorQuito'];
                 // Actualiza precioConvertido cuando precioManual es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND((precioConvertido / $valorQuito) * $valorAgrego,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND((precioConvertido / $valorQuito) * $valorAgrego,2) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioManual x 1.5 cuando precioManual no es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioManual = ROUND((precioManual / $valorQuito) * $valorAgrego,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioManual = ROUND((precioManual / $valorQuito) * $valorAgrego,2) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioOrigen x 1.5 independientemente de las condiciones anteriores y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioOrigen = ROUND((precioOrigen / $valorQuito) * $valorAgrego,2) WHERE Proveedor IN ($string_coma)");
+                DB::unprepared("UPDATE articulos SET precioOrigen = ROUND((precioOrigen / $valorQuito) * $valorAgrego,2) WHERE Proveedor IN ($proveedores)");
             });
         }
-
-        return "Terminado";
+        $resultado = $this->guardoHistorialCambioPrecio($proveedores,$calculo);
+        return $resultado;
     }
 
     public function formateoProveedores($proveedores)
@@ -125,5 +156,40 @@ class CambioPreciosControl extends Controller
         $string_coma = implode(",", $quoted_elements);
 
         return $string_coma;
+    }
+
+    public function guardoHistorialCambioPrecio($proveedores,$calculo)
+    {
+        $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
+        // la función explode, que divide una cadena en elementos basados en un delimitador, que en este caso es la coma y lo convierte en array
+        $proveedores = explode(',',$proveedores);
+        foreach ($proveedores as $proveedor){
+            //la función trim, en este caso quita las commilas del texto.
+            $proveedor = trim($proveedor, '"');
+            if ($calculo['tipo'] == 'agregoQuito'){
+                DB::select('INSERT INTO samira.historico_cambio_precios
+                    (fecha,
+                    proveedor,
+                    tipo,
+                    porcentaje_descuento,
+                    valor_agrego,
+                    valor_quito)
+                    VALUES
+                    ("'.$fecha.'","'.$proveedor.'","'.$calculo['tipo'].'","'.$calculo['porcentajeDescuento'].'","'.$calculo['valorAgrego'].'","'.$calculo['valorQuito'].'");
+                    ');
+            } else {
+                DB::select('INSERT INTO samira.historico_cambio_precios
+                    (fecha,
+                    proveedor,
+                    tipo,
+                    porcentaje_descuento,
+                    valor)
+                    VALUES
+                    ("'.$fecha.'","'.$proveedor.'","'.$calculo['tipo'].'","'.$calculo['porcentajeDescuento'].'","'.$calculo['valor'].'");
+                    ');
+            }
+
+        }
+        return "Terminado";
     }
 }

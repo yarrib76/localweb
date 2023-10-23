@@ -62,8 +62,15 @@
                             <table id="reporte" class="table table-striped table-bordered records_list">
                                 <thead>
                                 <tr>
+                                    <th>Fecha</th>
+                                    <th>Articulo</th>
+                                    <th>PrecioConvertidoViejo</th>
+                                    <th>nuevoPrecioConvertido</th>
+                                    <th>PrecioManualViejo</th>
+                                    <th>nuevoPrecioManual</th>
+                                    <th>PrecioOrigenViejo</th>
+                                    <th>nuevoPrecioOrigen</th>
                                     <th>Proveedor</th>
-                                    <th>Total</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -72,6 +79,33 @@
             </div>
         </div>
     </div>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <img src="refresh/load.gif" height="100" width="100">
+        </div>
+    </div>
+    <div id="myModalFinish" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="col-xs-12 col-xs-offset-0 well">
+                <table id="pedidos" class="table table table-scroll table-striped">
+                    <thead>
+                    <tr>
+                        <td><img src="refresh/checkmark.png" height="100" width="100"></td>
+                        <td><h1>Finalizado</h1></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="button" value="Cerrar" class="btn btn-success" onclick="cerrarFinish()"></td>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
     <style>
         SELECT, INPUT[type="text"] {
             width: 180px;
@@ -86,7 +120,22 @@
             width: 40px;
             text-align: center;
         }
-
+        #myModal {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 8%;
+            height: 20%;
+            overflow-y: auto;
+        }
+        #myModalFinish {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 30%;
+            height: 50%;
+            overflow-y: auto;
+        }
     </style>
 @stop
 @section('extra-javascript')
@@ -112,6 +161,7 @@
         var inputagregarPorcentaje = document.getElementById('agregarPorcentaje');
         var inputPorcentajedescuento = document.getElementById('porcentajeDescuento');
         inputPorcentajedescuento.value = ""
+        var modalFinish = document.getElementById('myModalFinish');
 
         $(document).ready( function () {
             var table;
@@ -119,6 +169,10 @@
             $("#btnLeft").click(function () {
                 var selectedItem = $("#select2 option:selected");
                 $("#select1").append(selectedItem);
+                // Ordenar las opciones en select1 alfabéticamente por texto
+                $("#select1").html($("#select1").find("option").sort(function(a, b) {
+                    return a.text.localeCompare(b.text);
+                }));
             });
 
             $("#btnRight").click(function () {
@@ -133,45 +187,6 @@
             });
         });
 
-        //evento click para enviar los valores seleccionados del select
-        $("#enviar_seleccion_paraborrar").click(function() {
-            eliminarTabla()
-            //obtiene los valores seleccionados del select
-            var valoresSeleccionados = mostrarSeleccion();
-            var headers = {
-                'Content-Type': 'application/json'
-            }
-            var datos = valoresSeleccionados;
-            console.log(datos)
-            //realiza la petición ajax para enviar los datos
-            $.ajax({
-                url: '/cambioprecios',
-                method: "POST",
-                headers:headers,
-                data: JSON.stringify(datos),
-                success: function(json) {
-                    var total = 0;
-                    for(var i = 0; i < json.length; i++){
-                        total =  total + json[i]['Total'];
-                    }
-                    document.getElementById("Total").value = total
-                    table = $('#reporte').DataTable({
-                                dom: 'Bfrtip',
-                                "autoWidth": false,
-                                buttons: [
-                                    'excel'
-                                ],
-                                order: [1,'desc'],
-                                "aaData": json,
-                                "columns": [
-                                    { "data": "Proveedor" },
-                                    { "data": "Total" }
-                                ]
-                            }
-                    );
-                }
-            });
-        });
         function llenarSelectProveedor(){
             $.ajax({
                 type: 'get',
@@ -193,7 +208,14 @@
 
         function eliminarTabla(){
             if(typeof table != "undefined"){
+                table.clear().draw();
                 table.destroy()
+            }
+        }
+
+        function limpiaTabla(){
+            if(typeof table != "undefined"){
+                table.clear().draw();
             }
         }
 
@@ -269,59 +291,111 @@
             }
         }
         function enviarSeleccion(tipo){
-            var datosSelecionados = mostrarSeleccion()
-            if (checkboxAgregoPorcentaje.checked){
-                var calculo = {
+            if (validacionOpciones()){
+                var datosSelecionados = mostrarSeleccion()
+                if (tipo == 'verificacion'){
+                    eliminarTabla()
+                } else limpiaTabla()
+                if (checkboxAgregoPorcentaje.checked){
+                    var calculo = {
                         tipo: "porcentaje",
                         valor: inputporcentaje.value,
                         porcentajeDescuento: inputPorcentajedescuento.value
+                    }
+                }
+                if (checkboxBasadoDolar.checked){
+                    var calculo = {
+                        tipo: "dolar",
+                        valor: inputprecioDolar.value,
+                        porcentajeDescuento: inputPorcentajedescuento.value
+                    }
+                }
+                if (checkboxQuitoAgregoPorcentaje.checked){
+                    var calculo = {
+                        tipo: "agregoQuito",
+                        valorAgrego: inputagregarPorcentaje.value,
+                        valorQuito: inputquitarPorcentaje.value,
+                        porcentajeDescuento: inputPorcentajedescuento.value
+                    }
+                }
+                var headers = {
+                    'Content-Type': 'application/json'
+                }
+                // Get the modal
+                var modal = document.getElementById('myModal');
+                // When the user clicks the button, open the modal
+                modal.style.display = "block";
+                $.ajax({
+                    url: '/cambioprecios',
+                    method: "POST",
+                    headers:headers,
+                    data: JSON.stringify({
+                        proveedores: datosSelecionados,
+                        calculo: calculo,
+                        tipo: tipo
+                    }),
+                    success: function(json) {
+                        if (tipo == "verificacion"){
+                            table = $('#reporte').DataTable({
+                                        dom: 'Bfrtip',
+                                        "autoWidth": false,
+                                        buttons: [
+                                            'excel'
+                                        ],
+                                        order: [1,'desc'],
+                                        "aaData": json,
+                                        "columns": [
+                                            { "data": "Fecha" },
+                                            { "data": "Articulo" },
+                                            { "data": "PrecioConvertidoViejo" },
+                                            { "data": "nuevoPrecioConvertido" },
+                                            { "data": "PrecioManualViejo" },
+                                            { "data": "nuevoPrecioManual" },
+                                            { "data": "PrecioOrigenViejo" },
+                                            { "data": "nuevoPrecioOrigen" },
+                                            { "data": "Proveedor" },
+                                        ]
+                                    }
+                            );
+                            modal.style.display = "none";
+                        } else {
+                            modal.style.display = "none";
+                            modalFinish.style.display = "block"
                         }
+                    }
+                });
             }
-            if (checkboxBasadoDolar.checked){
-                var calculo = {
-                    tipo: "dolar",
-                    valor: inputprecioDolar.value,
-                    porcentajeDescuento: inputPorcentajedescuento.value
-                }
+
+        }
+
+        function validacionOpciones(){
+            if (checkboxAgregoPorcentaje.checked == false && checkboxBasadoDolar.checked == false && checkboxQuitoAgregoPorcentaje.checked == false){
+                alert('Debe haber al menos un checkbox seleccionado.')
+                return false
             }
-            if (checkboxQuitoAgregoPorcentaje.checked){
-                var calculo = {
-                    tipo: "agregoQuito",
-                    valorAgrego: inputagregarPorcentaje.value,
-                    valorQuito: inputquitarPorcentaje.value,
-                    porcentajeDescuento: inputPorcentajedescuento.value
-                }
+            if (checkboxAgregoPorcentaje.checked && inputporcentaje.value == ""){
+                alert('Debe agragar un porcentaje para continuar')
+                return false
             }
-            var headers = {
-                'Content-Type': 'application/json'
+            if (checkboxBasadoDolar.checked && inputprecioDolar.value == ""){
+                alert('Debe agregar el valor del dolar para continuar')
+                return false
             }
-            $.ajax({
-                url: '/cambioprecios',
-                method: "POST",
-                headers:headers,
-                data: JSON.stringify({
-                    proveedores: datosSelecionados,
-                    calculo: calculo,
-                    tipo: tipo
-                }),
-                success: function(json) {
-                    console.log(json)
-                    table = $('#reporte').DataTable({
-                                dom: 'Bfrtip',
-                                "autoWidth": false,
-                                buttons: [
-                                    'excel'
-                                ],
-                                order: [1,'desc'],
-                                "aaData": json,
-                                "columns": [
-                                    { "data": "Proveedor" },
-                                    { "data": "Total" }
-                                ]
-                            }
-                    );
-                }
-            });
+            if (checkboxQuitoAgregoPorcentaje.checked && (inputagregarPorcentaje.value == "" || inputquitarPorcentaje.value == "")){
+                alert('Debe agregar porcentaje para quitar y porcentaje para agregar')
+                return false
+            }
+            if (checkboxPorcentajeDescuento.checked && inputPorcentajedescuento.value == ""){
+                alert('Debe agragar un porcentaje de descuento')
+                return false
+            }
+            return true
+        }
+
+        function cerrarFinish(){
+            modalFinish.style.display = "none";
+            location.reload();
+            //close the modal
         }
     </script>
 @stop
