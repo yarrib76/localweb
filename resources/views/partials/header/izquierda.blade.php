@@ -59,6 +59,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/editargeneral"> Por Proveedor</a></li>
                             <li><a href="/importExport"> Importacion EXCEL-CSV</a></li>
+                            <li><a href="/cambioPrecios"> Cambio Precio Sistema</a></li>
                         </ul>
                     </li>
                 </ul>
