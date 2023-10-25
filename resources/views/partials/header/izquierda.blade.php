@@ -35,6 +35,7 @@
                     <li><a href="/reportevendedoras"> Vendedoras </a></li>
                     <li><a href="/notasadmin">Administrar Notas</a></li>
                     <li><a href="/panelcontrol"> DashBoard </a></li>
+                    <li><a href="/abmpersonal"> Personal </a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -44,7 +45,13 @@
                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                     <li><a href="/articulos"> ABM</a></li>
                     <li><a href="/sincroArticulos"> SincronizacionLocales</a></li>
-                    <li><a href="/ordenesCompras"> Ordenes de Compra</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Ordenes de Compra</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/ordenesCompras">Todas</a></li>
+                            <li><a href="/ordenescomprascontrol">Control Ordenes</a></li>
+                        </ul>
+                    </li>
                     <li><a href="/compraauto"> Compra Automatica</a></li>
                     <li class="divider"></li>
                     <li class="dropdown-submenu">
@@ -52,6 +59,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/editargeneral"> Por Proveedor</a></li>
                             <li><a href="/importExport"> Importacion EXCEL-CSV</a></li>
+                            <li><a href="/cambioPrecios"> Cambio Precio Sistema</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -71,6 +79,13 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="/clientes"> ABM</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Fidelizacion</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/clientesFidelizacion"> Clientes </a></li>
+                            <li><a href="/clientesFidelizacion/setParametros"> Configuracion </a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -100,6 +115,7 @@
                     <li><a href="/reportefacturas"> Facturas</a></li>
                     <li><a href="/reporteFinanciero"> Reporte Financiero</a></li>
                     <li><a href="/reportesalonpedidos"> Reporte Ventas Pedidos</a></li>
+                    <li><a href="/reporteinversion"> Reporte Inversion</a></li>
                 </ul>
             </li>
             <li class="dropdown">

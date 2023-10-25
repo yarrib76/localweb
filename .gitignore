@@ -9,7 +9,7 @@ composer.lock
 /node_modules
 /tests/logs/*
 /vendor/*
-/public/imagenes/articulos/*
+/public/imagenes/*
 /public/importacion/*
 bower_components/
 npm-debug.log

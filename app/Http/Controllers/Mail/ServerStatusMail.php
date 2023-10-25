@@ -26,6 +26,10 @@ class ServerStatusMail extends Controller
                 $mysqliConti = new mysqli("192.168.0.110", "yarrib76", "NetAcc10", "samira");
                 $mysqliProd = new mysqli("192.168.0.104", "yarrib76", "NetAcc10", "samira");
                 break;
+            case 'viamoreprodlaptop':
+                $mysqliConti = new mysqli("192.168.0.154", "yarrib76", "NetAcc10", "samira");
+                $mysqliProd = new mysqli("192.168.0.104", "root", "NetAcc10", "samira");
+                break;
             case 'donaprod':
                 $mysqliConti = new mysqli("192.168.0.150", "root", "NetAcc10", "samira");
                 $mysqliProd = new mysqli("192.168.0.50", "root", "NetAcc10", "samira");
@@ -56,6 +60,13 @@ class ServerStatusMail extends Controller
                 });
                 break;
             case 'viamoreprod':
+                Mail::send('mail.statusMail',$data,function($message){
+                    $message->to('ventas@viamore.com.ar', 'Prueba de Mail')->subject
+                    ('Estado de Backup y Replicas');
+                    $message->from('yarrib76@gmail.com','Yamil Arribas');
+                });
+                break;
+            case 'viamoreprodlaptop':
                 Mail::send('mail.statusMail',$data,function($message){
                     $message->to('ventas@viamore.com.ar', 'Prueba de Mail')->subject
                     ('Estado de Backup y Replicas');

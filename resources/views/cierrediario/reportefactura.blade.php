@@ -111,8 +111,16 @@
             <span class="close">&times;</span>
             <h3>Fecha</h3>
             <div class="col-xs-12 col-xs-offset-0 well">
-                <table id="cierreCaja" class="table table-scroll table-striped ">
-
+                <table id="cierreCaja" class="table table-striped table-bordered records_list">
+                    <thead>
+                    <tr>
+                        <th>Articulo</th>
+                        <th>Detalle</th>
+                        <th>Cantidad</th>
+                        <th>PrecioUnitario</th>
+                        <th>PrecioVenta</th>
+                    </tr>
+                    </thead>
                 </table>
             </div>
         </div>
@@ -142,10 +150,12 @@
 
             );
         } );
-        function cargoTablaPopup(nroFaactura) {
+
+        /*
+        function cargoTablaPopupold(nroFaactura) {
             var table = $("#cierreCaja");
             table.children().remove()
-            table.append("<thead><tr><th>Articulo</th><th>Detalle</th><th>Cantidad</th><th>PrecioArgen</th><th>PrecioUnitario</th><th>PrecioVenta</th><th>Ganancia</th></tr></thead>")
+            table.append("<thead><tr><th>Articulo</th><th>Detalle</th><th>Cantidad</th><th>PrecioUnitario</th><th>PrecioVenta</th></tr></thead>")
             $.ajax({
                 url: '/api/cierreCajaFacturaWeb?nroFactura=' + nroFaactura,
                 dataType: "json",
@@ -153,8 +163,8 @@
                     console.log(json)
                     $.each(json, function (index, json) {
                         table.append("<tr><td>" + json['Articulo'] + "</td><td>" + json['Detalle'] +
-                                "</td><td>" + json['Cantidad'] + "</td><td>" + json['PrecioArgen'] + "</td><td>"
-                                + json['PrecioUnitario'] + "</td><td>" + json['PrecioVenta'] + "</td><td>" + json['Ganancia'] +  "</td></tr>");
+                                "</td><td>" + json['Cantidad'] + "</td><td>"
+                                + json['PrecioUnitario'] + "</td><td>" + json['PrecioVenta'] + "</td></tr>");
                     });
                 }
             });
@@ -181,6 +191,60 @@
             $(".modal-content h3").html("Factura Nº:" + nroFaactura);
 
         }
+        */
+        function cargoTablaPopup(nroFaactura){
+            eliminarTabla()
+            // Get the modal
+            var modal = document.getElementById('myModal');
 
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal
+            modal.style.display = "block";
+            $.ajax({
+                url: '/api/cierreCajaFacturaWeb?nroFactura=' + nroFaactura,
+                'method': "GET",
+                'contentType': 'application/json',
+                success : function(json) {
+                    tablaCierreCaja =  $('#cierreCaja').DataTable({
+                                            dom: 'Bfrtip',
+                                            "autoWidth": false,
+                                            buttons: [
+                                                'excel'
+                                            ],
+                                            order: [0,'desc'],
+                                            "aaData": json,
+                                            "columns": [
+                                                { "data": "Articulo" },
+                                                { "data": "Detalle" },
+                                                { "data": "Cantidad" },
+                                                { "data": "PrecioUnitario" },
+                                                { "data": "PrecioVenta" },
+                                            ]
+                                        }
+                    );
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function () {
+                        modal.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function (event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                    $(".modal-content h3").html("Factura Nº:" + nroFaactura);
+
+                },
+            })
+        }
+
+        function eliminarTabla(){
+            if(typeof tablaCierreCaja != "undefined"){
+                tablaCierreCaja.destroy()
+            }
+        }
     </script>
 @stop

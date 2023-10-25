@@ -15,9 +15,10 @@ class OrdenArti extends Controller
     public function inTn()
     {
         $nroPedido = Input::get('nroPedido');
-        $artEnTiendaNube = DB::Select('SELECT controlpedidos.nropedido, OrdenWeb, OrdenArti.articulo, OrdenArti.detalle, OrdenArti.cantidad, OrdenArti.precio
+        $artEnTiendaNube = DB::Select('SELECT controlpedidos.nropedido, OrdenWeb, OrdenArti.articulo, OrdenArti.detalle, OrdenArti.cantidad, OrdenArti.precio, Arti.cantidad as stock
                                         FROM samira.controlpedidos as controlPedidos
                                         inner join samira.ordenesarticulos as OrdenArti ON OrdenArti.id_controlPedidos = controlpedidos.id
+                                        inner join samira.articulos as Arti ON OrdenArti.articulo = Arti.Articulo
                                         left join samira.pedidotemp as ptemp ON OrdenArti.articulo = ptemp.articulo
                                         and ptemp.NroPedido = controlpedidos.nropedido
                                         where controlpedidos.nropedido = "'. $nroPedido .'"

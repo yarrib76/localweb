@@ -68,14 +68,13 @@ class GetArticulosTiendaNube extends Controller
 
         //obtengo todas las categorìas
         $allCategorias = $this->obtengoSubCategoria($api);
-
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             try {
                 $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
                 foreach ($articulosTiendaNube->body as $articulo){
                     // dd($articulo->categories);
+                    // dd($articulo->categories);
                     $categorias = $this->obtengoCategorias($articulo->categories,$api,$allCategorias);
-
                     $newDescriptions = "";
                     if (Input::get('local') == 'Viamore'){
                         $newTituloSeo = substr($articulo->name->es, 0, strrpos($articulo->name->es, ' ') + 1) . " " . "POR MAYOR EN FLORES";
@@ -208,13 +207,25 @@ class GetArticulosTiendaNube extends Controller
                     // $subCategoria = $this->obtengoSubCategorias($categoria->parent,$api);
                     //obtengo el nombre de la categorìa Padre
                     $subCategoria = $this->obtengoCatPadre($categoria->parent,$allCategorias);
-                    // dd($subCategoria->body->name->es . " > " . $categoria->name->es . ",");
                     $categorias .= $subCategoria->es . " > " . $categoria->name->es . ",";
+
+                    // Funcion de Prueba que permite mas de una sub-Categoria pero con algunos inconvenientes si por error se agregan
+                      // Mas categerías al Artículo.
+                     //  $categorias = $this->obtengoCatPadre2($categoria->parent,$catogories);
                 } else {
                     $categorias .= $categoria->name->es . ",";
                 }
         }
-        return (substr($categorias, 0, -1));
+        // dd(substr($categorias, 0, -1));
+
+        $categorias = substr($categorias, 0, -1);
+        // Quita o reemplaza por nada, de la variable de tipo String la palabra repetida "BAÑO EN ORO," adaptación para mas de 2 sub-Categorias
+        $categorias = str_replace("BAÑO EN ORO,","",$categorias);
+        // Quita o reemplaza por nada, de tipo String la palabra repetida "BAÑO EN PLATA, adaptación para mas de 2 sub-Categorias
+        $categorias = str_replace("BAÑO EN PLATA,","",$categorias);
+        // Agregar cuando se inciropre la categería BAÑO EN ACERO
+        $categorias = str_replace("BAÑO ACERO,","",$categorias);
+        return $categorias;
     }
 
     private function creoVariantes($articulo)
@@ -257,9 +268,10 @@ class GetArticulosTiendaNube extends Controller
 
     private function obtengoSubCategoria($api)
     {
-        $query = $api->get("categories");
+        $query = $api->get("categories?page=1&per_page=200");
         return $query->body;
     }
+
 
     private function obtengoCatPadre($parent_id,$allCategorias)
     {
@@ -269,5 +281,24 @@ class GetArticulosTiendaNube extends Controller
             }
         }
 
+    }
+
+    //Nueva Funcion que soporta mas de una SubCategoria, pero queda en desuso ya que no sopprta varias categorías padres
+    private function obtengoCatPadre2($parent_id,$allCategorias)
+    {
+        $categorias= "";
+        $id = 0;
+        foreach ($allCategorias as $categoria) {
+            if ($categoria->id == $parent_id){
+                $categorias .= $categoria->name->es . " > ";
+                $id = $categoria->id;
+            }
+            if ($categoria->parent == $id){
+                $categorias .= $categoria->name->es . " > ";
+                $id = $categoria->id;
+            }
+        }
+        $categorias = (substr($categorias,0,-3));
+        return $categorias . ",";
     }
 }

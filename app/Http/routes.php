@@ -82,6 +82,7 @@ Route::resource('pedidos', 'Pedido\PedidosController');
 Route::get('panelPedidos', 'Pedido\PanelController@panel');
 Route::get('facturados', 'Pedido\PanelController@facturados');
 Route::get('procesados', 'Pedido\PanelController@procesados');
+Route::get('pedidospagos', 'Pedido\PanelController@pedidosPagos');
 Route::get('empaquetados', 'Pedido\PanelController@empaquetados');
 Route::get('cancelados', 'Pedido\PanelController@cancelados');
 Route::get('todos', 'Pedido\PanelController@todos');
@@ -162,7 +163,8 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 /*Test*/
 Route::get('/test','Test\Test@test');
 Route::get('/testconvert','Test\Test@convert');
-    Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
+Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
+Route::get('/cambioPrecios','Articulo\CambioPreciosControl@index');
 /*Notas Adhesivas*/
 Route::resource('notasadmin','Notas\NotasAdhesivasAdmin');
 Route::get('/notasadhesivas', 'Notas\NotasAdhesivas@index');
@@ -179,6 +181,7 @@ Route::get('/autosinc','Api\Automation\ReplicaTN@view');
 
 /*codigos de Barra*/
 Route::get('/barcode', 'Articulo\Barcode@crearCodigo');
+Route::get('/barcodeDoble', 'Articulo\Barcode@crearCodigoDoble');
 
 /*Reporte Contabilidad*/
 Route::get('/reportesalonpedidos', 'Contabilidad\VistaPedidosSalon@index');
@@ -187,6 +190,8 @@ Route::get('/listarfacturas', 'Contabilidad\Facturas@listarfacturas');
 Route::get('/tipo_pagos', 'Contabilidad\Facturas@tipo_pagos');
 Route::get('/estados_financiera', 'Contabilidad\Facturas@estados_financiera');
 Route::post('updateFactura/update','Contabilidad\Facturas@update');
+Route::get ('/reporteinversion','Contabilidad\ReporteInversion@index');
+Route::post ('/consultaInversion','Contabilidad\ReporteInversion@consulta');
 
 /*Carritos Abandonados*/
 Route::get('/carritosAbandonados', 'TiendaNube\CarritosAbandonados@index');
@@ -202,6 +207,70 @@ Route::get('/consultaempaquetados', 'Reporte\DashBoard\Consultas@consultaEmpaque
 Route::get('/consultacarritosabandonados', 'Reporte\DashBoard\Consultas@carritosAbandanados');
 Route::get('/relojesoperativos', 'Reporte\DashBoard\Consultas@relojesOperativos');
 Route::get('/tablaPedidos', 'Reporte\DashBoard\Consultas@tablaPedidos');
+Route::get('/tablaClienteFidel', 'Reporte\DashBoard\Consultas@tablaClientesFidel');
+
+/*Clientes Fidelizacion*/
+Route::get('/clientesFidelizacion','ClientesFidelizacion\ClientesFidel@index');
+Route::get('/clientesFidelizacion/query','ClientesFidelizacion\ClientesFidel@query');
+Route::post('/clientesFidelizacion/update', 'ClientesFidelizacion\ClientesFidel@update');
+Route::get('/clientesFidelizacion/agregarNotas', 'ClientesFidelizacion\ClientesFidel@agregarNotas');
+Route::get('/clientesFidelizacion/notas', 'ClientesFidelizacion\ClientesFidel@notas');
+Route::post('/clientesFidelizacion/finalizarClienteFidel', 'ClientesFidelizacion\ClientesFidel@finalizarClienteFidel');
+Route::get('/clientesFidelizacion/biFidel', 'ClientesFidelizacion\ClientesFidel@biFidel');
+Route::get('clientesFidelizacion/setParametros','ClientesFidelizacion\ClientesFidel@setParametros');
+Route::get('clientesFidelizacion/etapasFidel','ClientesFidelizacion\ClientesFidel@etapas_fidel');
+Route::post('clientesFidelizacion/guardarParametros','ClientesFidelizacion\ClientesFidel@guardarParametros');
+
+/*Personal*/
+Route::get('/fichaje','Personal\Fichaje@index');
+Route::get('/fichajeCodigo','Personal\Fichaje@consultaEmpleado');
+Route::get('/ingreso','Personal\Fichaje@ingreso');
+Route::get('/egreso','Personal\Fichaje@egreso');
+/*ABMPersonal*/
+Route::get('abmpersonal','Personal\AbmPersonal@index');
+Route::get('getcodigo','Personal\AbmPersonal@obtngoCodigoBarra');
+Route::get('guardarPersonal','Personal\AbmPersonal@guardar');
+Route::post('/guardar-imagen', 'Personal\ImagenController@guardar');
+
+/*Estadisticas*/
+Route::get('estadisticas/{users_id}','Personal\Estadisticas@index');
+Route::get('estadisticaPedidos','Personal\Estadisticas@pedidos');
+Route::get('obtengoFoto','Personal\Estadisticas@obtengoFoto');
+Route::get('obtengoDatosPersonales','Personal\Estadisticas@obtengoDatosPersonales');
+Route::get('obtengoCantPedidos','Personal\Estadisticas@obtengoCantPedidos');
+Route::get('obtengoVentasSalon','Personal\Estadisticas@ventasSalon');
+Route::get('obtengoVentasSalonTotales','Personal\Estadisticas@obtengoVentasSalonTotales');
+Route::get('obtengoPedidosCancelados','Personal\Estadisticas@obtengoPedidosCancelados');
+Route::get('obtengoCantidadNoEncuesta','Personal\Estadisticas@obtengoCantidadNoEncuesta');
+Route::get('obtengoCantidadTotalesParaNoEncuesta','Personal\Estadisticas@obtengoCantidadTotalesParaNoEncuesta');
+Route::get('obtengoFidelClientes','Personal\Estadisticas@obtengoFidelClientes');
+Route::get('reportePedidosCancelados','Personal\Estadisticas@reportePedidosCancelados');
+
+/*Control Fichaje*/
+Route::get('/listaFichaje','Personal\ControlFichaje@control');
+Route::get('listaMensual','Personal\ControlFichaje@listaMensual');
+Route::get('cantDiasAusentes','Personal\ControlFichaje@cantDiasAusentes');
+Route::get('pruebacantDiasAusentes','Personal\ControlFichaje@prueba');
+Route::get('listaDiasAusentes','Personal\ControlFichaje@listaDiasAusentes');
+
+/*Control Objetivo*/
+Route::get('listaObjetivos','Personal\Objetivos\ControlObjetivos@listarObjetivos');
+Route::post('objetivosUpdate','Personal\Objetivos\ControlObjetivos@update');
+Route::get('crearObjetivo','Personal\Objetivos\ControlObjetivos@crearObjetivo');
+Route::get('resetObjetivos','Personal\Objetivos\ControlObjetivos@resetObjetivos');
+Route::get('autoCargaObjetivos','Personal\Objetivos\ControlObjetivos@autoCargaObjetivos');
+
+/*Control Ordenes de Compra*/
+Route::get('ordenescomprascontrol','Articulo\OrdenesComprasControl@index');
+Route::get('ordenescomprasconsulta','Articulo\OrdenesComprasControl@consulta');
+Route::get('/ordenescomprasconsulta/todas','Articulo\OrdenesComprasControl@consultaTodas');
+Route::get('ordenescomprasnotas ','Articulo\OrdenesComprasControl@notas');
+Route::get('ordenescomprasnotas/agregar','Articulo\OrdenesComprasControl@agregarNotas');
+Route::post('ordenescompra/fincontrol','Articulo\OrdenesComprasControl@finalizarControl');
+
+/*Cambio de Precias*/
+Route::post ('/cambioprecios','Articulo\CambioPreciosControl@proceso');
+Route::get ('/reportecambiopreciohistorico','Articulo\CambioPreciosControl@reporteCambioPrecioHistorico');
 
 
 Route::group(['prefix' => 'api'],
@@ -242,6 +311,7 @@ Route::group(['prefix' => 'api'],
         Route::get('/proveedoresSelect', 'Api\ProveedoresSelect@query');
         Route::get('/provinciasSelect', 'Api\ProvinciasSelect@query');
         Route::get('/relesWebSelect', 'Api\RolesSelect@query');
+        Route::get('/listaSelectProveeor','Api\ProveedoresSelect@selectAllProveedoresMultiple');
 
         Route::get('/getcontrolpedidos', 'Api\GetControlPedidosMobil@query');
         Route::get('/getpedidos', 'Api\GetPedidoMobil@query');
@@ -315,4 +385,11 @@ Route::group(['prefix' => 'api'],
 
         /*ABM Clientes*/
         Route::get('/abmclientes', 'Api\Clientes\GetClientes@consulta');
+
+        /*Reportes Pedidos*/
+        Route::get('/get_todos', 'Api\Pedidos\GetPedidos@todos');
+        Route::get('/get_facturados', 'Api\Pedidos\GetPedidos@facturados');
+
+        /*Define pago del pedido*/
+        Route::get('/estadopago', 'Api\EstadoPagoPedido@modificoEstadoPago');
     });

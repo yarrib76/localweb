@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
@@ -19,6 +20,12 @@ class ProveedoresSelect extends Controller
             $proveedores = Proveedores::where('Nombre', '=',Input::get('proveedor_name'))->get();
             return Response::json($proveedores);
         }
+        return Response::json($proveedores);
+    }
+
+    public function selectAllProveedoresMultiple()
+    {
+        $proveedores = DB::select('select nombre from samira.proveedores ORDER BY nombre ASC ;');
         return Response::json($proveedores);
     }
 }

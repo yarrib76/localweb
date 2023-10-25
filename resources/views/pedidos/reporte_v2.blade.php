@@ -28,7 +28,11 @@
                                     <th>Cliente</th>
                                     <th>Fecha</th>
                                     <th>Vendedora</th>
-                                    <th>Factura</th>
+                                    @if($estado != "Pagos")
+                                        <th>Factura</th>
+                                    @else
+                                        <th>Fecha_Pago</th>
+                                    @endif
                                     <th>Total</th>
                                     <th>OrdenWeb</th>
                                     <th>TotalWeb</th>
@@ -57,7 +61,11 @@
                                             <td data-order = "{{$pedido->fechaParaOrden}}">{{$pedido->fecha}}</td>
                                         @endif
                                         <td>{{$pedido->vendedora}}</td>
-                                        <td>{{$pedido->nrofactura}}</td>
+                                        @if($estado != "Pagos")
+                                            <td>{{$pedido->nrofactura}}</td>
+                                        @else
+                                             <td>{{$pedido->fecha_pago}}</td>
+                                        @endif
                                         <td>{{$pedido->total}}</td>
                                         @if ($pedido->ordenweb != Null)
                                             <td>{{$pedido->ordenweb}}</td>
@@ -112,6 +120,13 @@
                                             @elseif($pedido->instancia == 1)
                                                  <button type="button" id="botonInstancia{{$a}}" class="btn btn-info" onclick="cambioInstancia({{$pedido->nropedido}},2,{{$a}});">Fin</button>
                                             @endif
+                                            @if($pedido->pagado == 0)
+                                                <button type="button" id="botonNoPago{{$a}}" class="btn btn-danger" onclick="cambioPago('{{$pedido->nropedido}}',0,'{{$a}}');"><i class="fa fa-frown-o"></i></button>
+                                                <button type="button" id="botonPago{{$a}}" style="display:none" class="btn btn-success" onclick="cambioPago('{{$pedido->nropedido}}',1,'{{$a}}');"><i class="fa fa-smile-o"></i></button>
+                                                @else
+                                                        <button type="button" id="botonNoPago{{$a}}" style="display:none"  class="btn btn-danger" onclick="cambioPago('{{$pedido->nropedido}}',0,'{{$a}}');"><i class="fa fa-frown-o"></i></button>
+                                                        <button type="button" id="botonPago{{$a}}" class="btn btn-success" onclick="cambioPago('{{$pedido->nropedido}}',1,'{{$a}}');"><i class="fa fa-smile-o"></i></button>
+                                                @endif
                                                     <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');"><i class="fa fa-check"></i></button>
                                                 </td>
                                         @else
@@ -441,6 +456,8 @@
                         <option value="Google">Google</option>
                         <option value="Instagram">Instagram</option>
                         <option value="FaceBook">FaceBook</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Reels(Tips a la Vista)">Reels(Tips a la Vista)</option>
                         <option value="Recomendado">Recomendado</option>
                         <option value="Volante">Volante</option>
                         <option value="Caminando">Caminando</option>
@@ -460,7 +477,7 @@
             <h3>Nº Pedido: </h3>
             <h5 id="cliente"></h5>
             <div id="general">
-                <h4>Articulos en la Tiendo y no en el sistema</h4>
+                <h4>Articulos en la Tienda y no en el sistema</h4>
                 <div id="div_checkOutInTN">
                     <div class="col-xs-12 col-xs-offset-0 well">
                         <table id="checkOutInTN" class="table table-striped table-bordered records_list">
@@ -472,6 +489,7 @@
                                 <th>Detalle</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
+                                <th>Stock</th>
                             </tr>
                             </thead>
                         </table>
@@ -902,6 +920,7 @@
                                     { "data": "detalle" },
                                     { "data": "cantidad" },
                                     { "data": "precio" },
+                                    { "data": "stock" },
                                 ]
                             }
                     );
@@ -1033,6 +1052,22 @@
                     $('#encuesta_id').val(json[0]['encuesta'])
                 }
             });
+        }
+
+        function cambioPago(nroPedido,estado, posicionBoton){
+            $.ajax({
+                url:'api/estadopago?nroPedido=' + nroPedido + '&estado=' + estado,
+                dataType: 'json',
+                success: function(json){
+                    if (json == 0) {
+                        document.getElementById("botonNoPago" + posicionBoton).style.display = 'block'
+                        document.getElementById("botonPago" + posicionBoton).style.display = 'none'
+                    }else {
+                        document.getElementById("botonPago" + posicionBoton).style.display = 'block'
+                        document.getElementById("botonNoPago" + posicionBoton).style.display = 'none'
+                    }
+                }
+            })
         }
     </script>
 

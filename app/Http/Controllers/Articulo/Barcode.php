@@ -20,6 +20,15 @@ class Barcode extends Controller
         return view('barcode.muestrabarcode', compact('codigos'));
     }
 
+    public function crearCodigoDoble()
+    {
+        $sku = Input::get('articulo');
+        $articulo = Articulos::where('Articulo',$sku)->get();
+        $detalle = $this->completoTexto($articulo[0]->Detalle);
+        $codigos = ['codigo' => $articulo[0]->Articulo,'texto' => $detalle];
+        return view('barcode.muestrabarcode_doble', compact('codigos'));
+    }
+
     public function completoTexto($texto)
     {
         $textoAgregado = "";
