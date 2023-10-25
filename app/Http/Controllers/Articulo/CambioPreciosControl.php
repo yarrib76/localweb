@@ -192,4 +192,11 @@ class CambioPreciosControl extends Controller
         }
         return "Terminado";
     }
+
+    public function reporteCambioPrecioHistorico()
+    {
+        $datos = DB::select('SELECT fecha,proveedor,tipo,porcentaje_descuento,valor,valor_agrego,valor_quito
+                              FROM samira.historico_cambio_precios;');
+        return Response::json($datos);
+    }
 }

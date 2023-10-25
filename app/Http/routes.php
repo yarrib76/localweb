@@ -270,6 +270,7 @@ Route::post('ordenescompra/fincontrol','Articulo\OrdenesComprasControl@finalizar
 
 /*Cambio de Precias*/
 Route::post ('/cambioprecios','Articulo\CambioPreciosControl@proceso');
+Route::get ('/reportecambiopreciohistorico','Articulo\CambioPreciosControl@reporteCambioPrecioHistorico');
 
 
 Route::group(['prefix' => 'api'],

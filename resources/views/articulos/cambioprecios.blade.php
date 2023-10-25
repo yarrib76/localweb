@@ -45,7 +45,7 @@
                             </td>
                             <td>
                                 <div>
-                                    <input type="checkbox" id="checkboxPorcentajeDescuento" name="opciones" value="valor" onclick="selectores('checkboxPorcentajeDescuento')"> Descuento
+                                    <input type="checkbox" id="checkboxPorcentajeDescuento" name="opciones" value="valor" disabled="true" onclick="selectores('checkboxPorcentajeDescuento')"> Descuento
                                 </div>
                                 <input type="number" id="porcentajeDescuento" style="width: 60px;" disabled="true">
 
@@ -56,6 +56,9 @@
                         </td>
                         <td style="text-align: center;">
                             <button id="enviar_seleccion_produccion" class="btn btn-success" onclick="enviarSeleccion('produccion')">Produccion</button>
+                        </td>
+                        <td>
+                            <button id="historico" class="btn btn-success" onclick="reporteHistorico()">ReporteHistorico</button>
                         </td>
                     </table>
                     <div class="panel-body">
@@ -141,13 +144,14 @@
 @section('extra-javascript')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css"/>
+    <link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-html5-2.4.2/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
 
+    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
 
-    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-html5-2.4.2/datatables.min.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-
 
     <!-- DataTables -->
 
@@ -253,6 +257,7 @@
                         inputprecioDolar.disabled = false
                         checkboxAgregoPorcentaje.checked = false
                         checkboxQuitoAgregoPorcentaje.checked = false
+                        checkboxPorcentajeDescuento.disabled = false
                         inputagregarPorcentaje.disabled = true
                         inputquitarPorcentaje.disabled = true
                         inputporcentaje.disabled = true
@@ -262,6 +267,10 @@
                     } else {
                         inputprecioDolar.disabled = true
                         inputprecioDolar.value = ""
+                        checkboxPorcentajeDescuento.disabled = true
+                        checkboxPorcentajeDescuento.checked = false
+                        inputPorcentajedescuento.disabled = true;
+                        inputPorcentajedescuento.value = ""
                     }
                     break;
                 case "checkboxQuitoAgregoPorcentaje":
@@ -398,4 +407,6 @@
             //close the modal
         }
     </script>
+    <!-- Incluir archivo cambioPreciosHistorico --!>
+    @include('articulos.cambioprecioshistorico')
 @stop
