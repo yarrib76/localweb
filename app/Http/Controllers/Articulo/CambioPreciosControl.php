@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Response;
 
 class CambioPreciosControl extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia');
+    }
+
     public function index()
     {
         return view('articulos.cambioprecios');
