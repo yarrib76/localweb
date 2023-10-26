@@ -23,14 +23,9 @@ use mysqli;
 //
 class Test extends Controller
 {
-<<<<<<< HEAD
-    //Commit miCorreo
-=======
-    //Commit DashBoard..
-    //Primer Commit Cambio de Precio
->>>>>>> b773e372cc0ae9a8c0236b40a115350609b883bc
     public function Test()
     {
+        //Priemer Commit miCorreo_V2
         $path = 'public/export/facturas/';
         //Elimino todos los archivos del directorio
         $this->eliminarFacturas($path);
