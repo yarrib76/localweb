@@ -272,6 +272,10 @@ Route::post('ordenescompra/fincontrol','Articulo\OrdenesComprasControl@finalizar
 Route::post ('/cambioprecios','Articulo\CambioPreciosControl@proceso');
 Route::get ('/reportecambiopreciohistorico','Articulo\CambioPreciosControl@reporteCambioPrecioHistorico');
 
+/*Correo Argentino MiCorreo*/
+Route::get('/miCorreo','CorreoArgentino\miCorreo@index');
+Route::get('/miCorreoCargaDatos','CorreoArgentino\miCorreo@listarEvios');
+Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
 
 Route::group(['prefix' => 'api'],
     function () {
