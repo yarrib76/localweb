@@ -64,7 +64,7 @@ class Ordenes extends Controller
             $ordenesTiendaNube = $api->get("orders?page=$i&per_page=$cantidadPorPaginas&status=open&created_at_min=$fecha_min&created_at_max=$fecha_max");
             // dd($ordenesTiendaNube->body);
             foreach ($ordenesTiendaNube->body as $orden) {
-                //dd($orden->products);
+                // dd($orden->billing_zipcode);
                 $crearPedido = $this->verificarOrgen($orden->number,$tienda);
                 $fecha = date('Y-m-d',strtotime($orden->created_at));
                 $fechaProveedor = date('Y-m-d H:i:s',strtotime($orden->created_at));
@@ -87,7 +87,8 @@ class Ordenes extends Controller
                                             ,'TotalWeb' => $orden->total
                                             ,'Tienda' =>$tienda
                                             ,'Articulos' => $orden->products
-                                            ,'FechaProveedor' => $fechaProveedor];
+                                            ,'FechaProveedor' => $fechaProveedor
+                                            ,'CodigoPostal'=> $orden->billing_zipcode];
                     $count++;
                 }
             }
@@ -164,7 +165,8 @@ class Ordenes extends Controller
             "Cuit" => $datos->Cuit,
             "Localidad" => $datos->Localidad,
             "Provincia" => "",
-            "Id_provincia" => $id_Provincia
+            "Id_provincia" => $id_Provincia,
+            "CodigoPostal" => $datos->CodigoPostal
         ]);
         return $cliente_id->id;
     }

@@ -276,6 +276,7 @@ Route::get ('/reportecambiopreciohistorico','Articulo\CambioPreciosControl@repor
 Route::get('/miCorreo','CorreoArgentino\miCorreo@index');
 Route::get('/miCorreoCargaDatos','CorreoArgentino\miCorreo@listarEvios');
 Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
+Route::get('/pub_sucursales','CorreoArgentino\miCorreo@sucursalesDestinos');
 
 Route::group(['prefix' => 'api'],
     function () {
@@ -396,4 +397,7 @@ Route::group(['prefix' => 'api'],
 
         /*Define pago del pedido*/
         Route::get('/estadopago', 'Api\EstadoPagoPedido@modificoEstadoPago');
+
+        /*Lista Transportes*/
+        Route::get('/transportes','Api\GetTransportes@listaTransportes');
     });

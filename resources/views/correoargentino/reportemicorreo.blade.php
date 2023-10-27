@@ -27,7 +27,7 @@
         $(document).ready( function () {
             llenarTabla();
             paramLookup();
-            estadosLookup();
+            sucursalesLookup();
         });
 
         //custom max min header filter
@@ -128,23 +128,26 @@
             return vendedoras;
         }
         var estados = {}
-        function estadosLookup (cell){
-            //cell - the cell component
-            $.ajax({
-                url: '/estados_financiera',
-                dataType : "json",
-                success : function(json) {
-                    var arr= json
-                    var obj = {}; //create the empty output object
-                    arr.forEach( function(item){
-                        var key = Object.keys(item)[0]; //take the first key from every object in the array
-                        obj[ key ] = item [ key ]; //assign the key and value to output obj
-                    });
-                    estados = obj
-                }
-            });
+        function sucursalesLookup (tipo_envio,cod_provincia){
+            if (tipo_envio == "Sucursal"){
+                $.ajax({
+                    url: '/pub_sucursales?codigo_provincia=' + cod_provincia,
+                    dataType : "json",
+                    async: false,
+                    success : function(json) {
+                        var arr= json
+                        var obj = {}; //create the empty output object
+                        arr.forEach( function(item){
+                            var key = Object.keys(item)[0]; //take the first key from every object in the array
+                            obj[ key ] = item [ key ]; //assign the key and value to output obj
+                        });
+                        estados = obj
+                    }
+                });
+                return estados
+            }
             //do some processing and return the param object
-            return estados;
+            return "";
         }
 
         $("#example-table").tabulator({
@@ -162,10 +165,20 @@
                 {title: "altura", field: "altura", sortable: true,  editor:true, width: 80},
                 {title: "ancho", field: "ancho", sortable: true,  editor:true, width: 80},
                 {title: "peso", field: "peso", sortable: true,  editor:true, width: 80},
-                {title: "valor_del_contenido", field: "valor_del_contenido", sortable: true, width: 110},
-                {title: "provincia", field: "provincia", sortable: true, download:false, width: 150},
-                {title: "provincia_destino", field: "provincia_destino", sortable: true, width: 80},
-                {title: "sucursal_destino", field: "sucursal_destino", sortable: true, width: 80},
+                {title: "valor_del_contenido", field: "valor_del_contenido", editor:true, sortable: true, width: 110},
+                {title: "provincia", field: "provincia", sortable: true, download:false, width: 120},
+                {title: "provincia_destino", field: "provincia_destino", sortable: true, width: 50},
+                {title: "sucursal_destino", field: "sucursal_destino", sortable: true, width: 110,editor: "select", editorParams: function(cell) {
+                    // En lugar de asignar estados directamente, devuelve una función que obtiene los estados
+                    var tipo_envio = cell.getData().tipo_envio;
+                    var provincia_destino = cell.getData().provincia_destino;
+                    return sucursalesLookup(tipo_envio,provincia_destino);
+                },formatter: function(cell){
+                    if (cell.getRow().getData()['tipo_envio'] == "Sucursal" &&  cell.getRow().getData()['sucursal_destino'] == ""){
+                        cell.getElement().css({"background-color": "red"});
+                    } else cell.getElement().css({"background-color": ""})
+                    return cell.getValue()
+                },headerFilter:"input"},
                 {title: "localidad_destino", field: "localidad_destino", sortable: true,  editor:true, width: 150},
                 {title: "calle_destino", field: "calle_destino", editor:true, sortable: true, width: 130},
                 {title: "altura_destino", field: "altura_destino", editor:true, sortable: true, width: 150},

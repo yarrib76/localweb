@@ -2,6 +2,7 @@
 
 namespace Donatella\Http\Controllers\CorreoArgentino;
 
+use Donatella\Models\Pub_sucursales;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
@@ -40,6 +41,7 @@ class MiCorreo extends Controller
                                     INNER JOIN samira.provincias ON provincias.id = clientes.id_provincia
                                     INNER JOIN samira.pub_sucursales ON pub_sucursales.id_provincias = provincias.id
                                     where pedidos.estado = 0 and pedidos.empaquetado = 1
+                                    and (pedidos.transporte = "Domicilio" or  pedidos.transporte = "Sucursal")
                                     group by (nropedido)');
         return $empaquetados;
     }
@@ -61,7 +63,7 @@ class MiCorreo extends Controller
                             ("CP","10","10","10","1","' . $total . '","' . $pedido->codigo_provincia . '","' . $this->quitar_tildes($pedido->localidad) . '",
                             "' . $this->quitar_tildes($pedido->direccion) . '","' . $pedido->codigopostal . '","' . $nombre . '",
                             "' . $pedido->mail . '","'.substr($pedido->cel,0,3).'","' . substr($pedido->cel,-8) . '","' . $pedido->nropedido . '","' . $pedido->vendedora . '",
-                            "Domicilio","' . $pedido->ordenweb . '","' . $pedido->transporte . '","' . $pedido->provincia . '","","","",
+                            "' . $pedido->transporte . '","' . $pedido->ordenweb . '","' . $pedido->transporte . '","' . $pedido->provincia . '","","","",
                             "","","");');
             }
         }
@@ -95,5 +97,14 @@ class MiCorreo extends Controller
                     provincia = "'.$datos['provincia'].'",
                     localidad_destino = "'.$datos['localidad_destino'].'"
                     where id_mi_correo = "'.$datos['id_mi_correo'].'"');
+    }
+
+    public function sucursalesDestinos(){
+        $codigo_provincia = Input::get('codigo_provincia');
+        $datos = Pub_sucursales::where('codigo_provincia','=', $codigo_provincia)->orderBy('nombre_sucursal', 'asc')->get();
+        for ($i = 0; $i < $datos->count(); $i++ ){
+            $arrEstadosFinanciera[$i] = [$datos[$i]->codigo_sucursal => $datos[$i]->nombre_sucursal];
+        }
+        return Response::json($arrEstadosFinanciera);
     }
 }

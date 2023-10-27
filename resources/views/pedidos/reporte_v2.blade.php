@@ -436,7 +436,8 @@
             <h4>Articulo</h4>
             <div class="col-xs-12 col-xs-offset-0 well-sm">
                 <label id="Trans"></label>
-                <input id="Transporte" type="text" step="any" class="form-control" placeholder="Ingrese Transporte" name="Transporte">
+                <!-- <input id="Transporte" type="text" step="any" class="form-control" placeholder="Ingrese Transporte" name="Transporte">  Se reemplaza por el Select-->
+                <select id="Transporte_Select" type="text" step="any" class="form-control" placeholder="Ingrese Transporte" name="Transporte"></select>
             </div>
             <input type="button" id="guardar" value="Guardar" class="btn btn-success" onclick="guardarTransporte();">
         </div>
@@ -588,7 +589,9 @@
                     column.visible( ! column.visible() );
                 } );
             } );
+            cargoSelectTransportes()
         } );
+
 
         function cargoTablaPopup(nroPedido){
             var table = $("#pedidos");
@@ -802,7 +805,7 @@
                 }
             }
             $(".modal-content h4").html("Pedido Nº:" + nroPedido);
-            document.getElementById("Transporte").innerHTML = "Transporte: " + transporte
+           // document.getElementById("Transporte").innerHTML = "Transporte: " + transporte Se reemplaza por el Select
             //Cargo las variables con los datos que llegan la llamda del metodo
             posicionBot = posicionBoton
             nroPedi = nroPedido
@@ -815,13 +818,14 @@
                     //Me fijo el valor que tiene la fila en el cambio webSku y se lo asigno al Input
                     //que esta en el model con el ID WebSku
                     newTransporte = reporte.rows[posicionTable].cells[8].innerHTML
-                    document.getElementById("Transporte").value = newTransporte
+                   // document.getElementById("Transporte").value = newTransporte Se reemplaza por el Select
+                    $('#Transporte_Select').val(newTransporte)
                 }
             }
         }
         function guardarTransporte() {
             $.ajax({
-                url: 'api/transortePedido?nropedido=' + nroPedi + '&&transporte=' + document.getElementById("Transporte").value,
+                url: 'api/transortePedido?nropedido=' + nroPedi + '&&transporte=' + document.getElementById("Transporte_Select").value,
                 dataType: "json",
                 success: function (json) {
                     modal.style.display = "none";
@@ -1068,6 +1072,27 @@
                     }
                 }
             })
+        }
+
+        function cargoSelectTransportes() {
+            const selectTransportes = document.getElementById('Transporte_Select');
+            $.ajax({
+                url: '/api/transportes',
+                dataType: "json",
+                success: function (data) {
+                    // Borra las opciones existentes en el select
+                    while (selectTransportes.firstChild) {
+                        selectTransportes.removeChild(selectTransportes.firstChild);
+                    }
+
+                    // Recorre los datos JSON y agrega las opciones al select
+                    data.forEach(function(opcion) {
+                        const option = document.createElement('option');
+                        option.text = opcion.nombre;
+                        selectTransportes.appendChild(option);
+                    });
+                }
+            });
         }
     </script>
 
