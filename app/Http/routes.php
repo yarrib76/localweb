@@ -277,6 +277,7 @@ Route::get('/miCorreo','CorreoArgentino\miCorreo@index');
 Route::get('/miCorreoCargaDatos','CorreoArgentino\miCorreo@listarEvios');
 Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
 Route::get('/pub_sucursales','CorreoArgentino\miCorreo@sucursalesDestinos');
+Route::post('/miCorreoEliminar','CorreoArgentino\miCorreo@eliminarEnvio');
 
 Route::group(['prefix' => 'api'],
     function () {

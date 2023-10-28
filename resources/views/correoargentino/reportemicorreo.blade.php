@@ -156,6 +156,13 @@
             //     {column:"NroFactura", dir:"asc"}, //sort by this first
             //   ],
             columns: [
+                {title:"Del",width:80, align:"center", formatter:"buttonCross", cellClick:function(e, cell){
+                    cell.getRow().delete()
+                    $.ajax({
+                        url: "/miCorreoEliminar",
+                        data: cell.getRow().getData(),
+                        type: "post"
+                    })}},
                 {title: "Pedido", field: "nropedido", sortable: true, download:false, width: 100,headerFilter:"input"},
                 {title: "vendedora", field: "vendedora", sortable: true, download:false, width: 110,headerFilter:"input"},
                 {title: "Ordenweb", field: "ordenweb", sortable: true, download:false,width: 110,headerFilter:"input"},

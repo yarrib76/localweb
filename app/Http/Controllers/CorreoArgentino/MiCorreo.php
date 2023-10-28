@@ -107,4 +107,11 @@ class MiCorreo extends Controller
         }
         return Response::json($arrEstadosFinanciera);
     }
+
+    public function eliminarEnvio()
+    {
+        $id_mi_correo = Input::get("id_mi_correo");
+        DB::select('delete from samira.mi_correo where id_mi_correo = "'.$id_mi_correo.'"');
+        return "OK";
+    }
 }
