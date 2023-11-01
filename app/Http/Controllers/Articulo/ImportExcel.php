@@ -82,6 +82,5 @@ class ImportExcel extends Controller
                 base_path() . $path, $imageName1);
 
         }
-
     }
 }

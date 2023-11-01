@@ -279,6 +279,12 @@ Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
 Route::get('/pub_sucursales','CorreoArgentino\miCorreo@sucursalesDestinos');
 Route::post('/miCorreoEliminar','CorreoArgentino\miCorreo@eliminarEnvio');
 
+/*Importar Sucrusales Correo Argentino Excel*/
+/*Import Excel*/
+Route::get('/indexImport', 'CorreoArgentino\ImportSucFromCSV@indexImport');
+Route::post('/importCsv', 'CorreoArgentino\ImportSucFromCSV@importCsv');
+
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');

@@ -30,6 +30,10 @@
         </div>
 
         <div class="col-sm-9">
+            <input type="number" class="form-control" placeholder="Codigo Postal" name="codigo_postal" required="required">
+        </div>
+
+        <div class="col-sm-9">
             <input type="email" class="form-control" placeholder="Mail" name="Mail" required="required">
         </div>
 

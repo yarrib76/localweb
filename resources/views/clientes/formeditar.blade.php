@@ -33,6 +33,11 @@
                 <label>Provincia</label>
                 <select id="provincia" class="form-control" name="Provincia_id" ></select>
             </div>
+
+            <div class="col-sm-9">
+                <input type="number" class="form-control" placeholder="Codigo Postal" name="codigo_postal" value="{{$cliente->codigopostal}}" required="required">
+            </div>
+
             <div class="col-sm-9">
                 <input type="email" class="form-control" placeholder="Mail" name="Mail" value="{{$cliente->mail}}" required="required">
             </div>

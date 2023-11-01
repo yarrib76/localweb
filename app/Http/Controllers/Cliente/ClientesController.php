@@ -63,6 +63,7 @@ class ClientesController extends Controller
             "Cuit" => Input::get('Cuit'),
             "Localidad" => Input::get('Localidad'),
             "Provincia" => Input::get('Provincia'),
+            "CodigoPostal" => Input::get('codigo_postal'),
             "Id_provincia" => Input::get('Provincia_id'),
             'encuesta' => Input::get('Encuesta'),
         ]);
@@ -113,6 +114,7 @@ class ClientesController extends Controller
             'Direccion' => Input::get('Direccion'),
             'Localidad' => Input::get('Localidad'),
             'Provincia' => Input::get('Provincia'),
+            "CodigoPostal" => Input::get('codigo_postal'),
             "Id_provincia" => Input::get('Provincia_id'),
             'Mail' => Input::get('Mail'),
             'Telefono' => Input::get('Telefono'),

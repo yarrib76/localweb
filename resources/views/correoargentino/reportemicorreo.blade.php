@@ -5,6 +5,7 @@
             <div class="col-sm-12 ">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Mi Correo
+                        <button class="btn btn-primary" onclick="llenarTabla()"><span class="glyphicon glyphicon-refresh"></span></button>
                     </div>
                     <div class="panel-body">
                         <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
