@@ -174,7 +174,12 @@
                 {title: "ancho", field: "ancho", sortable: true,  editor:true, width: 80},
                 {title: "peso", field: "peso", sortable: true,  editor:true, width: 80},
                 {title: "valor_del_contenido", field: "valor_del_contenido", editor:true, sortable: true, width: 110},
-                {title: "provincia", field: "provincia", sortable: true, download:false, width: 120},
+                {title: "provincia", field: "provincia", sortable: true, download:false, width: 120, formatter: function(cell){
+                    if (cell.getRow().getData()['provincia'] == "Gran Buenos Aires" || cell.getRow().getData()['provincia'] == "Otro"){
+                        cell.getElement().css({"background-color": "red"});
+                    } else cell.getElement().css({"background-color": ""})
+                    return cell.getValue()
+                }},
                 {title: "provincia_destino", field: "provincia_destino", sortable: true, width: 50},
                 {title: "sucursal_destino", field: "sucursal_destino", sortable: true, width: 110,editor: "select", editorParams: function(cell) {
                     // En lugar de asignar estados directamente, devuelve una función que obtiene los estados
@@ -192,7 +197,12 @@
                 {title: "altura_destino", field: "altura_destino", editor:true, sortable: true, width: 150},
                 {title: "piso", field: "piso", sortable: true,  editor:true, width: 80},
                 {title: "dpto", field: "dpto", sortable: true,  editor:true, width: 80},
-                {title: "codpostal_destino", field: "codpostal_destino", editor:true, sortable: true, width: 130,headerFilter:"input"},
+                {title: "codpostal_destino", field: "codpostal_destino", editor:"number", sortable: true, width: 130,headerFilter:"input", formatter: function(cell){
+                    if (cell.getRow().getData()['codpostal_destino'] == ""){
+                        cell.getElement().css({"background-color": "red"});
+                    } else cell.getElement().css({"background-color": ""})
+                    return cell.getValue()
+                }},
                 {title: "destino_nombre", field: "destino_nombre", editor:true, sortable: true, width: 150,headerFilter:"input"},
                 {title: "destino_email", field: "destino_email", sortable: true, width: 80,headerFilter:"input"},
                 {title: "cod_area_tel", field: "cod_area_tel", sortable: true, width: 1},
