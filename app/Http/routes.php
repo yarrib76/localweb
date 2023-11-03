@@ -273,11 +273,11 @@ Route::post ('/cambioprecios','Articulo\CambioPreciosControl@proceso');
 Route::get ('/reportecambiopreciohistorico','Articulo\CambioPreciosControl@reporteCambioPrecioHistorico');
 
 /*Correo Argentino MiCorreo*/
-Route::get('/miCorreo','CorreoArgentino\miCorreo@index');
-Route::get('/miCorreoCargaDatos','CorreoArgentino\miCorreo@listarEvios');
-Route::post('/miCorreoUpdate','CorreoArgentino\miCorreo@update');
-Route::get('/pub_sucursales','CorreoArgentino\miCorreo@sucursalesDestinos');
-Route::post('/miCorreoEliminar','CorreoArgentino\miCorreo@eliminarEnvio');
+Route::get('/miCorreo','CorreoArgentino\MiCorreo@index');
+Route::get('/miCorreoCargaDatos','CorreoArgentino\MiCorreo@listarEvios');
+Route::post('/miCorreoUpdate','CorreoArgentino\MiCorreo@update');
+Route::get('/pub_sucursales','CorreoArgentino\MiCorreo@sucursalesDestinos');
+Route::post('/miCorreoEliminar','CorreoArgentino\MiCorreo@eliminarEnvio');
 
 /*Importar Sucrusales Correo Argentino Excel*/
 /*Import Excel*/
