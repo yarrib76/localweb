@@ -25,7 +25,8 @@ class Test extends Controller
 {
     public function Test()
     {
-        //Priemer Commit miCorreo_V2
+        //Priemer Commit miCorreo_V3
+        
         $path = 'public/export/facturas/';
         //Elimino todos los archivos del directorio
         $this->eliminarFacturas($path);
