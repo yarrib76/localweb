@@ -3,6 +3,7 @@
 namespace Donatella\Http\Controllers\CorreoArgentino;
 
 use Donatella\Models\Pub_sucursales;
+use Donatella\Models\Tipo_Transportes;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
@@ -21,6 +22,7 @@ class MiCorreo extends Controller
 
     public function index()
     {
+        $this->eliminarTodoslosEnvios();
         return view('correoargentino.reportemicorreo');
     }
 
@@ -49,7 +51,7 @@ class MiCorreo extends Controller
     public function crearEnvios($empaquetados)
     {
         foreach ($empaquetados as $pedido){
-            $total = ($pedido->total * 4);
+            $total = ($pedido->total * 2);
             $nombre = $this->quitar_tildes($pedido->nombre);
             //Verifico si ya fue creado el pedido, si no existe lo creo
             $verificoExistencia = DB::select('select * from samira.mi_correo where nropedido = "'.$pedido->nropedido.'"');
@@ -97,6 +99,12 @@ class MiCorreo extends Controller
                     provincia = "'.$datos['provincia'].'",
                     localidad_destino = "'.$datos['localidad_destino'].'"
                     where id_mi_correo = "'.$datos['id_mi_correo'].'"');
+
+        //Actualizao el codigo postal de un cliente, que tiene asignado un determinado pedido.
+        DB::select('UPDATE samira.clientes AS c
+                    JOIN samira.controlpedidos AS cp ON c.id_clientes = cp.id_cliente
+                    SET c.codigopostal = "'.$datos['codpostal_destino'].'"
+                    WHERE cp.nropedido = "'.$datos['nropedido'].'";');
     }
 
     public function sucursalesDestinos(){
@@ -108,10 +116,25 @@ class MiCorreo extends Controller
         return Response::json($arrEstadosFinanciera);
     }
 
+    public function tipo_transportes()
+    {
+        $transportes = Tipo_Transportes::where('nombre', '=', 'Domicilio')
+                                        ->orWhere('nombre','=', 'Sucursal')
+                                        ->get();
+        for ($i = 0; $i < $transportes->count(); $i++){
+            $arrTipoTransporte[$i] = [$transportes[$i]->nombre => $transportes[$i]->nombre];
+        }
+        return Response::json($arrTipoTransporte);
+    }
     public function eliminarEnvio()
     {
         $id_mi_correo = Input::get("id_mi_correo");
         DB::select('delete from samira.mi_correo where id_mi_correo = "'.$id_mi_correo.'"');
         return "OK";
+    }
+
+    private function eliminarTodoslosEnvios()
+    {
+        DB::select('delete from samira.mi_correo');
     }
 }

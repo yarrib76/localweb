@@ -31,7 +31,19 @@
                     <li><a href="/transferenciasarticulos"> Transferencias </a></li>
                     <li><a href="/reportesArticulosWeb"> ArticulosWeb </a></li>
                     <li><a href="/artimasVendidos"> ArticulosMasVendidos </a></li>
-                    <li><a href="/panelPedidos"> Pedidos </a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" href="#">Pedidos</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/panelPedidos">Todos</a></li>
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="#">Envios</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/miCorreo">Exportar</a></li>
+                                    <li><a href="/indexImport">ImportarSucursales</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
                     <li><a href="/reportevendedoras"> Vendedoras </a></li>
                     <li><a href="/notasadmin">Administrar Notas</a></li>
                     <li><a href="/panelcontrol"> DashBoard </a></li>

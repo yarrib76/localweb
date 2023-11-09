@@ -278,6 +278,7 @@ Route::get('/miCorreoCargaDatos','CorreoArgentino\MiCorreo@listarEvios');
 Route::post('/miCorreoUpdate','CorreoArgentino\MiCorreo@update');
 Route::get('/pub_sucursales','CorreoArgentino\MiCorreo@sucursalesDestinos');
 Route::post('/miCorreoEliminar','CorreoArgentino\MiCorreo@eliminarEnvio');
+Route::get('/tipo_sucursal', 'CorreoArgentino\MiCorreo@tipo_transportes');
 
 /*Importar Sucrusales Correo Argentino Excel*/
 /*Import Excel*/

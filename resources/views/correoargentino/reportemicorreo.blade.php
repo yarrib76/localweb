@@ -108,12 +108,12 @@
             return true; //must return a boolean, true if it passes the filter.
         }
 
-        var vendedoras = {}
+        var tipo_transporte = {}
         //define lookup function
         function paramLookup(cell){
             //cell - the cell component
             $.ajax({
-                url: '/tipo_pagos',
+                url: '/tipo_sucursal',
                 dataType : "json",
                 success : function(json) {
                     var arr= json
@@ -122,11 +122,11 @@
                         var key = Object.keys(item)[0]; //take the first key from every object in the array
                         obj[ key ] = item [ key ]; //assign the key and value to output obj
                     });
-                    vendedoras = obj
+                    tipo_transporte = obj
                 }
             });
             //do some processing and return the param object
-            return vendedoras;
+            return tipo_transporte;
         }
         var estados = {}
         function sucursalesLookup (tipo_envio,cod_provincia){
@@ -167,7 +167,7 @@
                 {title: "Pedido", field: "nropedido", sortable: true, download:false, width: 100,headerFilter:"input"},
                 {title: "vendedora", field: "vendedora", sortable: true, download:false, width: 110,headerFilter:"input"},
                 {title: "Ordenweb", field: "ordenweb", sortable: true, download:false,width: 110,headerFilter:"input"},
-                {title: "tipo_envio", field: "tipo_envio", sortable: true, download:false,width: 100,headerFilter:"input"},
+                {title: "tipo_envio", field: "tipo_envio", sortable: true, download:false, width: 100,headerFilter:"input"},
                 {title: "tipo_producto", field: "tipo_producto", sortable: true, width: 10},
                 {title: "largo", field: "largo", sortable: true,  editor:true, width: 80},
                 {title: "altura", field: "altura", sortable: true,  editor:true, width: 80},
