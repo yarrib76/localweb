@@ -64,7 +64,7 @@ class MiCorreo extends Controller
                             VALUES
                             ("CP","20","10","20","1","' . $total . '","' . $pedido->codigo_provincia . '","' . $this->quitar_tildes($pedido->localidad) . '",
                             "' . $this->quitar_tildes($pedido->direccion) . '","' . $pedido->codigopostal . '","' . $nombre . '",
-                            "' . $pedido->mail . '","'.substr($pedido->cel,0,3).'","' . substr($pedido->cel,-8) . '","' . $pedido->nropedido . '","' . $pedido->vendedora . '",
+                            "' . $pedido->mail . '","'.substr($pedido->cel,0,-8).'","' . substr($pedido->cel,-8) . '","' . $pedido->nropedido . '","' . $pedido->vendedora . '",
                             "' . $pedido->transporte . '","' . $pedido->ordenweb . '","' . $pedido->transporte . '","' . $pedido->provincia . '","","","",
                             "","","");');
             }
