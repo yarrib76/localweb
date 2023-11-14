@@ -164,6 +164,7 @@
                         data: cell.getRow().getData(),
                         type: "post"
                     })}},
+                {title: "Cliente", field: "destino_nombre",download:false, sortable: true, width: 150, headerFilter:"input"},
                 {title: "Pedido", field: "nropedido", sortable: true, download:false, width: 100,headerFilter:"input"},
                 {title: "vendedora", field: "vendedora", sortable: true, download:false, width: 110,headerFilter:"input"},
                 {title: "Ordenweb", field: "ordenweb", sortable: true, download:false,width: 110,headerFilter:"input"},
@@ -250,7 +251,7 @@
             $("#example-table").tabulator("redraw");
         });
         $("#download-xlsx").click(function(){
-            $("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera"});
+            $("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera", delimiter: ";"});
         });
 
     </script>
