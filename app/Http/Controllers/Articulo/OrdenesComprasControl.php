@@ -86,14 +86,17 @@ class OrdenesComprasControl extends Controller
 
     public function finalizarControl()
     {
+        $estado = Input::get('estado');
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
         $id_compra = Input::get('id_compra');
         $ordenControlada = DB::select('select ordenControlada from samira.compras WHERE id_compra = "'.$id_compra.'" ');
-        if ($ordenControlada[0]->ordenControlada == 0){
-            DB::Select('update samira.compras SET fechaControl = "'.$fecha.'", ordenControlada = 1 where id_compra = "'.$id_compra.'"');
-        } else {
-                DB::Select('update samira.compras SET fechaControl = "'.$fecha.'", ordenControlada = 0 where id_compra = "'.$id_compra.'"');
-        }
+
+        // DB::Select('update samira.compras SET fechaControl = "'.$fecha.'", ordenControlada = "'.$estado.'" where id_compra = "'.$id_compra.'"');
+
+        if ($ordenControlada[0]->ordenControlada == 1 || $ordenControlada[0]->ordenControlada == 2){
+            DB::Select('update samira.compras SET fechaControl = "'.$fecha.'", ordenControlada = 0 where id_compra = "'.$id_compra.'"');
+        }else DB::Select('update samira.compras SET fechaControl = "'.$fecha.'", ordenControlada = "'.$estado.'" where id_compra = "'.$id_compra.'"');
+
         return "OK";
     }
 

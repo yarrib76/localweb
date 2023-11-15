@@ -264,14 +264,16 @@
                     }},
                     {title:"Cerrar",width:80, align:"center", cellClick:function(e, cell){
                         if (confirm("Esta seguro que desea finalizar el control del articulo " + cell.getRow().getData()['Articulo'] + "?")) {
+                            if (confirm('Esta Completa la Orden?')){
+                                estado = 1
+                            } else estado = 2
                             $.ajax({
                                 url: 'ordenescomprasnotas?id_compra=' + cell.getRow().getData()['id_compra'],
                                 dataType : "json",
                                 success : function(json) {
-                                    console.log(isEmptyObject(json))
                                     if (!isEmptyObject(json)){
                                         $.ajax({
-                                            url: "ordenescompra/fincontrol?id_compra=",
+                                            url: "ordenescompra/fincontrol?id_compra=" + "&estado=" + estado,
                                             data: cell.getRow().getData(),
                                             async: false,
                                             type: "post"
@@ -286,8 +288,8 @@
                             var data = cell.getRow().getData();
                             var ordenControlada = data.ordenControlada;
 
-                            // Verifica si la orden ya fue controlada (0 = No controlada, 1 = Controlada)
-                            if (ordenControlada == "1") {
+                            // Verifica si la orden ya fue controlada (0 = No controlada, 1 = Controlada, 2 = Incompleta)
+                            if (ordenControlada == "1" || ordenControlada == "2") {
                                 return "<i class='fas fa-times'></i>"; // Ícono de cruz (times)
                             } else {
                                 return "<i class='fas fa-check'></i>"; // Ícono de tilde (check)
@@ -299,9 +301,12 @@
            rowFormatter:function(row){
                var data = row.getData();
                var ordenControlada = data.ordenControlada
-                //Verifico si la orden ya fue controlado 0 = No controlada y 1 = Controlada
+                //Verifico si la orden ya fue controlado 0 = No controlada - 1 = Controlada - 2 = Incompleta
                 if (ordenControlada == "1"){
                     row.getElement().css({"background-color":"green"});
+                }
+                if (ordenControlada == "2"){
+                    row.getElement().css({"background-color":"yellow"});
                 }
            },
                 cellEdited:function(cell, value, data){
