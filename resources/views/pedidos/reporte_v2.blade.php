@@ -698,6 +698,12 @@
                     document.getElementById("botonEntregado" + posicionBoton).disabled = true;
                 }
             });
+
+            //Elimino el pedído en la tabla miCorreo
+            $.ajax({
+                    url: "/miCorreoEliminarDesdeEmpaquetados?nroPedido=" + nroPedido,
+                    type: "post"
+                })
         }
 
         function comentario(controlpedidos_id,nroPedido,nombre_cliente,apellido_cliente){

@@ -22,7 +22,7 @@ class MiCorreo extends Controller
 
     public function index()
     {
-        $this->eliminarTodoslosEnvios();
+        // $this->eliminarTodoslosEnvios();
         return view('correoargentino.reportemicorreo');
     }
 
@@ -130,6 +130,14 @@ class MiCorreo extends Controller
     {
         $id_mi_correo = Input::get("id_mi_correo");
         DB::select('delete from samira.mi_correo where id_mi_correo = "'.$id_mi_correo.'"');
+        return "OK";
+    }
+
+    //Elimino el pedido de miCorreo cuando se pone el pedido como entregado desde pedidos.reportes_v2.blade.php
+    public function eliminarEnvioDesdeEntregado()
+    {
+        $nroPedido = Input::get("nroPedido");
+        DB::select('delete from samira.mi_correo where nropedido = "'.$nroPedido.'"');
         return "OK";
     }
 
