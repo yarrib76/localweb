@@ -14,7 +14,7 @@ class PanelPromocionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:Gerencia,Ventas');
+        $this->middleware('role:Gerencia,Ventas,Caja');
     }
     /**
      * Display a listing of the resource.
