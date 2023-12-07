@@ -25,5 +25,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     @include('facturaweb.factura')
     @include('facturaweb.listararticulos')
+    @include('facturaweb.listaclientes')
 
 @stop

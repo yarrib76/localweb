@@ -286,9 +286,14 @@ Route::get('/tipo_sucursal', 'CorreoArgentino\MiCorreo@tipo_transportes');
 Route::get('/indexImport', 'CorreoArgentino\ImportSucFromCSV@indexImport');
 Route::post('/importCsv', 'CorreoArgentino\ImportSucFromCSV@importCsv');
 
+
+/*Facturas WEB*/
 Route::get('/facturaweb', 'FacturaWeb\ControllerFacturaWeb@view');
 Route::get('/getArticulos', 'FacturaWeb\ControllerFacturaWeb@getArticulos');
 Route::get('/getPrecio', 'FacturaWeb\ControllerFacturaWeb@precioArticulo');
+Route::get('/listaVendedoras', 'FacturaWeb\ControllerFacturaWeb@listaVendedoras');
+Route::get('/listaTipoPagos', 'FacturaWeb\ControllerFacturaWeb@listaTipoPagos');
+Route::get('/getClientes', 'FacturaWeb\ControllerFacturaWeb@getClientes');
 
 Route::group(['prefix' => 'api'],
     function () {

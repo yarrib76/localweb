@@ -16,12 +16,12 @@
                                             <table>
                                                 <tr>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="Cliente" name="Cliente" style="width: 350px" disabled="true">
+                                                        <input type="text" class="form-control" placeholder="Cliente" id="Cliente" style="width: 350px" disabled="true">
                                                     </td>
                                                     <td>
                                                         <div class="col-md-4">
-                                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                                            <button class="btn btn-danger"><i class="fas fa-times-circle"></i></button>
+                                                            <button class="btn btn-primary" onclick="cargoModalClientes()"><i class="fas fa-search"></i></button>
+                                                            <button class="btn btn-danger" onclick="eliminarCliente()"><i class="fas fa-times-circle"></i></button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -39,13 +39,13 @@
                                             <h5>Precio de Venta</h5>
                                             <h5>Stock</h5>
                                             <h5>Cantidad</h5>
-                                            <label style="font-size: 15px"> <input type="checkbox" name="chkBoxDescuento">Descuento</label>
+                                            <label style="font-size: 15px"> <input type="checkbox" id="chkBoxDescuento">Descuento</label>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="number" class="form-control"  id="PrecioVenta" disabled="true" style="width: 80px">
+                                            <input type="number" class="form-control"  id="PrecioVenta" disabled="true" style="width: 90px">
                                             <input type="number" class="form-control"  id="Stock" disabled="true">
                                             <input type="number" class="form-control"  id="Cantidad" tabindex="1" min="0">
-                                                <select id="descuento_id" class="form-control" name="Descuento" >
+                                                <select id="descuento" class="form-control">
                                                 <option value="0">0</option>
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
@@ -62,27 +62,16 @@
                                 <td>
                                     <div>
                                         <h4>Vendedora</h4>
-                                        <select id="vendedora_id" class="form-control" name="Vendedora" >
-                                            <option value="Roxana">Roxana</option>
-                                            <option value="Sofia">Sofia</option>
-                                            <option value="Melanie">Melanie</option>
-                                            <option value="Dafne">Dafne</option>
-                                            <option value="Denisee">Denisee</option>
-                                        </select>
+                                        <select id="vendedora" class="form-control"></select>
                                     </div>
                                     <div>
                                         <h4>Tipo Pago</h4>
-                                        <select id="vendedora_id" class="form-control" name="Vendedora" >
-                                            <option value="Prestigio">Prestigio</option>
-                                            <option value="Efectivo">Efectivo</option>
-                                            <option value="Mercado Pago">Mercado Pago</option>
-                                            <option value="Transferencia">Transferencia</option>
-                                        </select>
+                                        <select id="tipo_pago" class="form-control"></select>
                                     </div>
                                 </td>
                                 <td>
                                     <h4>Total</h4>
-                                    <h4>0</h4>
+                                    <input type="number" id="totalApagar" min="0" disabled="true" style="width: 120px">
                                     <h4>Descuento</h4>
                                     <h4>0</h4>
                                 </td>
@@ -169,11 +158,19 @@
     var globalStock = document.getElementById('Stock');
     var globalCantidad = document.getElementById('Cantidad');
     var globalBtnAgregar = document.getElementById('btnAgregar');
+    var globalCliente = document.getElementById('Cliente');
+    var checkboxDescuento = document.getElementById("chkBoxDescuento");
+    var globalClientId;
+    var globalTotal = 0.00;
+    var GlonalDescuento;
     var datosFactura = [];
+
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
         recargaPagina()
         limpiezaVentanas()
+        cargoComboVendedoras()
+        cargoComboTipoPagos()
     });
     function callFactura(){
         var modalFactura = document.getElementById('myModalFactura');
@@ -206,6 +203,9 @@
                     if ((parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)) <= parseFloat(globalStock.value)){
                         datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
                         datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
+                        globalTotal += parseFloat(globalPrecioVenta.value) * parseFloat(globalCantidad.value).toFixed(2);
+                        document.getElementById('totalApagar').value = globalTotal;
+                        limpiezaVentanas();
                     } else {alert('Stock Insuficientessss!!!!')}
 
                     estado = 1
@@ -219,13 +219,14 @@
                     Detalle: globalDetalle.value,
                     Cantidad: globalCantidad.value,
                     PrecioUnitario: globalPrecioVenta.value,
-                    PrecioVenta: (parseFloat(globalPrecioVenta.value) * parseFloat(globalCantidad.value)).toFixed(2)
+                    PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2)
                 };
                 datosFactura.push(nuevoAticulo);
+                globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
+                document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
+                limpiezaVentanas();
             }
-
-            addArtToFactura();
-            limpiezaVentanas();
+            refreshTabulator();
         } else {alert('Stock Insuficiente!!!!')}
 
     }
@@ -247,15 +248,18 @@
     function eliminarAritculoFactura(nroArticulo){
         for (var i = 0; i < datosFactura.length; i++) {
             if (datosFactura[i]['Articulo'] === nroArticulo) {
+                globalTotal = parseFloat(globalTotal).toFixed(2) - parseFloat(datosFactura[i]['PrecioVenta']).toFixed(2);
+                document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
                 datosFactura.splice(i, 1); // Elimina 1 elemento en la posición 'i'
                 break; // Sale del bucle una vez que se elimina el elemento
             }
         }
-        addArtToFactura() //vvuelvo a llenar el array para que actualice lo que se elimino
+        refreshTabulator() //vvuelvo a llenar el array para que actualice lo que se elimino
     }
 
-    function actualizarArticulo(){
-
+    function eliminarCliente(){
+        globalClientId = 1
+        globalCliente.value = ""
     }
     //custom max min header filter
     var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
@@ -352,10 +356,50 @@
         ],
     });
 
-    function addArtToFactura(){
+    function refreshTabulator(){
         $("#table-arti-factura").tabulator("setData", datosFactura);
     }
 
+    function cargoComboVendedoras(){
+        $.ajax({
+            type: 'get',
+            url: '/listaVendedoras',
+            //    data: {radio_id:category_id , flota_id:flota_id},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (datos, textStatus, jqXHR) {
+                $.each(datos, function (i, value) {
+                    $('#vendedora').append("<option value='" + value['Id'] + "'>" + value['Nombre'] + '</option>');
+                }); // each
+            },
+            error: function (datos) {
+                console.log("Este callback maneja los errores " + datos);
+            }
+
+        }); // aja
+    }
+
+    function cargoComboTipoPagos(){
+        $.ajax({
+            type: 'get',
+            url: '/listaTipoPagos',
+            //    data: {radio_id:category_id , flota_id:flota_id},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (datos, textStatus, jqXHR) {
+                $.each(datos, function (i, value) {
+                    $('#tipo_pago').append("<option value='" + value['id_tipo_pagos'] + "'>" + value['tipo_pago'] + '</option>');
+                }); // each
+                //Selecciono en el combo por default la opción 2 que es "Efectivo"
+                $("#tipo_pago").val(2);
+            },
+        error: function (datos) {
+            console.log("Este callback maneja los errores " + datos);
+        }
+
+        }); // aja
+
+    }
     function limpiezaVentanas(){
         globalCantidad.value = ""
         globalDetalle.value = ""
@@ -363,5 +407,20 @@
         globalPrecioVenta.value = ""
         globalStock.value = ""
         globalBtnAgregar.disabled = true
+        checkboxDescuento.checked = false
+        document.getElementById('descuento').disabled = true
+        globalClientId = 1 //Se asigna valor de 1 ya que pertenece al cliente Ninguno,Ninguno
+        globalCliente.value = ""
     }
+
+
+    // Agregar un listener para el evento change
+    checkboxDescuento.addEventListener("change", function(event) {
+        if (event.target.checked) {
+            document.getElementById('descuento').disabled = false
+        } else {
+            document.getElementById('descuento').disabled = true
+            $("#descuento").val(0);
+        }
+    });
 </script>
