@@ -23,7 +23,7 @@ class Precio
     {
         $precioVenta = ($articulo->PrecioManual * $articulo->Gastos * $articulo->Ganancia);
         $precioVenta = $this->redondeoDecimal($precioVenta);
-        $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $articulo->Gastos, 'Ganancia' => $articulo->Ganancia];
+        $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $articulo->Gastos, 'Ganancia' => $articulo->Ganancia, 'PrecioArgen' => $articulo->PrecioManual];
         return $precio;
     }
 
@@ -33,14 +33,14 @@ class Precio
         if ($articulo->Moneda == "ARG") {
             $precioVenta = $articulo->PrecioConvertido * $proveedor[0]->Gastos * $proveedor[0]->Ganancia;
             $precioVenta = $this->redondeoDecimal($precioVenta);
-            $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $proveedor[0]->Gastos, 'Ganancia' => $proveedor[0]->Ganancia];
+            $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $proveedor[0]->Gastos, 'Ganancia' => $proveedor[0]->Ganancia, 'PrecioArgen' => $articulo->PrecioConvertido];
             return $precio;
         }else{
             $cotizacion = Dolar::get();
             $precioEnPesos = $articulo->PrecioConvertido * $cotizacion[0]->PrecioDolar;
             $precioVenta = $precioEnPesos * $proveedor[0]->Gastos * $proveedor[0]->Ganancia;
             $precioVenta = $this->redondeoDecimal($precioVenta);
-            $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $proveedor[0]->Gastos, 'Ganancia' => $proveedor[0]->Ganancia];
+            $precio [] = ['PrecioVenta' => $precioVenta, 'Gastos' => $proveedor[0]->Gastos, 'Ganancia' => $proveedor[0]->Ganancia, 'PrecioArgen' => $this->redondeoDecimal($precioEnPesos)];
             return $precio;
         }
     }

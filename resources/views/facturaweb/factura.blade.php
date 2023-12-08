@@ -160,9 +160,11 @@
     var globalBtnAgregar = document.getElementById('btnAgregar');
     var globalCliente = document.getElementById('Cliente');
     var checkboxDescuento = document.getElementById("chkBoxDescuento");
+    var glocalVendedora = document.getElementById('vendedora');
     var globalClientId;
     var globalTotal = 0.00;
-    var GlonalDescuento;
+    var globalDescuento;
+    var globalPrecioArgen;
     var datosFactura = [];
 
     //Ejecuta cuando carga la pagina
@@ -219,7 +221,10 @@
                     Detalle: globalDetalle.value,
                     Cantidad: globalCantidad.value,
                     PrecioUnitario: globalPrecioVenta.value,
-                    PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2)
+                    PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
+                    Vendedora: glocalVendedora.options[glocalVendedora.selectedIndex].text,
+                    PrecioArgen: globalPrecioArgen,
+                    Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value))
                 };
                 datosFactura.push(nuevoAticulo);
                 globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
@@ -348,6 +353,7 @@
             {title: "PrecioVenta", field: "PrecioVenta", sortable: true, width:140},
             {title: "Accion",width:100, align:"center", cellClick:function(e, cell){
                 eliminarAritculoFactura(cell.getRow().getData()['Articulo'])
+                console.log(cell.getRow().getData())
             },
                 formatter: function (cell) {
                     return "<button class='btn-info'>Eliminar</button>"; // Ícono de cruz (times)

@@ -62,7 +62,8 @@
     var modalArticulos = document.getElementById('myModalArticulos');
     // Get the <span> element that closes the modal
     var spanArticulos = document.getElementById("close-articulos");
-    var precioAreticulo;
+    var precioArticulo;
+    var precioArgentina;
     function cargoModalArticulos(){
         getArticulos()
         // When the user clicks the button, open the modal
@@ -86,8 +87,17 @@
                 globalNroArticulo.value  = cell.getRow().getData()['Articulo'];
                 globalDetalle.value  = cell.getRow().getData()['Detalle'];
                 globalStock.value  = cell.getRow().getData()['Cantidad'];
-                getPrecioArticulo(cell.getRow().getData()['Articulo']);
-                globalPrecioVenta.value = precioAreticulo;
+                $.ajax({
+                    url: "/getPrecio?nroArticulo=" + cell.getRow().getData()['Articulo'],
+                    dataType: "json",
+                    async: false,
+                    success: function(json){
+                        precioArticulo = (json[0]['PrecioVenta']);
+                        precioArgentina = (json[0]['PrecioArgen']);
+                    },
+                })
+                globalPrecioVenta.value = precioArticulo;
+                globalPrecioArgen = precioArgentina;
                 modalArticulos.style.display = "none";
                 globalCantidad.value = 1;
                 globalCantidad.focus();
@@ -102,18 +112,6 @@
 
     function getArticulos(){
         $("#table-articulos").tabulator("setData", '/getArticulos');
-    }
-
-    function getPrecioArticulo(nroArticulo){
-        $.ajax({
-            url: "/getPrecio?nroArticulo=" + nroArticulo
-            + "&tipo=SinEncuesta",
-            dataType: "json",
-            async: false,
-            success: function(json){
-                precioAreticulo = (json[0]['PrecioVenta']);
-            }
-        })
     }
 
 </script>

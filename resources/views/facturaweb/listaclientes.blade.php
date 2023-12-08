@@ -98,17 +98,5 @@
         $("#table-clientes").tabulator("setData", '/getClientes');
     }
 
-    function getPrecioArticulo(nroArticulo){
-        $.ajax({
-            url: "/getPrecio?nroArticulo=" + nroArticulo
-            + "&tipo=SinEncuesta",
-            dataType: "json",
-            async: false,
-            success: function(json){
-                precioAreticulo = (json[0]['PrecioVenta']);
-            }
-        })
-    }
-
 </script>
 
