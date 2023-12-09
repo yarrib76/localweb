@@ -108,6 +108,41 @@
                 }
             }
         ],
+
+    });
+    // Agregar un manejador de eventos keydown para la tabla
+    $("#table-articulos").on("keydown", function(e) {
+        // Verificar si la tecla presionada es la tecla Tab (código 9)
+        if (e.keyCode === 13) {
+            e.preventDefault(); // Prevenir el comportamiento predeterminado de la tecla Tab
+
+            var visibleCells = $("#table-articulos .tabulator-row[style!='display: none;'] .tabulator-cell");
+            visibleCells.trigger("click")
+
+
+        //    var firstVisibleCell = $("#table-articulos .tabulator-row[style!='display: none;'] .tabulator-cell:first");
+
+        //    console.log(firstVisibleCell);
+        /*
+            if (firstVisibleCell.length > 0) {
+                console.log("Entre")
+                firstVisibleCell.trigger("click");
+            }
+        */
+            /*
+            visibleCells.each(function() {
+                $(this).trigger("click");
+            });
+            */
+            // Obtener todas las filas de la tabla
+            //var table = $("#table-articulos").tabulator("getData");
+            // console.log(table[0])
+            // Iterar a través de las filas y mostrar la información
+          //  table.forEach(function(rowData, index) {
+          //      console.log("Fila " + (index + 1) + ":", rowData);
+          //  });
+        }
+
     });
 
     function getArticulos(){

@@ -205,6 +205,7 @@
                     if ((parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)) <= parseFloat(globalStock.value)){
                         datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
                         datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
+                        datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + (globalPrecioArgen * parseFloat(globalCantidad.value));
                         globalTotal += parseFloat(globalPrecioVenta.value) * parseFloat(globalCantidad.value).toFixed(2);
                         document.getElementById('totalApagar').value = globalTotal;
                         limpiezaVentanas();
@@ -353,7 +354,6 @@
             {title: "PrecioVenta", field: "PrecioVenta", sortable: true, width:140},
             {title: "Accion",width:100, align:"center", cellClick:function(e, cell){
                 eliminarAritculoFactura(cell.getRow().getData()['Articulo'])
-                console.log(cell.getRow().getData())
             },
                 formatter: function (cell) {
                     return "<button class='btn-info'>Eliminar</button>"; // Ícono de cruz (times)
