@@ -45,13 +45,14 @@
                                             <input type="number" class="form-control"  id="PrecioVenta" disabled="true" style="width: 90px">
                                             <input type="number" class="form-control"  id="Stock" disabled="true">
                                             <input type="number" class="form-control"  id="Cantidad" tabindex="1" min="0">
-                                                <select id="descuento" class="form-control">
+                                                <select id="select_descuento" class="form-control">
                                                 <option value="0">0</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
-                                                <option value="40">40</option>
-                                                <option value="50">50</option>
+                                                <option value="0.9">10</option>
+                                                <option value="0.8">20</option>
+                                                <option value="0.7">30</option>
+                                                <option value="0.6">40</option>
+                                                <option value="0.5">50</option>
+                                                <option value="0">100</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
@@ -73,7 +74,7 @@
                                     <h4>Total</h4>
                                     <input type="number" id="totalApagar" min="0" disabled="true" style="width: 120px">
                                     <h4>Descuento</h4>
-                                    <h4>0</h4>
+                                    <input type="number" id="totalDescuento" min="0" disabled="true" style="width: 120px">
                                 </td>
                             </tr>
                         </table>
@@ -88,8 +89,8 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <input type="text" name="correo" placeholder="Correo" style="width: 80px">
-                                        <input type="text" name="total" placeholder="Total" style="width: 80px">
+                                        <input type="number" id="correo" placeholder="Correo" style="width: 80px">
+                                        <input type="number" id="total_correo" placeholder="Total" style="width: 80px">
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxPedido">Pedido</label>
                                         <h4>NroPedido</h4>
                                         <input type="number" name="NroPedido" style="width: 70px">
@@ -160,12 +161,16 @@
     var globalBtnAgregar = document.getElementById('btnAgregar');
     var globalCliente = document.getElementById('Cliente');
     var checkboxDescuento = document.getElementById("chkBoxDescuento");
+    var listDescuento = document.getElementById('select_descuento')
+    var textDescuento = document.getElementById('totalDescuento');
     var glocalVendedora = document.getElementById('vendedora');
     var globalClientId;
     var globalTotal = 0.00;
     var globalDescuento;
     var globalPrecioArgen;
     var datosFactura = [];
+    var inputCorreo = document.getElementById('correo');
+    var inputTotal_correo = document.getElementById('total_correo');
 
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
@@ -233,6 +238,7 @@
                 limpiezaVentanas();
             }
             refreshTabulator();
+            limpiezaCorreo();
         } else {alert('Stock Insuficiente!!!!')}
 
     }
@@ -261,6 +267,8 @@
             }
         }
         refreshTabulator() //vvuelvo a llenar el array para que actualice lo que se elimino
+        limpiezaCorreo();
+        limpiezaDescuentos();
     }
 
     function eliminarCliente(){
@@ -412,9 +420,11 @@
         globalNroArticulo.value = ""
         globalPrecioVenta.value = ""
         globalStock.value = ""
+        textDescuento.value = 0.00
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
-        document.getElementById('descuento').disabled = true
+        listDescuento.disabled = true
+        $("#select_descuento").val(0);
     }
 
     function limpiezaTotal(){
@@ -423,20 +433,46 @@
         globalNroArticulo.value = ""
         globalPrecioVenta.value = ""
         globalStock.value = ""
+        textDescuento.value = 0.00
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
-        document.getElementById('descuento').disabled = true
+        listDescuento.disabled = true
         globalClientId = 1 //Se asigna valor de 1 ya que pertenece al cliente Ninguno,Ninguno
         globalCliente.value = ""
     }
 
+    function limpiezaCorreo(){
+        inputCorreo.value = ""
+        inputTotal_correo.value = ""
+    }
+
+    function limpiezaDescuentos(){
+        textDescuento.value = 0.00
+        $("#select_descuento").val(0);
+        checkboxDescuento.checked = false
+        listDescuento.disabled = true
+    }
     // Agregar un listener para el evento change
     checkboxDescuento.addEventListener("change", function(event) {
+        limpiezaCorreo();
         if (event.target.checked) {
-            document.getElementById('descuento').disabled = false
+            listDescuento.disabled = false
         } else {
-            document.getElementById('descuento').disabled = true
-            $("#descuento").val(0);
+            listDescuento.disabled = true
+            $("#select_descuento").val(0);
+            textDescuento.value = 0.00
         }
     });
+
+    // Agregar un listener para el evento change
+    listDescuento.addEventListener('change', function(event){
+        resultado = (parseFloat(globalTotal) * listDescuento.value)
+        textDescuento.value = parseFloat(resultado).toFixed(2)
+    })
+
+    inputCorreo.addEventListener('keyup', function(event){
+        if (checkboxDescuento.checked) {
+            inputTotal_correo.value = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
+        } else {inputTotal_correo.value = parseFloat(globalTotal) + parseFloat(inputCorreo.value)}
+    })
 </script>
