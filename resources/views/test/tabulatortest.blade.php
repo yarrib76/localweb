@@ -68,15 +68,16 @@
         getArticulos()
         // When the user clicks the button, open the modal
         modalArticulos.style.display = "block";
-        tableArticulos.setHeaderFilterFocus("Detalle");
+
+        table.setHeaderFilterFocus("Detalle");
 
         // When the user clicks on <span> (x), close the modal
         spanArticulos.onclick = function() {
             modalArticulos.style.display = "none";
-            tableArticulos.clearFilter('Detalle', 'Articulo', 'Cantidad')
+            table.clearFilter('Detalle', 'Articulo', 'Cantidad')
         }
     }
-        var tableArticulos = new Tabulator("#table-articulos", {
+        table = new Tabulator("#table-articulos", {
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
@@ -104,7 +105,6 @@
                 globalCantidad.value = 1;
                 globalCantidad.focus();
                 globalBtnAgregar.disabled = false
-                tableArticulos.clearFilter('Detalle', 'Articulo', 'Cantidad')
             },
                 formatter: function (cell) {
                     return "<button class='btn-info'>Agregar</button>"; // Ícono de cruz (times)
@@ -149,8 +149,79 @@
     });
 
     function getArticulos(){
-        tableArticulos.setData('/getArticulos');
+        table.setData('/getArticulos');
     }
 
+    //custom max min filter function
+    function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams) {
+        //headerValue - the value of the header filter element
+        //rowValue - the value of the column in this row
+        //rowData - the data for the row being filtered
+        //filterParams - params object passed to the headerFilterFuncParams property
+
+        if (rowValue) {
+            if (headerValue.start != "") {
+                if (headerValue.end != "") {
+                    return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                } else {
+                    return rowValue >= headerValue.start;
+                }
+            } else {
+                if (headerValue.end != "") {
+                    return rowValue <= headerValue.end;
+                }
+            }
+        }
+
+        return true; //must return a boolean, true if it passes the filter.
+    }
+    var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
+        var end;
+        var container = document.createElement("span");
+        //create and style inputs
+        var start = document.createElement("input");
+        start.setAttribute("type", "number");
+        start.setAttribute("placeholder", "Min");
+        start.setAttribute("min", 0);
+        start.setAttribute("max", 100);
+        start.style.padding = "4px";
+        start.style.width = "50%";
+        start.style.boxSizing = "border-box";
+
+        start.value = cell.getValue();
+
+        function buildValues() {
+            success({
+                start: start.value,
+                end: end.value,
+            });
+        }
+
+        function keypress(e) {
+            if (e.keyCode == 13) {
+                buildValues();
+            }
+
+            if (e.keyCode == 27) {
+                cancel();
+            }
+        }
+
+        end = start.cloneNode();
+
+        start.addEventListener("change", buildValues);
+        start.addEventListener("blur", buildValues);
+        start.addEventListener("keydown", keypress);
+
+        end.addEventListener("change", buildValues);
+        end.addEventListener("blur", buildValues);
+        end.addEventListener("keydown", keypress);
+
+
+        container.appendChild(start);
+        container.appendChild(end);
+
+        return container;
+    }
 </script>
 

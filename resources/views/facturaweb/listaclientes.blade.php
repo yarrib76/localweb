@@ -73,7 +73,7 @@
             modalClientes.style.display = "none";
         }
     }
-    $("#table-clientes").tabulator({
+    var tableClientes = new Tabulator("#table-clientes", {
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
@@ -95,7 +95,7 @@
     });
 
     function getClientes(){
-        $("#table-clientes").tabulator("setData", '/getClientes');
+        tableClientes.setData('/getClientes');
     }
 
 </script>

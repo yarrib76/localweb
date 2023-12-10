@@ -341,7 +341,7 @@
         return true; //must return a boolean, true if it passes the filter.
     }
 
-    $("#table-arti-factura").tabulator({
+    var tableCLientes = new Tabulator("#table-arti-factura", {
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
@@ -363,7 +363,7 @@
     });
 
     function refreshTabulator(){
-        $("#table-arti-factura").tabulator("setData", datosFactura);
+        tableCLientes.setData(datosFactura);
     }
 
     function cargoComboVendedoras(){
@@ -415,10 +415,20 @@
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
         document.getElementById('descuento').disabled = true
+    }
+
+    function limpiezaTotal(){
+        globalCantidad.value = ""
+        globalDetalle.value = ""
+        globalNroArticulo.value = ""
+        globalPrecioVenta.value = ""
+        globalStock.value = ""
+        globalBtnAgregar.disabled = true
+        checkboxDescuento.checked = false
+        document.getElementById('descuento').disabled = true
         globalClientId = 1 //Se asigna valor de 1 ya que pertenece al cliente Ninguno,Ninguno
         globalCliente.value = ""
     }
-
 
     // Agregar un listener para el evento change
     checkboxDescuento.addEventListener("change", function(event) {
