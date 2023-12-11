@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
@@ -18,7 +19,8 @@ class ControllerFacturaWeb extends Controller
 {
     public function view()
     {
-        return view('facturaweb.factmenuprincipal');
+        $nameCajera = Auth::user()->name;
+        return view('facturaweb.factmenuprincipal', compact('nameCajera'));
     }
 
     public function getArticulos()
@@ -50,5 +52,18 @@ class ControllerFacturaWeb extends Controller
     public function getClientes(){
         $clientes = DB::select('select id_clientes, nombre, apellido, mail from samira.clientes;');
         return Response::json($clientes);
+    }
+
+    public function facturar(){
+        $datosFactura = (Input::get('articulos'));
+        $datosFactura = json_decode($datosFactura);
+
+        foreach ($datosFactura as $dato) {
+            // Hacer algo con cada dato (por ejemplo, imprimirlo)
+            dump($dato);
+        }
+        $cliente_id = Input::get('cliente_id');
+        $tipo_pago_id = Input::get('tipo_pago_id');
+        dump($cliente_id,$tipo_pago_id);
     }
 }

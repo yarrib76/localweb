@@ -82,10 +82,10 @@
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
         columns: [
-            {title: "Articulo", field: "Articulo", sortable: true, width: 150,headerFilter:"input"},
-            {title: "Detalle", field: "Detalle", sortable: true, width: 350,headerFilter:"input"},
-            {title: "Cantidad", field: "Cantidad", sortable: true, width: 110,headerFilter:"input"},
-            {title: "Accion",width:100, align:"center", cellClick:function(e, cell){
+            {title: "Articulo", field: "Articulo", width: 150,headerFilter:"input"},
+            {title: "Detalle", field: "Detalle",  width: 350,headerFilter:"input"},
+            {title: "Cantidad", field: "Cantidad", width: 110,headerFilter:"input"},
+            {title: "Accion",width:100, cellClick:function(e, cell){
                 globalNroArticulo.value  = cell.getRow().getData()['Articulo'];
                 globalDetalle.value  = cell.getRow().getData()['Detalle'];
                 globalStock.value  = cell.getRow().getData()['Cantidad'];

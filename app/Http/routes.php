@@ -148,7 +148,7 @@ Route::get('downloadExcel/{type}', 'Api\GetArticulosTiendaNube@downloadExcel');
 /*Ordenes Tienda Nube*/
 Route::get('/ordenestiendanube','TiendaNube\Ordenes@index');
 Route::get('/importarordenes','TiendaNube\Ordenes@main');
-Route::post('/crearpedido','TiendaNube\Ordenes@nuevoPedido');
+Route::get('/crearpedido','TiendaNube\Ordenes@nuevoPedido');
 
 /*Reporte Vendedores */
 Route::get('/reportevendedoras', 'Reporte\Vendedoras@pedidos');
@@ -294,6 +294,7 @@ Route::get('/getPrecio', 'FacturaWeb\ControllerFacturaWeb@precioArticulo');
 Route::get('/listaVendedoras', 'FacturaWeb\ControllerFacturaWeb@listaVendedoras');
 Route::get('/listaTipoPagos', 'FacturaWeb\ControllerFacturaWeb@listaTipoPagos');
 Route::get('/getClientes', 'FacturaWeb\ControllerFacturaWeb@getClientes');
+Route::post('/crearfactura', 'FacturaWeb\ControllerFacturaWeb@facturar');
 
 Route::group(['prefix' => 'api'],
     function () {

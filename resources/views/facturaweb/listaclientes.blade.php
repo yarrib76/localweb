@@ -79,11 +79,13 @@
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
         columns: [
-            {title: "Nombre", field: "nombre", sortable: true, width: 150,headerFilter:"input"},
-            {title: "Apellido", field: "apellido", sortable: true, width: 110,headerFilter:"input"},
-            {title: "Mail", field: "mail", sortable: true, width: 350,headerFilter:"input"},
-            {title: "Accion",width:100, align:"center", cellClick:function(e, cell){
+            {title: "id_clientes", field:"id_clientes",width:10, visible: false},
+            {title: "Nombre", field: "nombre", width: 150,headerFilter:"input"},
+            {title: "Apellido", field: "apellido", width: 110,headerFilter:"input"},
+            {title: "Mail", field: "mail", width: 350,headerFilter:"input"},
+            {title: "Accion",width:100, cellClick:function(e, cell){
                 globalCliente.value  = cell.getRow().getData()['nombre'] + "," + cell.getRow().getData()['apellido'] ;
+                globalClientId = cell.getRow().getData()['id_clientes'];
                 // getPrecioArticulo(cell.getRow().getData()['Articulo']);
                 modalClientes.style.display = "none";
             },

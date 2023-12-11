@@ -95,8 +95,8 @@
                                         <h4>NroPedido</h4>
                                         <input type="number" name="NroPedido" style="width: 70px">
                                         <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                        <label style="font-size: 15px"> <input type="checkbox" name="chkBoxListoEnvio">Listo Para Envio</label>
-                                        <button class="btn btn-secondary">Facturar</button>
+                                        <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio">Listo Para Envio</label>
+                                        <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button class="btn btn-primary"><i class="fas fa-print"></i></button>
 
@@ -164,14 +164,14 @@
     var listDescuento = document.getElementById('select_descuento')
     var textDescuento = document.getElementById('totalDescuento');
     var glocalVendedora = document.getElementById('vendedora');
-    var globalClientId;
+    var globalClientId = 1;
     var globalTotal = 0.00;
     var globalDescuento;
     var globalPrecioArgen;
     var datosFactura = [];
     var inputCorreo = document.getElementById('correo');
     var inputTotal_correo = document.getElementById('total_correo');
-
+    var chkBoxListoEnvio = document.getElementById('chkBoxListoEnvio');
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
         recargaPagina()
@@ -230,7 +230,8 @@
                     PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
                     Vendedora: glocalVendedora.options[glocalVendedora.selectedIndex].text,
                     PrecioArgen: globalPrecioArgen,
-                    Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value))
+                    Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
+                    cajera: '{{$nameCajera}}',
                 };
                 datosFactura.push(nuevoAticulo);
                 globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
@@ -349,18 +350,18 @@
         return true; //must return a boolean, true if it passes the filter.
     }
 
-    var tableCLientes = new Tabulator("#table-arti-factura", {
+    var tableFactura = new Tabulator("#table-arti-factura", {
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
         columns: [
-            {title: "Articulo", field: "Articulo", sortable: true, width: 150,headerFilter:"input"},
-            {title: "Detalle", field: "Detalle", sortable: true, width: 350,headerFilter:"input"},
-            {title: "Cantidad", field: "Cantidad", sortable: true, width: 80},
-            {title: "PrecioUnitario", field: "PrecioUnitario", sortable: true, width:140},
-            {title: "PrecioVenta", field: "PrecioVenta", sortable: true, width:140},
-            {title: "Accion",width:100, align:"center", cellClick:function(e, cell){
+            {title: "Articulo", field: "Articulo", width: 150,headerFilter:"input"},
+            {title: "Detalle", field: "Detalle", width: 350,headerFilter:"input"},
+            {title: "Cantidad", field: "Cantidad", width: 80},
+            {title: "PrecioUnitario", field: "PrecioUnitario", width:140},
+            {title: "PrecioVenta", field: "PrecioVenta", width:140},
+            {title: "Accion",width:100, cellClick:function(e, cell){
                 eliminarAritculoFactura(cell.getRow().getData()['Articulo'])
             },
                 formatter: function (cell) {
@@ -371,7 +372,7 @@
     });
 
     function refreshTabulator(){
-        tableCLientes.setData(datosFactura);
+        tableFactura.setData(datosFactura);
     }
 
     function cargoComboVendedoras(){
@@ -425,6 +426,7 @@
         checkboxDescuento.checked = false
         listDescuento.disabled = true
         $("#select_descuento").val(0);
+        chkBoxListoEnvio.disabled = true
     }
 
     function limpiezaTotal(){
@@ -475,4 +477,27 @@
             inputTotal_correo.value = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
         } else {inputTotal_correo.value = parseFloat(globalTotal) + parseFloat(inputCorreo.value)}
     })
+
+    function facturar(){
+        var listaArticulos =  JSON.stringify(datosFactura)
+        var tipo_pago_id  = document.getElementById('tipo_pago').value
+        var datosCombinados = {
+            articulos: listaArticulos,
+            cliente_id: globalClientId,
+            tipo_pago_id: tipo_pago_id,
+        };
+        $.ajax({
+            url: "crearfactura",
+            method: 'post',
+            data: datosCombinados,
+            success: function (json) {
+                // Manejar la respuesta exitosa aquí
+            },
+            error: function(xhr, status, error) {
+                // Manejar errores de la solicitud aquí
+            }
+        });
+        console.log(datosCombinados);
+    }
 </script>
+
