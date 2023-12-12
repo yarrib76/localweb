@@ -169,6 +169,7 @@
     var listDescuento = document.getElementById('select_descuento')
     var textDescuento = document.getElementById('totalDescuento');
     var glocalVendedora = document.getElementById('vendedora');
+    document.getElementById('totalApagar').value = 0.00
     var globalClientId = 1;
     var globalTotal = 0.00;
     var globalDescuento;
@@ -486,30 +487,37 @@
     })
 
     function facturar(){
-        var listaArticulos =  JSON.stringify(datosFactura)
-        var tipo_pago_id  = document.getElementById('tipo_pago').value
-        var datosCombinados = {
-            articulos: listaArticulos,
-            cliente_id: globalClientId,
-            tipo_pago_id: tipo_pago_id,
-            nroFactura: document.getElementById('nroFactura').value,
-            total: document.getElementById('totalApagar').value,
-            descuento: document.getElementById('totalDescuento').value,
-            porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
-            envio: document.getElementById('correo').value,
-            totalEnvio: document.getElementById('total_correo').value,
-        };
-        $.ajax({
-            url: "crearfactura",
-            method: 'post',
-            data: datosCombinados,
-            success: function (json) {
-                // Manejar la respuesta exitosa aquí
-            },
-            error: function(xhr, status, error) {
-                // Manejar errores de la solicitud aquí
+        if (document.getElementById('totalApagar').value != 0){
+            if (confirm('Confirma la Factura?')){
+                var listaArticulos =  JSON.stringify(datosFactura)
+                var tipo_pago_id  = document.getElementById('tipo_pago').value
+                var datosCombinados = {
+                    articulos: listaArticulos,
+                    cliente_id: globalClientId,
+                    tipo_pago_id: tipo_pago_id,
+                    nroFactura: document.getElementById('nroFactura').value,
+                    total: document.getElementById('totalApagar').value,
+                    descuento: document.getElementById('totalDescuento').value,
+                    porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
+                    envio: document.getElementById('correo').value,
+                    totalEnvio: document.getElementById('total_correo').value,
+                    vendedora: glocalVendedora.value,
+                };
+                $.ajax({
+                    url: "crearfactura",
+                    method: 'post',
+                    data: datosCombinados,
+                    async: false,
+                    success: function (json) {
+                        alert('La venta se realizo con correctamente')
+                    },
+                    error: function(xhr, status, error) {
+                        // Manejar errores de la solicitud aquí
+                    }
+                });
+                location.reload();
             }
-        });
+        }else (alert('No se puede facturar con valor Total en 0'))
     }
 
     function getNroFactura(){

@@ -78,16 +78,18 @@ class ControllerFacturaWeb extends Controller
         $envio = Input::get('envio');
         $totalEnvio = Input::get('totalEnvio');
         $gananciaTotal = 0.0;
+        $vendedora = Input::get('vendedora');
 
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
-            $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha);
-            dump($articulosFactura);
+            $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
+        //    dump($articulosFactura);
         }
         $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id);
-        dump($gananciaTotal);
-        dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
+        $this->acturlizarNroFactura();
+        // dump($gananciaTotal);
+        // dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
     }
 
     public function getNroFactura(){
@@ -112,7 +114,7 @@ class ControllerFacturaWeb extends Controller
         ]);
     }
 
-    public function addArticulosToFactura($articuloFactura,$nroFactura,$fecha)
+    public function addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora)
     {
         Facturas::create([
             'NroFactura' => $nroFactura,
@@ -124,7 +126,7 @@ class ControllerFacturaWeb extends Controller
             'PrecioVenta' => $articuloFactura->PrecioVenta,
             'Ganancia' => $articuloFactura->Ganancia,
             'Cajera' => $articuloFactura->cajera,
-            'Vendedora' => $articuloFactura->Vendedora,
+            'Vendedora' => $vendedora,
             'Fecha' => $fecha,
         ]);
     }
@@ -148,6 +150,6 @@ class ControllerFacturaWeb extends Controller
 
     public function acturlizarNroFactura()
     {
-
+        DB::select('UPDATE samira.nrofactura SET NroFactura = NroFactura + 1' );
     }
 }
