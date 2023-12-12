@@ -2,8 +2,11 @@
 
 namespace Donatella\Http\Controllers\FacturaWeb;
 
+use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
 use Donatella\Models\Articulos;
+use Donatella\Models\FacturacionHist;
+use Donatella\Models\Facturas;
 use Donatella\Models\Tipo_Pagos;
 use Donatella\Models\Vendedores;
 use Illuminate\Http\Request;
@@ -17,10 +20,19 @@ use Illuminate\Support\Facades\Response;
 
 class ControllerFacturaWeb extends Controller
 {
-    public function view()
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
+    public function view(Request $request)
     {
         $nameCajera = Auth::user()->name;
-        return view('facturaweb.factmenuprincipal', compact('nameCajera'));
+        $clienteDireccionIP = $request->ip();
+        $auto = $this->autorizacionFacturaWeb($clienteDireccionIP);
+        if ($auto){
+            return view('facturaweb.factmenuprincipal', compact('nameCajera'));
+        }else return view('partials.errors.noautorizado');
     }
 
     public function getArticulos()
@@ -55,15 +67,87 @@ class ControllerFacturaWeb extends Controller
     }
 
     public function facturar(){
-        $datosFactura = (Input::get('articulos'));
-        $datosFactura = json_decode($datosFactura);
-
-        foreach ($datosFactura as $dato) {
-            // Hacer algo con cada dato (por ejemplo, imprimirlo)
-            dump($dato);
-        }
+        $fecha =  Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateString();
+        $articulosFactura = json_decode((Input::get('articulos')));
         $cliente_id = Input::get('cliente_id');
         $tipo_pago_id = Input::get('tipo_pago_id');
-        dump($cliente_id,$tipo_pago_id);
+        $nroFactura = Input::get('nroFactura');
+        $total = Input::get('total');
+        $descuento = Input::get('descuento');
+        $porcentajeDescuento = Input::get('porcentajeDescuento');
+        $envio = Input::get('envio');
+        $totalEnvio = Input::get('totalEnvio');
+        $gananciaTotal = 0.0;
+
+        foreach ($articulosFactura as $articuloFactura) {
+            $gananciaTotal += $articuloFactura->Ganancia;
+            $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
+            $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha);
+            dump($articulosFactura);
+        }
+        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id);
+        dump($gananciaTotal);
+        dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
+    }
+
+    public function getNroFactura(){
+        $nroFactura = DB::select('select * from samira.nrofactura');
+        return $nroFactura;
+    }
+
+    public function autorizacionFacturaWeb($clienteDireccionIP){
+        $autorizacion = DB::select('select * from samira.autorizacion_facturaweb
+                                    where ip_autorizada = "'.$clienteDireccionIP.'"');
+        if (!empty($autorizacion)){
+            return true;
+        } else return false;
+    }
+
+    public function descontarArticulos($nroArticulo,$cantidad)
+    {
+        $articulo = Articulos::where('Articulo', '=', $nroArticulo);
+        $contidadActual = $articulo->get()[0]['Cantidad'];
+        $articulo->update([
+            'Cantidad' => $contidadActual - $cantidad,
+        ]);
+    }
+
+    public function addArticulosToFactura($articuloFactura,$nroFactura,$fecha)
+    {
+        Facturas::create([
+            'NroFactura' => $nroFactura,
+            'Articulo' => $articuloFactura->Articulo,
+            'Detalle' => $articuloFactura->Detalle,
+            'Cantidad' => $articuloFactura->Cantidad,
+            'PrecioArgen' => $articuloFactura->PrecioArgen,
+            'PrecioUnitario' => $articuloFactura->PrecioUnitario,
+            'PrecioVenta' => $articuloFactura->PrecioVenta,
+            'Ganancia' => $articuloFactura->Ganancia,
+            'Cajera' => $articuloFactura->cajera,
+            'Vendedora' => $articuloFactura->Vendedora,
+            'Fecha' => $fecha,
+        ]);
+    }
+
+
+    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id)
+    {
+        FacturacionHist::create([
+            'NroFactura' => $nroFactura,
+            'Total' => $total,
+            'Porcentaje' => $porcentajeDescuento,
+            'Descuento' => $descuento,
+            'Ganancia' => $gananciaTotal,
+            'Fecha' => $fecha,
+            'id_clientes' => $cliente_id,
+            'envio' => $envio,
+            'totalEnvio' => $totalEnvio,
+            'id_tipo_pago' => $tipo_pago_id
+        ]);
+    }
+
+    public function acturlizarNroFactura()
+    {
+
     }
 }

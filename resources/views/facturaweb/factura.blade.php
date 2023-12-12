@@ -61,6 +61,11 @@
                                     </div>
                                 </td>
                                 <td>
+                                    <di>
+                                        <h4>Factura</h4>
+                                        <input type="number" id="nroFactura" disabled="true" style="width: 120px">
+                                    </di>
+
                                     <div>
                                         <h4>Vendedora</h4>
                                         <select id="vendedora" class="form-control"></select>
@@ -193,6 +198,7 @@
             modalFactura.style.display = "none";
             location.reload();
         }
+        getNroFactura();
     }
 
     globalCantidad.addEventListener('keypress', function(event) {
@@ -228,7 +234,7 @@
                     Cantidad: globalCantidad.value,
                     PrecioUnitario: globalPrecioVenta.value,
                     PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
-                    Vendedora: glocalVendedora.options[glocalVendedora.selectedIndex].text,
+                    Vendedora: glocalVendedora.value,
                     PrecioArgen: globalPrecioArgen,
                     Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
                     cajera: '{{$nameCajera}}',
@@ -236,6 +242,7 @@
                 datosFactura.push(nuevoAticulo);
                 globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
                 document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
+                console.log(datosFactura)
                 limpiezaVentanas();
             }
             refreshTabulator();
@@ -384,7 +391,7 @@
             dataType: "json",
             success: function (datos, textStatus, jqXHR) {
                 $.each(datos, function (i, value) {
-                    $('#vendedora').append("<option value='" + value['Id'] + "'>" + value['Nombre'] + '</option>');
+                    $('#vendedora').append("<option value='" + value['Nombre'] + "'>" + value['Nombre'] + '</option>');
                 }); // each
             },
             error: function (datos) {
@@ -485,6 +492,12 @@
             articulos: listaArticulos,
             cliente_id: globalClientId,
             tipo_pago_id: tipo_pago_id,
+            nroFactura: document.getElementById('nroFactura').value,
+            total: document.getElementById('totalApagar').value,
+            descuento: document.getElementById('totalDescuento').value,
+            porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
+            envio: document.getElementById('correo').value,
+            totalEnvio: document.getElementById('total_correo').value,
         };
         $.ajax({
             url: "crearfactura",
@@ -497,7 +510,21 @@
                 // Manejar errores de la solicitud aquí
             }
         });
-        console.log(datosCombinados);
+    }
+
+    function getNroFactura(){
+        $.ajax({
+            url: 'getNroFactura',
+            method: 'get',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (json){
+                document.getElementById('nroFactura').value = json[0]['NroFactura']
+            },
+            error: function(xhr, status, error){
+
+            }
+        })
     }
 </script>
 

@@ -30,4 +30,8 @@
     @include('facturaweb.listararticulos')
     @include('facturaweb.listaclientes')
 
+    <script>
+
+    </script>
+
 @stop
