@@ -37,8 +37,14 @@ class ControllerFacturaWeb extends Controller
 
     public function getArticulos()
     {
+        $botonManual = Input::get('botonManual');
+        $nroArticulo = Input::get('nroArticulo');
+        if ($botonManual === 'true'){
+            $articulo = DB::select('select Articulo, Detalle, Cantidad from samira.articulos
+                                      where articulo = "'.$nroArticulo.'"');
+            return Response::json($articulo);
+        }
         $articulos = DB::select('select Articulo, Detalle, Cantidad from samira.articulos');
-
         return Response::json($articulos);
     }
 

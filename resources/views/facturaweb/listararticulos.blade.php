@@ -98,6 +98,17 @@
                         precioArgentina = (json[0]['PrecioArgen']);
                     },
                 })
+                $.ajax({
+                    url: 'api/fotoarticulo?nroArticulo=' + cell.getRow().getData()['Articulo'],
+                    dataType : "json",
+                    success : function(json) {
+                        if (json.length != 0) {
+                            globalFotoArticulo.src = json[0]['imagessrc']
+                        } else {
+                            globalFotoArticulo.src = "../../imagenes/sinfoto.png"
+                        }
+                    },
+                })
                 globalPrecioVenta.value = precioArticulo;
                 globalPrecioArgen = precioArgentina;
                 modalArticulos.style.display = "none";

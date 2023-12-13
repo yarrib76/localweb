@@ -25,11 +25,16 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <img id="fotoArticulo" src="../../imagenes/sinfoto.png" width="100" height="100">
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </div>
                                         <div class="col-md-4">
                                             <button class="btn btn-primary" onclick="cargoModalArticulos()"><i class="fas fa-search"></i></button>
-                                            <button>Buscar</button>
+                                            <button onclick="busquedaManualArt()">Buscar</button>
                                         </div>
                                     </section>
                                 </td>
@@ -48,8 +53,11 @@
                                                 <select id="select_descuento" class="form-control">
                                                 <option value="0">0</option>
                                                 <option value="0.9">10</option>
+                                                <option value="0.85">15</option>
                                                 <option value="0.8">20</option>
+                                                <option value="0.75">25</option>
                                                 <option value="0.7">30</option>
+                                                <option value="0.65">35</option>
                                                 <option value="0.6">40</option>
                                                 <option value="0.5">50</option>
                                                 <option value="0">100</option>
@@ -178,6 +186,8 @@
     var inputCorreo = document.getElementById('correo');
     var inputTotal_correo = document.getElementById('total_correo');
     var chkBoxListoEnvio = document.getElementById('chkBoxListoEnvio');
+    var globalFotoArticulo = document.getElementById('fotoArticulo');
+
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
         recargaPagina()
@@ -199,6 +209,7 @@
             modalFactura.style.display = "none";
             location.reload();
         }
+        globalNroArticulo.focus()
         getNroFactura();
     }
 
@@ -206,6 +217,12 @@
         if (event.key === 'Enter') {
             // Llama a la función dek boton Agrrgar
             btnAgregar();
+        }
+    });
+
+    globalNroArticulo.addEventListener('keypress', function (evt) {
+        if ( this.value.length > 1 && this.value.length == 13){
+            busquedaManualArt();
         }
     });
 
@@ -248,6 +265,7 @@
             }
             refreshTabulator();
             limpiezaCorreo();
+            globalNroArticulo.focus()
         } else {alert('Stock Insuficiente!!!!')}
 
     }
@@ -533,6 +551,45 @@
 
             }
         })
+    }
+
+    function busquedaManualArt(){
+        $.ajax({
+            url: '/getArticulos?nroArticulo=' + globalNroArticulo.value + '&&botonManual=true',
+            method: 'get',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (json){
+                globalNroArticulo.value = json[0]['Articulo']
+                globalDetalle.value = json[0]['Detalle']
+                globalStock.value = json[0]['Cantidad']
+            },
+            error: function(xhr, status, error){
+            }
+        })
+        $.ajax({
+            url: "/getPrecio?nroArticulo=" + globalNroArticulo.value,
+            dataType: "json",
+            async: false,
+            success: function(json){
+                globalPrecioVenta.value = (json[0]['PrecioVenta']);
+                globalPrecioArgen = (json[0]['PrecioArgen']);
+            },
+        })
+        $.ajax({
+            url: 'api/fotoarticulo?nroArticulo=' + globalNroArticulo.value,
+            dataType : "json",
+            success : function(json) {
+                if (json.length != 0) {
+                    globalFotoArticulo.src = json[0]['imagessrc']
+                } else {
+                    globalFotoArticulo.src = "../../imagenes/sinfoto.png"
+                }
+            },
+        })
+        globalCantidad.value = 1;
+        globalCantidad.focus();
+        globalBtnAgregar.disabled = false
     }
 </script>
 
