@@ -599,6 +599,13 @@
     function imprimir(){
         window.jsPDF = window.jspdf.jsPDF;
 
+        var fechaHoraActual = new Date();
+        // Obtener la fecha actual
+        var fechaActual = fechaHoraActual.toLocaleDateString();
+        // Obtener la hora actual
+        var horaActual = fechaHoraActual.toLocaleTimeString();
+
+
         var columns = Object.keys(datosFactura[0]);
 
         // Definir el orden y los campos que deseas mostrar
@@ -616,9 +623,10 @@
 
 
         // Título en la parte superior
-        var topTitle = "Orden#: " + document.getElementById('nroFactura').value
+        var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
-        doc.text(topTitle, 105, topTitleY, { align: "center" });
+        doc.setFontSize(12);
+        doc.text(topTitle, 105, topTitleY, { align: "right" });
 
         /* Título en la parte inferior
         var bottomTitle = "Título en la parte inferior";
@@ -644,19 +652,21 @@
         } else {
             var bottomTitle = "Total: " + globalTotal
         }
+        doc.setFontSize(12);
         var bottomTitleY = finalY + 10;
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
 
         // Agregar otro texto debajo del título en la parte inferior
         if(inputCorreo.value != ""){
+            // Define el tamaño de la fuente antes de agregar el texto
+            doc.setFontSize(12);
             var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
             var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
-            doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom", fontSize: 7 });
+            doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom"});
         }
 
-
-        doc.save('archivo.pdf');
+        doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }
 </script>
 

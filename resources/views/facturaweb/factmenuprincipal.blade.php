@@ -20,14 +20,13 @@
 @stop
 
 @section('extra-javascript')
-    <!-- <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
-    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="../../js/jquery/jquery.min.js"></script>
     <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css" rel="stylesheet">
     <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
+    <script src="../../js/jspdf/jspdf.umd.min.js"></script>
+    <script src="../../js/jspdf/jspdf.plugin.autotable.min.js"></script>
 
     @include('facturaweb.factura')
     @include('facturaweb.listararticulos')
