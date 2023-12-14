@@ -104,11 +104,13 @@
                                     <div>
                                         <input type="number" id="correo" placeholder="Correo" style="width: 80px">
                                         <input type="number" id="total_correo" placeholder="Total" style="width: 80px">
-                                        <label style="font-size: 15px"> <input type="checkbox" name="chkBoxPedido">Pedido</label>
+                                        <!--PEDIDOS-->
+                                        <label style="font-size: 15px"> <input type="checkbox" id="chkBoxPedido">Pedido</label>
                                         <h4>NroPedido</h4>
-                                        <input type="number" name="NroPedido" style="width: 70px">
-                                        <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                        <input type="number" id="NroPedido" style="width: 70px">
+                                        <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio">Listo Para Envio</label>
+                                        <!--PEDIDO-->
                                         <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
@@ -188,12 +190,20 @@
     var chkBoxListoEnvio = document.getElementById('chkBoxListoEnvio');
     var globalFotoArticulo = document.getElementById('fotoArticulo');
 
+    /*PEDIDOS*/
+    var chkBoxPedido = document.getElementById('chkBoxPedido');
+    var chkBoxListoEnvio = document.getElementById('chkBoxListoEnvio');
+    var inputNroPedido = document.getElementById('NroPedido');
+    var btnBuscarPedido = document.getElementById('btnBuscarPedido');
+    /*PEDIDOS*/
+
     //Ejecuta cuando carga la pagina
     $(document).ready ( function(){
         recargaPagina()
         limpiezaVentanas()
         cargoComboVendedoras()
         cargoComboTipoPagos()
+        limpiezaPedidos()
     });
     function callFactura(){
         var modalFactura = document.getElementById('myModalFactura');
@@ -212,19 +222,6 @@
         globalNroArticulo.focus()
         getNroFactura();
     }
-
-    globalCantidad.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            // Llama a la función dek boton Agrrgar
-            btnAgregar();
-        }
-    });
-
-    globalNroArticulo.addEventListener('keypress', function (evt) {
-        if ( this.value.length > 1 && this.value.length == 13){
-            busquedaManualArt();
-        }
-    });
 
     function btnAgregar(){
         estado = 0
@@ -260,7 +257,6 @@
                 datosFactura.push(nuevoAticulo);
                 globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
                 document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
-                console.log(datosFactura)
                 limpiezaVentanas();
             }
             refreshTabulator();
@@ -480,6 +476,14 @@
         checkboxDescuento.checked = false
         listDescuento.disabled = true
     }
+
+    function limpiezaPedidos(){
+        inputNroPedido.value = "";
+        inputNroPedido.disabled = true;
+        btnBuscarPedido.disabled = true;
+    }
+
+    /*LISTENER'S*/
     // Agregar un listener para el evento change
     checkboxDescuento.addEventListener("change", function(event) {
         limpiezaCorreo();
@@ -507,6 +511,27 @@
             inputTotal_correo.value = parseFloat(totalSinDescuento).toFixed(2)
         }
     })
+    globalCantidad.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            // Llama a la función dek boton Agrrgar
+            btnAgregar();
+        }
+    });
+
+    globalNroArticulo.addEventListener('keypress', function (evt) {
+        if ( this.value.length > 1 && this.value.length == 13){
+            busquedaManualArt();
+        }
+    });
+
+    chkBoxPedido.addEventListener("change", function(event) {
+        if (event.target.checked) {
+            btnBuscarPedido.disabled = false;
+        } else {
+            limpiezaPedidos()
+        }
+    });
+    /*LISTENER'S*/
 
     function facturar(){
         if (document.getElementById('totalApagar').value != 0){

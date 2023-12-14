@@ -31,7 +31,7 @@
     @include('facturaweb.factura')
     @include('facturaweb.listararticulos')
     @include('facturaweb.listaclientes')
-
+    @include('facturaweb.listapedidos')
     <script>
 
     </script>

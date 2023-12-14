@@ -164,4 +164,26 @@ class ControllerFacturaWeb extends Controller
     {
         DB::select('UPDATE samira.nrofactura SET NroFactura = NroFactura + 1' );
     }
+
+    /*PEDIDOS*/
+    public function getPedidos()
+    {
+        DB::statement("SET lc_time_names = 'es_ES'");
+        $pedidos = DB::select('SELECT control.nropedido, CONCAT (cli.nombre, "," , cli.apellido) as Cliente, control.ordenWeb, control.total,
+                            DATE_FORMAT(control.fecha, "%d de %M %Y") AS fecha, control.vendedora, control.id_cliente
+                            FROM samira.controlpedidos as control
+                            inner join samira.clientes cli ON control.id_cliente = cli.id_clientes
+                            WHERE estado = 1
+                            ORDER BY control.nropedido DESC;');
+        return Response::json($pedidos);
+    }
+
+    public function getPedidosArticulos(){
+        $nroPedido = Input::get('nroPedido');
+        $pedidosArticulos = DB::select('select * from samira.pedidotemp
+                                        where nroPedido = "'.$nroPedido.'"');
+        return Response::json($pedidosArticulos);
+    }
+
+    /*PEDIDOS*/
 }

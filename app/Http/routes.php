@@ -294,6 +294,8 @@ Route::get('/getPrecio', 'FacturaWeb\ControllerFacturaWeb@precioArticulo');
 Route::get('/listaVendedoras', 'FacturaWeb\ControllerFacturaWeb@listaVendedoras');
 Route::get('/listaTipoPagos', 'FacturaWeb\ControllerFacturaWeb@listaTipoPagos');
 Route::get('/getClientes', 'FacturaWeb\ControllerFacturaWeb@getClientes');
+Route::get('/getPedidos', 'FacturaWeb\ControllerFacturaWeb@getPedidos');
+Route::get('/getPedidosArticulos', 'FacturaWeb\ControllerFacturaWeb@getPedidosArticulos');
 Route::post('/crearfactura', 'FacturaWeb\ControllerFacturaWeb@facturar');
 Route::get('/getNroFactura', 'FacturaWeb\ControllerFacturaWeb@getNroFactura');
 
