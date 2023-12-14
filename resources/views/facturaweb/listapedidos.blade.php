@@ -88,6 +88,7 @@
                 globalCliente.value  = cell.getRow().getData()['Cliente'];
                 globalClientId = cell.getRow().getData()['id_cliente'];
                 globalTotal = cell.getRow().getData()['total'];
+                inputNroPedido.value = cell.getRow().getData()['nropedido'];
                 document.getElementById('totalApagar').value = cell.getRow().getData()['total'];
                 // getPrecioArticulo(cell.getRow().getData()['Articulo']);
                 $.ajax({
@@ -95,6 +96,7 @@
                     dataType: "json",
                     async: false,
                     success: function(json){
+                        console.log(json)
                         Array.prototype.push.apply(datosFactura, json);
                         refreshTabulator();
                     },

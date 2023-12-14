@@ -109,7 +109,7 @@
                                         <h4>NroPedido</h4>
                                         <input type="number" id="NroPedido" style="width: 70px">
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                        <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio">Listo Para Envio</label>
+                                        <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio" disabled="true">Listo Para Envio</label>
                                         <!--PEDIDO-->
                                         <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
@@ -232,8 +232,8 @@
                         datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
                         datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
                         datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + (globalPrecioArgen * parseFloat(globalCantidad.value));
-                        globalTotal += parseFloat(globalPrecioVenta.value) * parseFloat(globalCantidad.value).toFixed(2);
-                        document.getElementById('totalApagar').value = globalTotal;
+                        globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
+                        document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
                         limpiezaVentanas();
                     } else {alert('Stock Insuficientessss!!!!')}
 
@@ -252,7 +252,7 @@
                     Vendedora: glocalVendedora.value,
                     PrecioArgen: globalPrecioArgen,
                     Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
-                    cajera: '{{$nameCajera}}',
+                    Cajera: '{{$nameCajera}}',
                 };
                 datosFactura.push(nuevoAticulo);
                 globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
@@ -448,7 +448,6 @@
         checkboxDescuento.checked = false
         listDescuento.disabled = true
         $("#select_descuento").val(0);
-        chkBoxListoEnvio.disabled = true
     }
 
     function limpiezaTotal(){
@@ -463,6 +462,11 @@
         listDescuento.disabled = true
         globalClientId = 1 //Se asigna valor de 1 ya que pertenece al cliente Ninguno,Ninguno
         globalCliente.value = ""
+        globalTotal = 0;
+        $("#select_descuento").val(0);
+        chkBoxListoEnvio.disabled = true
+        document.getElementById('totalApagar').value = 0
+        datosFactura = [];
     }
 
     function limpiezaCorreo(){
@@ -481,6 +485,7 @@
         inputNroPedido.value = "";
         inputNroPedido.disabled = true;
         btnBuscarPedido.disabled = true;
+        chkBoxListoEnvio.checked = false;
     }
 
     /*LISTENER'S*/
@@ -527,8 +532,16 @@
     chkBoxPedido.addEventListener("change", function(event) {
         if (event.target.checked) {
             btnBuscarPedido.disabled = false;
+            chkBoxListoEnvio.disabled = false;
+            limpiezaTotal()
+            limpiezaCorreo()
+            refreshTabulator()
+            chkBoxListoEnvio.disabled = false;
         } else {
             limpiezaPedidos()
+            limpiezaTotal()
+            limpiezaCorreo()
+            refreshTabulator()
         }
     });
     /*LISTENER'S*/
@@ -538,6 +551,17 @@
             if (confirm('Confirma la Factura?')){
                 var listaArticulos =  JSON.stringify(datosFactura)
                 var tipo_pago_id  = document.getElementById('tipo_pago').value
+                var esPedido;
+                var listoParaEnvio;
+                var nroPedido;
+                if (chkBoxPedido.checked){
+                    esPedido = "SI"
+                    nroPedido = inputNroPedido.value
+                    if (chkBoxListoEnvio.checked){
+                        listoParaEnvio = 1
+                    } else listoParaEnvio = 0
+                }else esPedido = "NO"
+
                 var datosCombinados = {
                     articulos: listaArticulos,
                     cliente_id: globalClientId,
@@ -549,19 +573,22 @@
                     envio: document.getElementById('correo').value,
                     totalEnvio: document.getElementById('total_correo').value,
                     vendedora: glocalVendedora.value,
+                    esPedido: esPedido,
+                    listoParaEnvio: listoParaEnvio,
+                    nroPedido: nroPedido,
                 };
                 $.ajax({
                     url: "crearfactura",
                     method: 'post',
                     data: datosCombinados,
-                    async: false,
                     success: function (json) {
-                        alert('La venta se realizo con correctamente')
                     },
                     error: function(xhr, status, error) {
                         // Manejar errores de la solicitud aquí
+                        alert('Ha ocurrido un error consultar con el administrador')
                     }
                 });
+                alert('La venta se realizo con correctamente')
                 location.reload();
             }
         }else (alert('No se puede facturar con valor Total en 0'))

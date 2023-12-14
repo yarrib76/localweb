@@ -5,6 +5,7 @@ namespace Donatella\Http\Controllers\FacturaWeb;
 use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
 use Donatella\Models\Articulos;
+use Donatella\Models\ControlPedidos;
 use Donatella\Models\FacturacionHist;
 use Donatella\Models\Facturas;
 use Donatella\Models\Tipo_Pagos;
@@ -86,17 +87,22 @@ class ControllerFacturaWeb extends Controller
         $gananciaTotal = 0.0;
         $precioArgentina = 0;
         $vendedora = Input::get('vendedora');
+        $listoParaEnvio = Input::get('listoParaEnvio');
+        $nroPedido = Input::get('nroPedido');
+        $esPedido = Input::get('esPedido');
 
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
             $precioArgentina += $articuloFactura->PrecioArgen;
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
-        //    dump($articulosFactura);
         }
         $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina);
         $this->acturlizarNroFactura();
-        // dump($gananciaTotal);
+        if($esPedido = "SI"){
+            $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
+        }
+        // dump($vendedora);
         // dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
     }
 
@@ -133,7 +139,7 @@ class ControllerFacturaWeb extends Controller
             'PrecioUnitario' => $articuloFactura->PrecioUnitario,
             'PrecioVenta' => $articuloFactura->PrecioVenta,
             'Ganancia' => $articuloFactura->Ganancia,
-            'Cajera' => $articuloFactura->cajera,
+            'Cajera' => $articuloFactura->Cajera,
             'Vendedora' => $vendedora,
             'Fecha' => $fecha,
         ]);
@@ -185,5 +191,14 @@ class ControllerFacturaWeb extends Controller
         return Response::json($pedidosArticulos);
     }
 
+    public function actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido)
+    {
+        $controlPedido = ControlPedidos::where('nroPedido', '=',$nroPedido);
+        $controlPedido->update([
+            'nrofactura' => $nroFactura,
+            'Estado' => 0,
+            'empaquetado' => $listoParaEnvio,
+        ]);
+    }
     /*PEDIDOS*/
 }
