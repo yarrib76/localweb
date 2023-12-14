@@ -111,7 +111,7 @@
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio">Listo Para Envio</label>
                                         <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
-                                        <button class="btn btn-primary"><i class="fas fa-print"></i></button>
+                                        <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
 
                                     </div>
                                 </td>
@@ -500,8 +500,12 @@
 
     inputCorreo.addEventListener('keyup', function(event){
         if (checkboxDescuento.checked) {
-            inputTotal_correo.value = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
-        } else {inputTotal_correo.value = parseFloat(globalTotal) + parseFloat(inputCorreo.value)}
+            totalConDescuento = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
+            inputTotal_correo.value = parseFloat(totalConDescuento).toFixed(2)
+        } else {
+            totalSinDescuento = parseFloat(globalTotal) + parseFloat(inputCorreo.value)
+            inputTotal_correo.value = parseFloat(totalSinDescuento).toFixed(2)
+        }
     })
 
     function facturar(){
@@ -590,6 +594,69 @@
         globalCantidad.value = 1;
         globalCantidad.focus();
         globalBtnAgregar.disabled = false
+    }
+
+    function imprimir(){
+        window.jsPDF = window.jspdf.jsPDF;
+
+        var columns = Object.keys(datosFactura[0]);
+
+        // Definir el orden y los campos que deseas mostrar
+        var fieldsToShow = ['Cantidad', 'Detalle', 'PrecioUnitario', 'PrecioVenta'];
+
+        var bodyData = datosFactura.map(function(row) {
+            var rowData = [];
+            fieldsToShow.forEach(function(field) {
+                rowData.push(row[field]);
+            });
+            return rowData;
+        });
+
+        var doc = new jsPDF();
+
+
+        // Título en la parte superior
+        var topTitle = "Orden#: " + document.getElementById('nroFactura').value
+        var topTitleY = 15;
+        doc.text(topTitle, 105, topTitleY, { align: "center" });
+
+        /* Título en la parte inferior
+        var bottomTitle = "Título en la parte inferior";
+        var bottomTitleY = doc.internal.pageSize.height - 10;
+        doc.text(bottomTitle, 105, bottomTitleY, { align: "center" });
+        */
+
+        doc.autoTable({
+            head: [fieldsToShow],
+            body: bodyData,
+            startY: topTitleY + 10, // Comenzar después del título superior
+            margin: { top: 25, bottom: 20 } // Ajuste de márgenes
+        });
+
+        // Obtener la altura del contenido de la tabla
+        var finalY = doc.autoTable.previous.finalY;
+
+        // Título en la parte inferior al final de la tabla
+        if (textDescuento.value != 0){
+            var bottomTitle = "Total: " + globalTotal + " " +
+                    document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text +
+                    "%" + " de Descuento = " + document.getElementById('totalDescuento').value;
+        } else {
+            var bottomTitle = "Total: " + globalTotal
+        }
+        var bottomTitleY = finalY + 10;
+        doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
+
+
+        // Agregar otro texto debajo del título en la parte inferior
+        if(inputCorreo.value != ""){
+            var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
+            var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
+            doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom", fontSize: 7 });
+        }
+
+
+        doc.save('archivo.pdf');
     }
 </script>
 

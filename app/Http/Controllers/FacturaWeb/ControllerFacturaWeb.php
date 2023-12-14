@@ -84,15 +84,17 @@ class ControllerFacturaWeb extends Controller
         $envio = Input::get('envio');
         $totalEnvio = Input::get('totalEnvio');
         $gananciaTotal = 0.0;
+        $precioArgentina = 0;
         $vendedora = Input::get('vendedora');
 
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
+            $precioArgentina += $articuloFactura->PrecioArgen;
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
         //    dump($articulosFactura);
         }
-        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id);
+        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina);
         $this->acturlizarNroFactura();
         // dump($gananciaTotal);
         // dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
@@ -138,8 +140,11 @@ class ControllerFacturaWeb extends Controller
     }
 
 
-    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id)
+    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina)
     {
+        if ($porcentajeDescuento > 0){
+            $gananciaTotal = $descuento - $precioArgentina;
+        }
         FacturacionHist::create([
             'NroFactura' => $nroFactura,
             'Total' => $total,
@@ -147,6 +152,7 @@ class ControllerFacturaWeb extends Controller
             'Descuento' => $descuento,
             'Ganancia' => $gananciaTotal,
             'Fecha' => $fecha,
+            'Estado' => 0,
             'id_clientes' => $cliente_id,
             'envio' => $envio,
             'totalEnvio' => $totalEnvio,

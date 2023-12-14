@@ -19,14 +19,22 @@
 
 @section('extra-javascript')
 
-    <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css" rel="stylesheet">
-    <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    </head>
+    <body>
+    <button onclick="generatePDF()">Generate PDF</button>
 
     <script>
-        var doc = new jsPDF();
+        window.jsPDF = window.jspdf.jsPDF;
+        function generatePDF() {
+            // Create a new jsPDF instance
+            const doc = new jsPDF();
+
+            // Add content to the PDF
+            doc.text('Hello, World!', 10, 10);
+
+            // Save the PDF
+            doc.save('sample.pdf');
+        }
     </script>
-    @include('test.tabulatortest')
 @stop

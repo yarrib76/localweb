@@ -27,7 +27,7 @@ class Test extends Controller
     {
         //Priemer Commit FacturaWeb
 
-        return view('test.principal');
+        return view('test.pdf');
         $path = 'public/export/facturas/';
         //Elimino todos los archivos del directorio
         $this->eliminarFacturas($path);
