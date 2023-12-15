@@ -112,7 +112,6 @@ class ControllerFacturaWeb extends Controller
     }
 
     public function autorizacionFacturaWeb($clienteDireccionIP){
-        dd($clienteDireccionIP);
         $autorizacion = DB::select('select * from samira.autorizacion_facturaweb
                                     where ip_autorizada = "'.$clienteDireccionIP.'"');
         if (!empty($autorizacion)){
