@@ -246,7 +246,7 @@
                 var nuevoAticulo = {
                     Articulo: globalNroArticulo.value,
                     Detalle: globalDetalle.value,
-                    Cantidad: globalCantidad.value,
+                    Cantid: globalCantidad.value,
                     PrecioUnitario: globalPrecioVenta.value,
                     PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
                     Vendedora: glocalVendedora.value,
@@ -660,6 +660,9 @@
 
         var columns = Object.keys(datosFactura[0]);
 
+        // Definir los nombres de las columnas personalizados
+        var customHeaders = ['Cant', 'Detalle', 'Unidad', 'Total'];
+
         // Definir el orden y los campos que deseas mostrar
         var fieldsToShow = ['Cantidad', 'Detalle', 'PrecioUnitario', 'PrecioVenta'];
 
@@ -677,7 +680,7 @@
         // Título en la parte superior
         var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text(topTitle, 105, topTitleY, { align: "right" });
 
         /* Título en la parte inferior
@@ -687,10 +690,28 @@
         */
 
         doc.autoTable({
-            head: [fieldsToShow],
+            head: [customHeaders],
             body: bodyData,
             startY: topTitleY + 10, // Comenzar después del título superior
-            margin: { top: 25, bottom: 20 } // Ajuste de márgenes
+            margin: { top: 25, bottom: 20 },
+            styles: {
+                fontSize: 8, // Tamaño de letra
+                cellPadding: 2 // Espaciado interno de las celdas
+            },
+            columnStyles: {
+                0: { // Estilo de la primera columna
+                    columnWidth: 15 // Ancho de la primera columna
+                },
+                1: { // Estilo de la segunda columna
+                    columnWidth: 50 // Ancho de la segunda columna
+                },
+                2: { // Estilo de la tercera columna
+                    columnWidth: 15 // Ancho de la tercera columna
+                },
+                3: { // Estilo de la cuarta columna
+                    columnWidth: 15 // Ancho de la cuarta columna
+                }// Ajuste de márgenes
+            }
         });
 
         // Obtener la altura del contenido de la tabla
@@ -704,7 +725,7 @@
         } else {
             var bottomTitle = "Total: " + globalTotal
         }
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         var bottomTitleY = finalY + 10;
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
