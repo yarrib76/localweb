@@ -661,7 +661,7 @@
         var columns = Object.keys(datosFactura[0]);
 
         // Definir los nombres de las columnas personalizados
-        var customHeaders = ['Cant', 'Detalle', 'Unidad', 'Total'];
+        var customHeaders = ['Cant', 'Detalle', 'Uni.', 'Total'];
 
         // Definir el orden y los campos que deseas mostrar
         var fieldsToShow = ['Cantidad', 'Detalle', 'PrecioUnitario', 'PrecioVenta'];
@@ -700,13 +700,13 @@
             },
             columnStyles: {
                 0: { // Estilo de la primera columna
-                    columnWidth: 15 // Ancho de la primera columna
+                    columnWidth: 7 // Ancho de la primera columna
                 },
                 1: { // Estilo de la segunda columna
-                    columnWidth: 50 // Ancho de la segunda columna
+                    columnWidth: 40 // Ancho de la segunda columna
                 },
                 2: { // Estilo de la tercera columna
-                    columnWidth: 15 // Ancho de la tercera columna
+                    columnWidth: 10 // Ancho de la tercera columna
                 },
                 3: { // Estilo de la cuarta columna
                     columnWidth: 15 // Ancho de la cuarta columna
