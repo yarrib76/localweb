@@ -680,7 +680,7 @@
         // Título en la parte superior
         var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
-        doc.setFontSize(10);
+        doc.setFontSize(7);
         doc.text(topTitle, 105, topTitleY, { align: "right" });
 
         /* Título en la parte inferior
@@ -695,7 +695,7 @@
             startY: topTitleY + 10, // Comenzar después del título superior
             margin: { top: 25, bottom: 20 },
             styles: {
-                fontSize: 8, // Tamaño de letra
+                fontSize: 10, // Tamaño de letra
                 cellPadding: 2 // Espaciado interno de las celdas
             },
             columnStyles: {
@@ -703,10 +703,10 @@
                     columnWidth: 7 // Ancho de la primera columna
                 },
                 1: { // Estilo de la segunda columna
-                    columnWidth: 40 // Ancho de la segunda columna
+                    columnWidth: 30 // Ancho de la segunda columna
                 },
                 2: { // Estilo de la tercera columna
-                    columnWidth: 10 // Ancho de la tercera columna
+                    columnWidth: 15 // Ancho de la tercera columna
                 },
                 3: { // Estilo de la cuarta columna
                     columnWidth: 15 // Ancho de la cuarta columna
