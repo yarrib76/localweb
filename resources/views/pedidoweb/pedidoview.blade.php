@@ -6,10 +6,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-cog">Menu Facturacion</i></div>
                         <div class="panel-body">
-                            @if ($control == 'Autorizado')
-                                <button onclick="callFactura()">Nueva Factura</button>
-                            @endif
-                            <button onclick="window.location.href = '/pedidoWeb'">Pedidos</button>
+                            <button onclick="callFactura()">Nueva Factura</button>
                         </div>
                     </div>
                 </div>
@@ -31,12 +28,14 @@
     <script src="../../js/jspdf/jspdf.umd.min.js"></script>
     <script src="../../js/jspdf/jspdf.plugin.autotable.min.js"></script>
 
-    @include('facturaweb.factura')
+    @include('pedidoweb.pedido')
     @include('facturaweb.listararticulos')
     @include('facturaweb.listaclientes')
     @include('facturaweb.listapedidos')
     <script>
-
+        $(document).ready ( function(){
+            callPedido()
+        });
     </script>
 
 @stop

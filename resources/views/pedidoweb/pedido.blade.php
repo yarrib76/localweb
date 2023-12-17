@@ -1,11 +1,11 @@
-<div id="myModalFactura" class="modal">
+<div id="myModalPedido" class="modal">
     <!-- Modal Ingreso -->
-    <div id="modal-content-factura" class="modal-content">
-        <span id="close-factura" class="close">&times;</span>
+    <div id="modal-content-pedido" class="modal-content">
+        <span id="close-pedido" class="close">&times;</span>
         <div class="row">
             <div class="col-sm-30">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-calculator"> Factura</i></div>
+                    <div class="panel-heading"><i class="fa fa-calculator"> Pedidos</i></div>
                         <table class="table table-striped table-bordered records_list">
                             <tr>
                                 <td style="width: 100px;">
@@ -70,17 +70,13 @@
                                 </td>
                                 <td>
                                     <di>
-                                        <h4>Factura</h4>
+                                        <h4>Pedido</h4>
                                         <input type="number" id="nroFactura" disabled="true" style="width: 120px">
                                     </di>
 
                                     <div>
                                         <h4>Vendedora</h4>
                                         <select id="vendedora" class="form-control"></select>
-                                    </div>
-                                    <div>
-                                        <h4>Tipo Pago</h4>
-                                        <select id="tipo_pago" class="form-control"></select>
                                     </div>
                                 </td>
                                 <td>
@@ -94,26 +90,22 @@
                         <table class="table table-striped table-bordered records_list">
                             <tr>
                                 <td style="width: 1020px;">
-                                   <div id="table-arti-factura"></div>
-                                    <div>
-
-                                    </div>
-
+                                   <div id="table-arti-pedido"></div>
                                 </td>
                                 <td>
                                     <div>
-                                        <input type="number" id="correo" placeholder="Correo" style="width: 80px">
-                                        <input type="number" id="total_correo" placeholder="Total" style="width: 80px">
                                         <!--PEDIDOS-->
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxPedido">Pedido</label>
                                         <h4>NroPedido</h4>
                                         <input type="number" id="NroPedido" style="width: 70px">
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                        <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio" disabled="true">Listo Para Envio</label>
                                         <!--PEDIDO-->
-                                        <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
+                                        <button class="btn btn-secondary" onclick="nuevoPedido()">Nuevo</button>
+                                        <button class="btn btn-secondary" onclick="terminarPedido()">Terminar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
+                                        <h5>#Orden Web</h5>
+                                        <input type="number" id="ordenWeb" style="width: 70px">
 
                                     </div>
                                 </td>
@@ -185,10 +177,9 @@
     var globalDescuento;
     var globalPrecioArgen;
     var datosFactura = [];
-    var inputCorreo = document.getElementById('correo');
-    var inputTotal_correo = document.getElementById('total_correo');
-    var chkBoxListoEnvio = document.getElementById('chkBoxListoEnvio');
     var globalFotoArticulo = document.getElementById('fotoArticulo');
+    var globalOrdenWeb = document.getElementById('ordenWeb');
+    var globalNroPedido = document.getElementById('nroFactura');
 
     /*PEDIDOS*/
     var chkBoxPedido = document.getElementById('chkBoxPedido');
@@ -205,22 +196,22 @@
         cargoComboTipoPagos()
         limpiezaPedidos()
     });
-    function callFactura(){
-        var modalFactura = document.getElementById('myModalFactura');
+    function callPedido(){
+        var modalPedido = document.getElementById('myModalPedido');
 
         // Get the <span> element that closes the modal
-        var spanFactura = document.getElementById("close-factura");
+        var spanPedido = document.getElementById("close-pedido");
 
         // When the user clicks the button, open the modal
-        modalFactura.style.display = "block";
+        modalPedido.style.display = "block";
 
         // When the user clicks on <span> (x), close the modal
-        spanFactura.onclick = function() {
-            modalFactura.style.display = "none";
-            location.reload();
+        spanPedido.onclick = function() {
+            modalPedido.style.display = "none";
+            window.location.href = '/facturaweb';
         }
         globalNroArticulo.focus()
-        getNroFactura();
+        // getNroPedido();
     }
 
     function btnAgregar(){
@@ -260,7 +251,6 @@
                 limpiezaVentanas();
             }
             refreshTabulator();
-            limpiezaCorreo();
             globalNroArticulo.focus()
         } else {alert('Stock Insuficiente!!!!')}
 
@@ -372,7 +362,7 @@
         return true; //must return a boolean, true if it passes the filter.
     }
 
-    var tableFactura = new Tabulator("#table-arti-factura", {
+    var tablePedido = new Tabulator("#table-arti-pedido", {
         height: "550px",
         // initialSort:[
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
@@ -394,7 +384,7 @@
     });
 
     function refreshTabulator(){
-        tableFactura.setData(datosFactura);
+        tablePedido.setData(datosFactura);
     }
 
     function cargoComboVendedoras(){
@@ -447,6 +437,7 @@
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
         listDescuento.disabled = true
+        globalOrdenWeb.value = ""
         $("#select_descuento").val(0);
     }
 
@@ -464,14 +455,8 @@
         globalCliente.value = ""
         globalTotal = 0;
         $("#select_descuento").val(0);
-        chkBoxListoEnvio.disabled = true
         document.getElementById('totalApagar').value = 0
         datosFactura = [];
-    }
-
-    function limpiezaCorreo(){
-        inputCorreo.value = ""
-        inputTotal_correo.value = ""
     }
 
     function limpiezaDescuentos(){
@@ -485,16 +470,15 @@
         inputNroPedido.value = "";
         inputNroPedido.disabled = true;
         btnBuscarPedido.disabled = true;
-        chkBoxListoEnvio.checked = false;
     }
 
     function limpiezaDatosTabulator(){
         datosFactura = [];
     }
+
     /*LISTENER'S*/
     // Agregar un listener para el evento change
     checkboxDescuento.addEventListener("change", function(event) {
-        limpiezaCorreo();
         if (event.target.checked) {
             listDescuento.disabled = false
         } else {
@@ -510,15 +494,6 @@
         textDescuento.value = parseFloat(resultado).toFixed(2)
     })
 
-    inputCorreo.addEventListener('keyup', function(event){
-        if (checkboxDescuento.checked) {
-            totalConDescuento = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
-            inputTotal_correo.value = parseFloat(totalConDescuento).toFixed(2)
-        } else {
-            totalSinDescuento = parseFloat(globalTotal) + parseFloat(inputCorreo.value)
-            inputTotal_correo.value = parseFloat(totalSinDescuento).toFixed(2)
-        }
-    })
     globalCantidad.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             // Llama a la función dek boton Agrrgar
@@ -535,53 +510,30 @@
     chkBoxPedido.addEventListener("change", function(event) {
         if (event.target.checked) {
             btnBuscarPedido.disabled = false;
-            chkBoxListoEnvio.disabled = false;
             limpiezaTotal()
-            limpiezaCorreo()
             refreshTabulator()
-            chkBoxListoEnvio.disabled = false;
         } else {
             limpiezaPedidos()
             limpiezaTotal()
-            limpiezaCorreo()
             refreshTabulator()
         }
     });
     /*LISTENER'S*/
 
-    function facturar(){
+    function terminarPedido(){
         if (document.getElementById('totalApagar').value != 0){
-            if (confirm('Confirma la Factura?')){
+            if (confirm('Finalizar el Pedido?')){
                 var listaArticulos =  JSON.stringify(datosFactura)
-                var tipo_pago_id  = document.getElementById('tipo_pago').value
-                var esPedido;
-                var listoParaEnvio;
-                var nroPedido;
-                if (chkBoxPedido.checked){
-                    esPedido = "SI"
-                    nroPedido = inputNroPedido.value
-                    if (chkBoxListoEnvio.checked){
-                        listoParaEnvio = 1
-                    } else listoParaEnvio = 0
-                }else esPedido = "NO"
-
                 var datosCombinados = {
                     articulos: listaArticulos,
                     cliente_id: globalClientId,
-                    tipo_pago_id: tipo_pago_id,
-                    nroFactura: document.getElementById('nroFactura').value,
+                    nroPedido: globalNroPedido.value,
                     total: document.getElementById('totalApagar').value,
-                    descuento: document.getElementById('totalDescuento').value,
-                    porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
-                    envio: document.getElementById('correo').value,
-                    totalEnvio: document.getElementById('total_correo').value,
                     vendedora: glocalVendedora.value,
-                    esPedido: esPedido,
-                    listoParaEnvio: listoParaEnvio,
-                    nroPedido: nroPedido,
+                    ordeWeb: globalOrdenWeb.value,
                 };
                 $.ajax({
-                    url: "crearfactura",
+                    url: "crearPedido",
                     method: 'post',
                     data: datosCombinados,
                     success: function (json) {
@@ -591,20 +543,29 @@
                         alert('Ha ocurrido un error consultar con el administrador')
                     }
                 });
-                alert('La venta se realizo con correctamente')
-                location.reload();
+                alert('Pedido creado/modificado correctamente')
+                window.location.href = '/facturadorWeb';
+                // location.reload();
             }
         }else (alert('No se puede facturar con valor Total en 0'))
     }
 
-    function getNroFactura(){
+    function nuevoPedido(){
+        limpiezaVentanas()
+        limpiezaDescuentos()
+        limpiezaPedidos()
+        limpiezaTotal()
+        refreshTabulator()
+        getNroPedido()
+    }
+    function getNroPedido(){
         $.ajax({
-            url: 'getNroFactura',
+            url: 'api/getnumpedido',
             method: 'get',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (json){
-                document.getElementById('nroFactura').value = json[0]['NroFactura']
+                globalNroPedido.value = json['nroPedido']
             },
             error: function(xhr, status, error){
 
@@ -684,7 +645,7 @@
         var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
         doc.setFontSize(7);
-        doc.text(topTitle, 105, topTitleY, { align: "right" });
+        doc.text(topTitle, 15, topTitleY, { align: "left" });
 
         /* Título en la parte inferior
         var bottomTitle = "Título en la parte inferior";
@@ -728,7 +689,7 @@
         } else {
             var bottomTitle = "Total: " + globalTotal
         }
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         var bottomTitleY = finalY + 10;
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
@@ -736,7 +697,7 @@
         // Agregar otro texto debajo del título en la parte inferior
         if(inputCorreo.value != ""){
             // Define el tamaño de la fuente antes de agregar el texto
-            doc.setFontSize(12);
+            doc.setFontSize(8);
             var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
             var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
             doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom"});

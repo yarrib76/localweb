@@ -32,8 +32,10 @@ class ControllerFacturaWeb extends Controller
         $clienteDireccionIP = $request->ip();
         $auto = $this->autorizacionFacturaWeb($clienteDireccionIP);
         if ($auto){
-            return view('facturaweb.factmenuprincipal', compact('nameCajera'));
-        }else return view('partials.errors.noautorizado');
+            $control = 'Autorizado';
+        }else $control = 'NoAutorizado';
+
+        return view('facturaweb.factmenuprincipal', compact('nameCajera','control'));
     }
 
     public function getArticulos()
@@ -115,7 +117,8 @@ class ControllerFacturaWeb extends Controller
         $autorizacion = DB::select('select * from samira.autorizacion_facturaweb
                                     where ip_autorizada = "'.$clienteDireccionIP.'"');
 
-        return true;
+        /*Agregue esta linea para puentear la utorización en perido de prueba*/
+       // return true;
 
         if (!empty($autorizacion)){
             return true;

@@ -287,8 +287,8 @@ Route::get('/indexImport', 'CorreoArgentino\ImportSucFromCSV@indexImport');
 Route::post('/importCsv', 'CorreoArgentino\ImportSucFromCSV@importCsv');
 
 
-/*Facturas WEB*/
-Route::get('/facturaweb', 'FacturaWeb\ControllerFacturaWeb@view');
+/*Facturas y Pedidos WEB*/
+Route::get('/facturadorWeb', 'FacturaWeb\ControllerFacturaWeb@view');
 Route::get('/getArticulos', 'FacturaWeb\ControllerFacturaWeb@getArticulos');
 Route::get('/getPrecio', 'FacturaWeb\ControllerFacturaWeb@precioArticulo');
 Route::get('/listaVendedoras', 'FacturaWeb\ControllerFacturaWeb@listaVendedoras');
@@ -298,6 +298,9 @@ Route::get('/getPedidos', 'FacturaWeb\ControllerFacturaWeb@getPedidos');
 Route::get('/getPedidosArticulos', 'FacturaWeb\ControllerFacturaWeb@getPedidosArticulos');
 Route::post('/crearfactura', 'FacturaWeb\ControllerFacturaWeb@facturar');
 Route::get('/getNroFactura', 'FacturaWeb\ControllerFacturaWeb@getNroFactura');
+Route::get('/pedidoWeb','PedidosWeb\ControllerPedidoWeb@view');
+Route::post('/crearPedido', 'PedidosWeb\ControllerPedidoWeb@inPedido');
+
 
 Route::group(['prefix' => 'api'],
     function () {

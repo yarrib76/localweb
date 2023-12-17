@@ -88,15 +88,26 @@
                 globalCliente.value  = cell.getRow().getData()['Cliente'];
                 globalClientId = cell.getRow().getData()['id_cliente'];
                 globalTotal = cell.getRow().getData()['total'];
+                $("#vendedora").val(cell.getRow().getData()['vendedora']);
                 inputNroPedido.value = cell.getRow().getData()['nropedido'];
                 document.getElementById('totalApagar').value = cell.getRow().getData()['total'];
+                /*Verifico si existe la variable globalOrdenWeb ya que estoy utilizando listapedidos.blade.php tanto en la factura
+                como en los pedidos, por si existe la variable es porque estoy llamando a listapedidos desde un pedido y no una factura
+                 */
+                if (typeof globalOrdenWeb !== 'undefined') {
+                    globalOrdenWeb.value = cell.getRow().getData()['ordenWeb'];
+                }
+                /*Hago lo mismo que con globalOrdenWeb, necesito saber si tiene que poner un numero de Pedido o Factura*/
+                if (typeof globalNroPedido !== 'undefined') {
+                    globalNroPedido.value = cell.getRow().getData()['nropedido'];
+                }
                 // getPrecioArticulo(cell.getRow().getData()['Articulo']);
                 $.ajax({
                     url: "getPedidosArticulos?nroPedido=" + cell.getRow().getData()['nropedido'],
                     dataType: "json",
                     async: false,
                     success: function(json){
-                        console.log(json)
+                        limpiezaDatosTabulator()
                         Array.prototype.push.apply(datosFactura, json);
                         refreshTabulator();
                     },
