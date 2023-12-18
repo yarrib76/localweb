@@ -94,11 +94,8 @@
                         <table class="table table-striped table-bordered records_list">
                             <tr>
                                 <td style="width: 1020px;">
-                                   <div id="table-arti-factura"></div>
-                                    <div>
-
-                                    </div>
-
+                                    <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
+                                    <div id="table-arti-factura"></div>
                                 </td>
                                 <td>
                                     <div>
@@ -744,5 +741,9 @@
 
         doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }
+
+    $("#download-xlsx").click(function(){
+        tableFactura.download("xlsx", "data.xlsx", {sheetName:"ArticulosFactura"});
+    });
 </script>
 

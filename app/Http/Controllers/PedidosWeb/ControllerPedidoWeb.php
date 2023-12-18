@@ -35,6 +35,7 @@ class ControllerPedidoWeb extends Controller
         $cliente_id = Input::get('cliente_id');
         $ordenWeb = Input::get('ordeWeb');
         $nroPedido = Input::get('nroPedido');
+        $vendedora = Input::get('vendedora');
         $validarPedido = PedidosTemp::where('nroPedido', $nroPedido)->get();
         //Verifico si hay un pedido con el mismo numero. Si count es = 0 no hay pedidos y lo creo
         if (count($validarPedido) != 0) {
@@ -51,12 +52,12 @@ class ControllerPedidoWeb extends Controller
                 'PrecioUnitario' => $dato->PrecioUnitario,
                 'PrecioVenta' => $dato->PrecioVenta,
                 'Ganancia' => $dato->Ganancia,
-                'Cajera' => 'None',
+                'Cajera' => $dato->Cajera,
                 'Vendedora' => $dato->Vendedora,
                 'Fecha' => $fecha,
                 'Estado' => '0'
             ]);
-            $vendedora = $dato->Vendedora;
+            // $vendedora = $dato->Vendedora;
         }
         $this->crearControlPedido($nroPedido,$vendedora,$fecha ,$total,$ordenWeb,$fechaHora, $cliente_id);
         return $estado;

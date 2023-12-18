@@ -90,6 +90,7 @@
                         <table class="table table-striped table-bordered records_list">
                             <tr>
                                 <td style="width: 1020px;">
+                                    <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
                                    <div id="table-arti-pedido"></div>
                                 </td>
                                 <td>
@@ -101,9 +102,9 @@
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         <!--PEDIDO-->
                                         <button class="btn btn-secondary" onclick="nuevoPedido()">Nuevo</button>
-                                        <button class="btn btn-secondary" onclick="terminarPedido()">Terminar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
+                                        <button class="btn-success" onclick="terminarPedido()">Terminar</button>
                                         <h5>#Orden Web</h5>
                                         <input type="number" id="ordenWeb" style="width: 70px">
 
@@ -208,7 +209,7 @@
         // When the user clicks on <span> (x), close the modal
         spanPedido.onclick = function() {
             modalPedido.style.display = "none";
-            window.location.href = '/facturaweb';
+            window.location.href = '/facturadorWeb';
         }
         globalNroArticulo.focus()
         // getNroPedido();
@@ -280,7 +281,6 @@
             }
         }
         refreshTabulator() //vvuelvo a llenar el array para que actualice lo que se elimino
-        limpiezaCorreo();
         limpiezaDescuentos();
     }
 
@@ -437,7 +437,6 @@
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
         listDescuento.disabled = true
-        globalOrdenWeb.value = ""
         $("#select_descuento").val(0);
     }
 
@@ -457,6 +456,7 @@
         $("#select_descuento").val(0);
         document.getElementById('totalApagar').value = 0
         datosFactura = [];
+        globalNroPedido.value = "";
     }
 
     function limpiezaDescuentos(){
@@ -470,6 +470,7 @@
         inputNroPedido.value = "";
         inputNroPedido.disabled = true;
         btnBuscarPedido.disabled = true;
+        globalOrdenWeb.value = ""
     }
 
     function limpiezaDatosTabulator(){
@@ -521,7 +522,7 @@
     /*LISTENER'S*/
 
     function terminarPedido(){
-        if (document.getElementById('totalApagar').value != 0){
+       // if (document.getElementById('totalApagar').value != 0){
             if (confirm('Finalizar el Pedido?')){
                 var listaArticulos =  JSON.stringify(datosFactura)
                 var datosCombinados = {
@@ -547,10 +548,11 @@
                 window.location.href = '/facturadorWeb';
                 // location.reload();
             }
-        }else (alert('No se puede facturar con valor Total en 0'))
+        //}else (alert('No se puede facturar con valor Total en 0'))
     }
 
     function nuevoPedido(){
+        chkBoxPedido.checked = false;
         limpiezaVentanas()
         limpiezaDescuentos()
         limpiezaPedidos()
@@ -642,7 +644,7 @@
 
 
         // Título en la parte superior
-        var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
+        var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Pedido#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
         doc.setFontSize(7);
         doc.text(topTitle, 15, topTitleY, { align: "left" });
@@ -694,16 +696,11 @@
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
 
-        // Agregar otro texto debajo del título en la parte inferior
-        if(inputCorreo.value != ""){
-            // Define el tamaño de la fuente antes de agregar el texto
-            doc.setFontSize(8);
-            var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
-            var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
-            doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom"});
-        }
-
         doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }
+
+    $("#download-xlsx").click(function(){
+        tablePedido.download("xlsx", "data.xlsx", {sheetName:"ArticulosPedidos"});
+    });
 </script>
 
