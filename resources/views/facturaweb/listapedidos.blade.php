@@ -96,7 +96,8 @@
                  */
                 if (typeof globalOrdenWeb !== 'undefined') {
                     globalOrdenWeb.value = cell.getRow().getData()['ordenWeb'];
-                }
+                } else chkBoxListoEnvio.checked = false;
+
                 /*Hago lo mismo que con globalOrdenWeb, necesito saber si tiene que poner un numero de Pedido o Factura*/
                 if (typeof globalNroPedido !== 'undefined') {
                     globalNroPedido.value = cell.getRow().getData()['nropedido'];

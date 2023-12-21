@@ -156,6 +156,8 @@ class ControllerFacturaWeb extends Controller
     {
         if ($porcentajeDescuento > 0){
             $gananciaTotal = $descuento - $precioArgentina;
+        } else {
+            $descuento = null;
         }
         FacturacionHist::create([
             'NroFactura' => $nroFactura,
