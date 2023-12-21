@@ -100,7 +100,7 @@
                                 <td>
                                     <div>
                                         <input type="number" id="correo" placeholder="Correo" style="width: 80px">
-                                        <input type="number" id="total_correo" placeholder="Total" style="width: 80px">
+                                        <input type="number" id="total_correo" placeholder="Total" style="width: 80px" disabled = true>
                                         <!--PEDIDOS-->
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxPedido">Pedido</label>
                                         <h4>NroPedido</h4>
@@ -505,10 +505,11 @@
     listDescuento.addEventListener('change', function(event){
         resultado = (parseFloat(globalTotal) * listDescuento.value)
         textDescuento.value = parseFloat(resultado).toFixed(2)
+        limpiezaCorreo();
     })
 
     inputCorreo.addEventListener('keyup', function(event){
-        if (checkboxDescuento.checked) {
+        if (checkboxDescuento.checked && textDescuento.value != 0) {
             totalConDescuento = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
             inputTotal_correo.value = parseFloat(totalConDescuento).toFixed(2)
         } else {
