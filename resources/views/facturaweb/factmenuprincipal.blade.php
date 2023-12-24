@@ -6,10 +6,18 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-cog">Menu Facturacion</i></div>
                         <div class="panel-body">
-                            @if ($control == 'Autorizado')
-                                <button onclick="callFactura()">Nueva Factura</button>
-                            @endif
-                            <button onclick="window.location.href = '/pedidoWeb'">Pedidos</button>
+                            <table style="margin: 0 auto;">
+                                <tr>
+                                    @if ($control == 'Autorizado')
+                                        <td style="text-align: center; padding-right: 20px;">
+                                            <button onclick="callFactura()" class="fa fa-calculator" id="btnFactura">Factura</button>
+                                        </td>
+                                    @endif
+                                    <td style="text-align: center; padding-left: 20px;">
+                                        <button onclick="window.location.href = '/pedidoWeb'" class="fa fa-book" id="btnPedidos">Pedidos</button>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -17,7 +25,32 @@
         </div>
     </div>
 
+    <style>
+        #btnFactura {
+            width: 100px; /* Ajusta el tamaño según lo necesario */
+            height: 100px; /* Ajusta el tamaño según lo necesario */
+            border-radius: 30%;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Agrega una sombra para el efecto 3D */
+            background-color: #18af85; /* Color verde para el botón */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
+        #btnPedidos {
+            width: 100px; /* Ajusta el tamaño según lo necesario */
+            height: 100px; /* Ajusta el tamaño según lo necesario */
+            border-radius: 30%;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Agrega una sombra para el efecto 3D */
+            background-color: #077aaf; /* Color verde para el botón */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    </style>
 
 
 @stop

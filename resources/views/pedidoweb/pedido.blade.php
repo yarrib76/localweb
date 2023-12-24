@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-30">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-calculator"> Pedidos</i></div>
+                    <div class="panel-heading"><i class="fa fa-book"> Pedidos</i></div>
                         <table class="table table-striped table-bordered records_list">
                             <tr>
                                 <td style="width: 100px;">
@@ -101,7 +101,7 @@
                                         <input type="number" id="NroPedido" style="width: 70px">
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         <!--PEDIDO-->
-                                        <button class="btn btn-secondary" onclick="nuevoPedido()">Nuevo</button>
+                                        <button class="btn btn-warning" onclick="nuevoPedido()">Nuevo</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
                                         <button class="btn-success" onclick="terminarPedido()">Terminar</button>
@@ -522,7 +522,7 @@
     /*LISTENER'S*/
 
     function terminarPedido(){
-       // if (document.getElementById('totalApagar').value != 0){
+        if (document.getElementById('nroFactura').value != 0){
             if (confirm('Finalizar el Pedido?')){
                 var listaArticulos =  JSON.stringify(datosFactura)
                 var datosCombinados = {
@@ -548,7 +548,7 @@
                 window.location.href = '/facturadorWeb';
                 // location.reload();
             }
-        //}else (alert('No se puede facturar con valor Total en 0'))
+        }else (alert('Debe Crear un nuevo Pedido'))
     }
 
     function nuevoPedido(){

@@ -1,21 +1,8 @@
 @extends('layouts.master')
 @section('contenido')
     <div class="container">
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-cog">Menu Facturacion</i></div>
-                        <div class="panel-body">
-                            <button onclick="callFactura()">Nueva Factura</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
-
-
-
 
 @stop
 

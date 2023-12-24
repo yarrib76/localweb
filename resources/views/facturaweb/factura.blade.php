@@ -108,7 +108,7 @@
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio" disabled="true">Listo Para Envio</label>
                                         <!--PEDIDO-->
-                                        <button class="btn btn-secondary" onclick="facturar()">Facturar</button>
+                                        <button class="btn btn-danger" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
 

@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Input;
 
 class ControllerPedidoWeb extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
+    }
+
     public function view(Request $request)
     {
         $nameCajera = Auth::user()->name;
