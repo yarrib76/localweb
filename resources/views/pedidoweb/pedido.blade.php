@@ -6,7 +6,7 @@
             <div class="col-sm-30">
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-book"> Pedidos</i></div>
-                        <table class="table table-striped table-bordered records_list">
+                        <table class="table table-striped table-bordered records_list" style="width: 1250px;">
                             <tr>
                                 <td style="width: 100px;">
                                     <section >
@@ -68,18 +68,18 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <di>
+                                <td style="width: 100px;">
+                                    <div>
                                         <h4>Pedido</h4>
                                         <input type="number" id="nroFactura" disabled="true" style="width: 120px">
-                                    </di>
+                                    </div>
 
                                     <div>
                                         <h4>Vendedora</h4>
                                         <select id="vendedora" class="form-control"></select>
                                     </div>
                                 </td>
-                                <td>
+                                <td style="width: 100px;">
                                     <h4>Total</h4>
                                     <input type="number" id="totalApagar" min="0" disabled="true" style="width: 120px">
                                     <h4>Descuento</h4>
@@ -126,7 +126,7 @@
         z-index: 1; /* Sit on top */
         padding-top: 50px; /* Location of the box */
         left: 0;
-        top: -10%;
+        top: -5%;
         width: 100%; /* Full width */
         height: 100%; /* Full height */
         overflow: auto; /* Enable scroll if needed */
@@ -611,6 +611,7 @@
         })
         globalCantidad.value = 1;
         globalCantidad.focus();
+        globalCantidad.select();
         globalBtnAgregar.disabled = false
     }
 

@@ -646,6 +646,7 @@
         })
         globalCantidad.value = 1;
         globalCantidad.focus();
+        globalCantidad.select();
         globalBtnAgregar.disabled = false
     }
 
