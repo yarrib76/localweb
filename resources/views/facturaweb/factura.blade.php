@@ -517,6 +517,7 @@
             inputTotal_correo.value = parseFloat(totalSinDescuento).toFixed(2)
         }
     })
+
     globalCantidad.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             // Llama a la función dek boton Agrrgar
@@ -616,6 +617,7 @@
             method: 'get',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            async: false,
             success: function (json){
                 globalNroArticulo.value = json[0]['Articulo']
                 globalDetalle.value = json[0]['Detalle']

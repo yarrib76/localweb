@@ -113,6 +113,7 @@
                         refreshTabulator();
                     },
                 })
+                limpiezaCorreo();
                 modalPedidos.style.display = "none";
             },
                 formatter: function (cell) {

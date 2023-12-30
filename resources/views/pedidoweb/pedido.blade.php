@@ -95,6 +95,8 @@
                                 </td>
                                 <td>
                                     <div>
+                                        <input type="number" id="correo" placeholder="Correo" style="width: 80px">
+                                        <input type="number" id="total_correo" placeholder="Total" style="width: 80px" disabled = true>
                                         <!--PEDIDOS-->
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxPedido">Pedido</label>
                                         <h4>NroPedido</h4>
@@ -178,6 +180,8 @@
     var globalDescuento;
     var globalPrecioArgen;
     var datosFactura = [];
+    var inputCorreo = document.getElementById('correo');
+    var inputTotal_correo = document.getElementById('total_correo');
     var globalFotoArticulo = document.getElementById('fotoArticulo');
     var globalOrdenWeb = document.getElementById('ordenWeb');
     var globalNroPedido = document.getElementById('nroFactura');
@@ -459,6 +463,11 @@
         globalNroPedido.value = "";
     }
 
+    function limpiezaCorreo(){
+        inputCorreo.value = ""
+        inputTotal_correo.value = ""
+    }
+
     function limpiezaDescuentos(){
         textDescuento.value = 0.00
         $("#select_descuento").val(0);
@@ -493,6 +502,17 @@
     listDescuento.addEventListener('change', function(event){
         resultado = (parseFloat(globalTotal) * listDescuento.value)
         textDescuento.value = parseFloat(resultado).toFixed(2)
+        limpiezaCorreo();
+    })
+
+    inputCorreo.addEventListener('keyup', function(event){
+        if (checkboxDescuento.checked && textDescuento.value != 0) {
+            totalConDescuento = parseFloat(textDescuento.value) + parseFloat(inputCorreo.value)
+            inputTotal_correo.value = parseFloat(totalConDescuento).toFixed(2)
+        } else {
+            totalSinDescuento = parseFloat(globalTotal) + parseFloat(inputCorreo.value)
+            inputTotal_correo.value = parseFloat(totalSinDescuento).toFixed(2)
+        }
     })
 
     globalCantidad.addEventListener('keypress', function(event) {
@@ -512,10 +532,12 @@
         if (event.target.checked) {
             btnBuscarPedido.disabled = false;
             limpiezaTotal()
+            limpiezaCorreo()
             refreshTabulator()
         } else {
             limpiezaPedidos()
             limpiezaTotal()
+            limpiezaCorreo()
             refreshTabulator()
         }
     });
@@ -560,6 +582,7 @@
         refreshTabulator()
         getNroPedido()
     }
+
     function getNroPedido(){
         $.ajax({
             url: 'api/getnumpedido',
@@ -648,7 +671,7 @@
         // Título en la parte superior
         var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Pedido#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
-        doc.setFontSize(7);
+        doc.setFontSize(12);
         doc.text(topTitle, 15, topTitleY, { align: "left" });
 
         /* Título en la parte inferior
@@ -668,10 +691,10 @@
             },
             columnStyles: {
                 0: { // Estilo de la primera columna
-                    columnWidth: 7 // Ancho de la primera columna
+                    columnWidth: 15  // Ancho de la primera columna
                 },
                 1: { // Estilo de la segunda columna
-                    columnWidth: 30 // Ancho de la segunda columna
+                    columnWidth: 100 // Ancho de la segunda columna
                 },
                 2: { // Estilo de la tercera columna
                     columnWidth: 15 // Ancho de la tercera columna
@@ -693,10 +716,18 @@
         } else {
             var bottomTitle = "Total: " + globalTotal
         }
-        doc.setFontSize(8);
+        doc.setFontSize(10);
         var bottomTitleY = finalY + 10;
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
+        // Agregar otro texto debajo del título en la parte inferior
+        if(inputCorreo.value != ""){
+            // Define el tamaño de la fuente antes de agregar el texto
+            doc.setFontSize(10);
+            var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
+            var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
+            doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom"});
+        }
 
         doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }
