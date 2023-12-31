@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <input type="number" class="form-control"  id="PrecioVenta" disabled="true" style="width: 90px">
-                                            <input type="number" class="form-control"  id="Stock" disabled="true">
+                                            <input type="number" class="form-control"  id="Stock" disabled="true" style="width: 90px">
                                             <input type="number" class="form-control"  id="Cantidad" tabindex="1" min="0">
                                                 <select id="select_descuento" class="form-control">
                                                 <option value="0">0</option>
@@ -680,34 +680,29 @@
 
         var doc = new jsPDF();
 
-
         // Título en la parte superior
+        /* Descontinuado ahora va a bajo de todo
         var topTitle = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var topTitleY = 15;
         doc.setFontSize(7);
-        doc.text(topTitle, 105, topTitleY, { align: "right" });
-
-        /* Título en la parte inferior
-        var bottomTitle = "Título en la parte inferior";
-        var bottomTitleY = doc.internal.pageSize.height - 10;
-        doc.text(bottomTitle, 105, bottomTitleY, { align: "center" });
+        doc.text(topTitle, 50, topTitleY, { align: "right" });
         */
 
+        // Variables para controlar la visualización de los títulos de las columnas
+        var columnTitleVisible = true;
+
         doc.autoTable({
-            head: [customHeaders],
             body: bodyData,
-            startY: topTitleY + 10, // Comenzar después del título superior
-            margin: { top: 25, bottom: 20 },
             styles: {
-                fontSize: 10, // Tamaño de letra
+                fontSize: 8, // Tamaño de letra
                 cellPadding: 2 // Espaciado interno de las celdas
             },
             columnStyles: {
                 0: { // Estilo de la primera columna
-                    columnWidth: 7 // Ancho de la primera columna
+                    columnWidth: 10  // Ancho de la primera columna
                 },
                 1: { // Estilo de la segunda columna
-                    columnWidth: 30 // Ancho de la segunda columna
+                    columnWidth: 25 // Ancho de la segunda columna
                 },
                 2: { // Estilo de la tercera columna
                     columnWidth: 15 // Ancho de la tercera columna
@@ -715,6 +710,18 @@
                 3: { // Estilo de la cuarta columna
                     columnWidth: 15 // Ancho de la cuarta columna
                 }// Ajuste de márgenes
+            },
+            didDrawPage: function (data) {
+                if (columnTitleVisible) {
+                    var yPosition = 30; // Cambia este valor según sea necesario
+                    // Agregar títulos de las columnas en la primera página
+                    doc.setFontSize(10);
+                    doc.text("Cant", data.settings.margin.left + 0, 10);
+                    doc.text("Detalle", data.settings.margin.left + 17, 10);
+                    doc.text("Uni.", data.settings.margin.left + 40, 10);
+                    doc.text("Total", data.settings.margin.left + 50, 10);
+                    columnTitleVisible = false; // Ocultar títulos de columnas en las siguientes páginas
+                }
             }
         });
 
@@ -729,7 +736,7 @@
         } else {
             var bottomTitle = "Total: " + globalTotal
         }
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         var bottomTitleY = finalY + 10;
         doc.text(bottomTitle, 15, bottomTitleY, { align: "left", baseline: "bottom", fontSize: 7 });
 
@@ -737,11 +744,16 @@
         // Agregar otro texto debajo del título en la parte inferior
         if(inputCorreo.value != ""){
             // Define el tamaño de la fuente antes de agregar el texto
-            doc.setFontSize(12);
+            doc.setFontSize(8);
             var additionalText = "Envio: " + inputCorreo.value + " Total Con Envio: " + inputTotal_correo.value;
             var additionalTextY = bottomTitleY + 10; // Posición Y para el texto adicional
             doc.text(additionalText, 15, additionalTextY, { align: "left", baseline: "bottom"});
         }
+
+        doc.setFontSize(8);
+        var additionalText2 = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
+        var additionalTextY2 = bottomTitleY + 20; // Posición Y para el texto adicional
+        doc.text(additionalText2, 15, additionalTextY2, { align: "left", baseline: "bottom"});
 
         doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }

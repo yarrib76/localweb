@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <input type="number" class="form-control"  id="PrecioVenta" disabled="true" style="width: 90px">
-                                            <input type="number" class="form-control"  id="Stock" disabled="true">
+                                            <input type="number" class="form-control"  id="Stock" disabled="true" style="width: 90px">
                                             <input type="number" class="form-control"  id="Cantidad" tabindex="1" min="0">
                                                 <select id="select_descuento" class="form-control">
                                                 <option value="0">0</option>
