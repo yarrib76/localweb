@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Response;
 
 class ControlFichaje extends Controller
 {
-    protected $anio = '2023';
+    protected $anio;
+    public function __construct()
+    {
+        $this->anio = date('Y');
+    }
     public function control()
     {
         $usuario_id = Input::get('usuario_id');
@@ -63,6 +67,7 @@ class ControlFichaje extends Controller
                                             date_format(fecha_ingreso, "%m") AS mes
                                             FROM fichaje f
                                         WHERE DAYOFWEEK(fecha_ingreso) BETWEEN 2 AND 7
+                                        AND YEAR(fecha_ingreso) = "'.$this->anio.'"
                                         and id_user	= "'.$usuario_id.'"
                                         GROUP BY mes');
 // Procesar el resultado de la consulta

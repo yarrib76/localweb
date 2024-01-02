@@ -490,23 +490,23 @@
         /*Funciones para Tabulator En Modal*/
         function listaMensual(numMes,usuario_id){
             llenarTabla(numMes,usuario_id)
-            var modalFactura = document.getElementById('myModal');
+            var modalListaMensual = document.getElementById('myModal');
 
             // Get the <span> element that closes the modal
-            var spanFactura = document.getElementById("close-factura");
+            var spanListaMensual = document.getElementById("close");
 
             // When the user clicks the button, open the modal
-            modalFactura.style.display = "block";
+            modalListaMensual.style.display = "block";
 
             // When the user clicks on <span> (x), close the modal
-            spanFactura.onclick = function() {
-                modalFactura.style.display = "none";
+            spanListaMensual.onclick = function() {
+                modalListaMensual.style.display = "none";
             }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
-                if (event.target == modalFactura) {
-                    modalFactura.style.display = "none";
+                if (event.target == modalListaMensual) {
+                    modalListaMensual.style.display = "none";
                 }
             }
         }
