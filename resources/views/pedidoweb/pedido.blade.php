@@ -221,43 +221,45 @@
 
     function btnAgregar(){
         estado = 0
-        if (parseFloat(globalStock.value) >= parseFloat(globalCantidad.value) && parseFloat(globalCantidad.value) != 0 ){
-            for (var i = 0; i < datosFactura.length; i++) {
-                if (datosFactura[i]['Articulo'] === globalNroArticulo.value) {
-                    if ((parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)) <= parseFloat(globalStock.value)){
-                        datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
-                        datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
-                        datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + (globalPrecioArgen * parseFloat(globalCantidad.value));
-                        globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
-                        document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
-                        limpiezaVentanas();
-                    } else {alert('Stock Insuficientessss!!!!')}
+        if (globalNroPedido.value != ""){
+            if (parseFloat(globalStock.value) >= parseFloat(globalCantidad.value) && parseFloat(globalCantidad.value) != 0 ){
+                for (var i = 0; i < datosFactura.length; i++) {
+                    if (datosFactura[i]['Articulo'] === globalNroArticulo.value) {
+                        if ((parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)) <= parseFloat(globalStock.value)){
+                            datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
+                            datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
+                            datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + (globalPrecioArgen * parseFloat(globalCantidad.value));
+                            globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
+                            document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
+                            limpiezaVentanas();
+                        } else {alert('Stock Insuficientessss!!!!')}
 
-                    estado = 1
-                    break; // Sale del bucle una vez que se elimina el elemento
+                        estado = 1
+                        break; // Sale del bucle una vez que se elimina el elemento
+                    }
                 }
-            }
-            if (estado === 0){
-                // Crear un objeto con los datos del formulario
-                var nuevoAticulo = {
-                    Articulo: globalNroArticulo.value,
-                    Detalle: globalDetalle.value,
-                    Cantidad: globalCantidad.value,
-                    PrecioUnitario: globalPrecioVenta.value,
-                    PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
-                    Vendedora: glocalVendedora.value,
-                    PrecioArgen: globalPrecioArgen,
-                    Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
-                    Cajera: '{{$nameCajera}}',
-                };
-                datosFactura.push(nuevoAticulo);
-                globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
-                document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
-                limpiezaVentanas();
-            }
-            refreshTabulator();
-            globalNroArticulo.focus()
-        } else {alert('Stock Insuficiente!!!!')}
+                if (estado === 0){
+                    // Crear un objeto con los datos del formulario
+                    var nuevoAticulo = {
+                        Articulo: globalNroArticulo.value,
+                        Detalle: globalDetalle.value,
+                        Cantidad: globalCantidad.value,
+                        PrecioUnitario: globalPrecioVenta.value,
+                        PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
+                        Vendedora: glocalVendedora.value,
+                        PrecioArgen: globalPrecioArgen,
+                        Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
+                        Cajera: '{{$nameCajera}}',
+                    };
+                    datosFactura.push(nuevoAticulo);
+                    globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
+                    document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
+                    limpiezaVentanas();
+                }
+                refreshTabulator();
+                globalNroArticulo.focus()
+            } else {alert('Stock Insuficiente!!!!')}
+        } else {alert('Debe crear un nuevo pedido!!!')}
 
     }
     //Recarga la pagina si fueron con el boton del navegador para atras y luego para adelante

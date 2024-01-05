@@ -81,6 +81,7 @@
                     Caja <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
+                    <li><a href="/facturadorWeb"> Facturas/Pedidos </a></li>
                     <li><a href="/cierreDiario"> Cierres </a></li>
                     <li><a href="/controlcierre"> Verificar Cierres </a></li>
                 </ul>
