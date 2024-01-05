@@ -558,7 +558,7 @@
                     ordeWeb: globalOrdenWeb.value,
                 };
                 $.ajax({
-                    url: "crearPedido",
+                    url: "crearPedidoWeb",
                     method: 'post',
                     data: datosCombinados,
                     success: function (json) {
