@@ -519,6 +519,7 @@
             $("#select_descuento").val(0);
             textDescuento.value = 0.00
             listRecargo.disabled = false
+            limpiezaCorreo();
         }
     });
 
