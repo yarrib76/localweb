@@ -759,10 +759,10 @@
             doc.setFontSize(10);
             if (inputCorreo.value != ""){
                 var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
-                + " Total Con Recargo Mercado Pago: " + parseFloat(inputTotal_correo.value).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100);
+                + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(inputTotal_correo.value).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
             }else {
                 var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
-                + " Total Con Recargo Mercado Pago: " + parseFloat(globalTotal).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100);
+                + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(globalTotal).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
             }
 
             var additionalTextY_2 = bottomTitleY + 15; // Posición Y para el texto adicional

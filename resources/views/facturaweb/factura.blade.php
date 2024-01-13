@@ -82,6 +82,21 @@
                                         <h4>Tipo Pago</h4>
                                         <select id="tipo_pago" class="form-control"></select>
                                     </div>
+                                    <div>
+                                        <ha>Recargo</ha>
+                                        <select id="select_recargo" class="form-control">
+                                            <option value="0">0</option>
+                                            <option value="0.9">10</option>
+                                            <option value="0.85">15</option>
+                                            <option value="0.8">20</option>
+                                            <option value="0.75">25</option>
+                                            <option value="0.7">30</option>
+                                            <option value="0.65">35</option>
+                                            <option value="0.6">40</option>
+                                            <option value="0.5">50</option>
+                                            <option value="0">100</option>
+                                        </select>
+                                    </div>
                                 </td>
                                 <td>
                                     <h4>Total</h4>
@@ -174,6 +189,7 @@
     var globalCliente = document.getElementById('Cliente');
     var checkboxDescuento = document.getElementById("chkBoxDescuento");
     var listDescuento = document.getElementById('select_descuento')
+    var listRecargo = document.getElementById('select_recargo')
     var textDescuento = document.getElementById('totalDescuento');
     var glocalVendedora = document.getElementById('vendedora');
     document.getElementById('totalApagar').value = 0.00
@@ -445,6 +461,8 @@
         checkboxDescuento.checked = false
         listDescuento.disabled = true
         $("#select_descuento").val(0);
+        $("#select_recargo").val(0);
+
     }
 
     function limpiezaTotal(){
@@ -461,6 +479,7 @@
         globalCliente.value = ""
         globalTotal = 0;
         $("#select_descuento").val(0);
+        $("#select_recargo").val(0);
         chkBoxListoEnvio.disabled = true
         document.getElementById('totalApagar').value = 0
         datosFactura = [];
@@ -494,10 +513,14 @@
         limpiezaCorreo();
         if (event.target.checked) {
             listDescuento.disabled = false
+            listRecargo.disabled = true
+            $("#select_recargo").val(0);
         } else {
             listDescuento.disabled = true
             $("#select_descuento").val(0);
             textDescuento.value = 0.00
+            listRecargo.disabled = false
+            limpiezaCorreo();
         }
     });
 
@@ -754,6 +777,21 @@
         var additionalText2 = "Fecha: " + fechaActual + " " + horaActual + " Orden#: " + document.getElementById('nroFactura').value
         var additionalTextY2 = bottomTitleY + 20; // Posición Y para el texto adicional
         doc.text(additionalText2, 15, additionalTextY2, { align: "left", baseline: "bottom"});
+
+        if (listRecargo.value != 0){
+            // Define el tamaño de la fuente antes de agregar el texto
+            doc.setFontSize(8);
+            if (inputCorreo.value != ""){
+                var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
+                        + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(inputTotal_correo.value).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
+            }else {
+                var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
+                        + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(globalTotal).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
+            }
+
+            var additionalTextY_2 = bottomTitleY + 15; // Posición Y para el texto adicional
+            doc.text(additionalText_2, 15, additionalTextY_2, { align: "left", baseline: "bottom"});
+        }
 
         doc.save('ticket-' + document.getElementById('nroFactura').value + '.pdf');
     }
