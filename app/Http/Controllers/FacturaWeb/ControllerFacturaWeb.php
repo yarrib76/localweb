@@ -35,7 +35,7 @@ class ControllerFacturaWeb extends Controller
             $control = 'Autorizado';
         }else $control = 'NoAutorizado';
         //Provisorio para poder acceder desde samira y hacer pruebas
-        $control = 'Autorizado';
+        //$control = 'Autorizado';
         return view('facturaweb.factmenuprincipal', compact('nameCajera','control'));
     }
 
