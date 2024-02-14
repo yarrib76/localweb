@@ -757,7 +757,7 @@
                     document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text +
                     "%" + " de Descuento = " + document.getElementById('totalDescuento').value;
         } else {
-            var bottomTitle = "Total: " + globalTotal
+            var bottomTitle = "Total: " + parseFloat(globalTotal).toFixed(2);
         }
         doc.setFontSize(8);
         var bottomTitleY = finalY + 10;
