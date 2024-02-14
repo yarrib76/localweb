@@ -30,7 +30,6 @@ class ControllerFacturaWeb extends Controller
     {
         $nameCajera = Auth::user()->name;
         $clienteDireccionIP = $request->ip();
-        dump($clienteDireccionIP);
         $auto = $this->autorizacionFacturaWeb($clienteDireccionIP);
         if ($auto){
             $control = 'Autorizado';
