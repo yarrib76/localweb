@@ -21,12 +21,80 @@
                                         <td>{{$cierreDiario->Fecha}}</td>
                                         <td>{{$cierreDiario->Total}}</td>
                                         <td>{{$cierreDiario->Estado}}</td>
-                                        <td>{!! Html::linkRoute('facturaWeb.index', 'Ver', ['fecha'=>$cierreDiario->Fecha] , ['class' => 'btn btn-primary'] ) !!}</td>
+                                        <td>
+                                            {!! Html::linkRoute('facturaWeb.index', 'Ver', ['fecha'=>$cierreDiario->Fecha] , ['class' => 'btn btn-primary'] ) !!}
+                                            <button onclick="btnGastos('{{$cierreDiario->Fecha}}')" class="btn-info" id="btnGastos" >Gastos</button>
+                                            @if ($cierreDiario->Estado == "Caja Abierta")
+                                                <button onclick="cierreCaja('{{$cierreDiario->Fecha}}')" class="btn-primary" id="cierreCaja" >CerrarCaja</button>
+                                            @else <button onclick="cierreCaja('{{$cierreDiario->Fecha}}')" class="btn-primary" id="cierreCaja" disabled = true >CerrarCaja</button>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #myModalGastos {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 120%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        #modal-content-gastos {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 3px solid #888;
+            width: 70%;
+            height: 80%;
+            overflow-y: auto;
+        }
+        /* The Close Button */
+        #close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        #close:hover,
+        #close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <div id="myModalGastos" class="modal">
+        <!-- Modal content -->
+        <div id="modal-content-gastos" class="modal-content">
+            <span id="close">&times;</span>
+            <h4 id="Fecha">Fecha:</h4>
+            <div id="general">
+                <div class="col-xs-12 col-xs-offset-0 well">
+                    <table id="tabla_gastos" class="table table table-scroll table-striped">
+                        <thead>
+                            <tr>
+                                <th>Gasto</th>
+                                <th>Descripcion</th>
+                                <th>Importe</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
@@ -55,5 +123,73 @@
 
             );
         } );
+
+        function btnGastos(fecha){
+            var table = $("#tabla_gastos");
+            table.children().remove()
+            table.append("<thead><tr><th>Gasto</th><th>Descripcion</th><th>Importe</th><th>Fecha</th></tr></thead>")
+            $.ajax({
+                url: 'api/listaGastosFecha?fecha=' + fecha,
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (json){
+                    $.each(json, function(index, json){
+                        table.append("<tr><td>"+json['Nbr_Gasto']+"</td><td>"+json['Detalle']+
+                                "</td><td>"+json['Importe']+"</td>"+"</td><td>"+json['Fecha']+"</td>"+ "</tr>");
+                    });
+                    // Get the modal
+                    var modalGastos = document.getElementById('myModalGastos');
+
+                    // Get the <span> element that closes the modal
+                    var spanGastos = document.getElementById("close");
+
+                    // When the user clicks the button, open the modal
+                    modalGastos.style.display = "block";
+
+                    // When the user clicks on <span> (x), close the modal
+                    spanGastos.onclick = function() {
+                        modalGastos.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of t he modal, close it
+                    window.onclick = function(event) {
+                        if (event.target == modalGastos) {
+                            modalGastos.style.display = "none";
+                        }
+                    }
+                    $(".modal-content #Fecha").html( "Fecha: " + fecha);
+                },
+                error: function(xhr, status, error){
+                }
+            })
+        }
+
+        function cierreCaja(fecha) {
+            $.ajax({
+                url: 'cierreCaja?fecha=' + fecha,
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (json) {
+                },
+                error: function (xhr, status, error) {
+                }
+            })
+            var rows = document.getElementById('reporte').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (i = 0; i < rows.length; i++) {
+                rows[i].cells[3].addEventListener("click", function() {
+                    if (event.target.id === 'cierreCaja') {
+                        //Paso a la variable la fila seleccionada
+                        posicionTable = this.parentNode.rowIndex;
+                        console.log(posicionTable);
+                        reporte.rows[posicionTable].cells[2].innerHTML = "Caja Cerrada";
+                        event.target.disabled = true;
+                    }
+
+                })
+            }
+            alert("Caja " + fecha + " Cerrada")
+        }
     </script>
 @stop

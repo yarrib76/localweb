@@ -67,6 +67,7 @@ Route::get('artimasVendidos', 'Reporte\ArticuloMasVendidos@Reporte');
 
 Route::resource('articulos', 'Articulo\ArticulosController');
 Route::resource('cierreDiario', 'CierreDiario\CierreDiarioController');
+Route::get('cierreCaja', 'CierreDiario\CierreDiarioController@cierreCaja');
 Route::resource('facturaWeb', 'CierreDiario\FacturaWebController');
 Route::resource('clientes', 'Cliente\ClientesController');
 Route::get('controlcierre', 'CierreDiario\ControlCierreDiario@index');
@@ -424,4 +425,7 @@ Route::group(['prefix' => 'api'],
 
         /*Lista Transportes*/
         Route::get('/transportes','Api\GetTransportes@listaTransportes');
+
+        /*Lista Gastos por Fecha*/
+        Route::get('/listaGastosFecha','Api\GastosController@listaGastosFecha');
     });

@@ -8,6 +8,8 @@ use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 
 class CierreDiarioController extends Controller
 {
@@ -28,6 +30,13 @@ class CierreDiarioController extends Controller
                                     (CASE WHEN Estado = 1 THEN "Caja Cerrada" ELSE  "Caja Abierta" END) as Estado FROM samira.facturah
                                     group by Fecha;');
         return view('cierrediario.reporte', compact('cierresDiarios'));
+    }
+
+    public function cierreCaja()
+    {
+        $fecha = Input::get('fecha');
+        DB::select('UPDATE samira.facturah SET `Estado` = 1 where Fecha = "'.$fecha.'"');
+        return "Done";
     }
 
     /**
