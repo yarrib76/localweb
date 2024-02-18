@@ -244,7 +244,7 @@
                         if ((parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)) <= parseFloat(globalStock.value)){
                             datosFactura[i]['Cantidad'] = parseFloat(datosFactura[i]['Cantidad']) + parseFloat(globalCantidad.value)
                             datosFactura[i]['PrecioVenta'] = (parseFloat(datosFactura[i]['Cantidad']) * parseFloat(globalPrecioVenta.value)).toFixed(2)
-                            datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + (globalPrecioArgen * parseFloat(globalCantidad.value));
+                            datosFactura[i]['Ganancia'] = datosFactura[i]['Ganancia'] + ((parseFloat(globalCantidad.value) * parseFloat(globalPrecioVenta.value)).toFixed(2) - (globalPrecioArgen * parseFloat(globalCantidad.value)));
                             globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
                             document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
                             limpiezaVentanas();
@@ -264,7 +264,7 @@
                         PrecioVenta: (parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2),
                         Vendedora: glocalVendedora.value,
                         PrecioArgen: globalPrecioArgen,
-                        Ganancia: (globalPrecioArgen * parseFloat(globalCantidad.value)),
+                        Ganancia: ((parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value)).toFixed(2) - (globalPrecioArgen * parseFloat(globalCantidad.value))),
                         Cajera: '{{$nameCajera}}',
                     };
                     datosFactura.push(nuevoAticulo);

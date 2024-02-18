@@ -96,7 +96,7 @@ class ControllerFacturaWeb extends Controller
 
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
-            $precioArgentina += $articuloFactura->PrecioArgen;
+            $precioArgentina += $articuloFactura->PrecioArgen * $articuloFactura->Cantidad;
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
         }
