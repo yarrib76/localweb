@@ -280,7 +280,7 @@ class ABMTiendaNubeNew extends Controller
     public function verificoStock($cantidad,$artiCant)
     {
         if ($cantidad >= $artiCant) {
-            return "";
+            return 1000;
         }
         return 0;
     }
