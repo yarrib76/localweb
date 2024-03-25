@@ -782,11 +782,11 @@
             // Define el tamaño de la fuente antes de agregar el texto
             doc.setFontSize(8);
             if (inputCorreo.value != ""){
-                var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
-                        + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(inputTotal_correo.value).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
+                var additionalText_2 = "Recargo M.P.: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
+                        + " Total: " + parseFloat(parseFloat(inputTotal_correo.value).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
             }else {
-                var additionalText_2 = "Recargo: " + listRecargo.options[listRecargo.selectedIndex].text + "%"
-                        + " Total Con Recargo Mercado Pago: " + parseFloat(parseFloat(globalTotal).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
+                var additionalText_2 = "Recargo M.P.:" + listRecargo.options[listRecargo.selectedIndex].text + "%"
+                        + " Total: " + parseFloat(parseFloat(globalTotal).toFixed(2) * (1 + parseFloat(listRecargo.options[listRecargo.selectedIndex].text) /100)).toFixed(2);
             }
 
             var additionalTextY_2 = bottomTitleY + 15; // Posición Y para el texto adicional
