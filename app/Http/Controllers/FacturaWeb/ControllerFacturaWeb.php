@@ -94,6 +94,13 @@ class ControllerFacturaWeb extends Controller
         $nroPedido = Input::get('nroPedido');
         $esPedido = Input::get('esPedido');
 
+        /*En caso de tener 2 Modal FacturaWeb Abiertos, antes de guardar la factura verifico que no exista.
+          Si Existe solicito un nuevo # de Factura
+        */
+        if ($this->controlNroFactura($nroFactura)){
+            $nroFactura = $this->getNroFactura()[0]->NroFactura;
+        };
+
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
             $precioArgentina += $articuloFactura->PrecioArgen * $articuloFactura->Cantidad;
@@ -178,6 +185,12 @@ class ControllerFacturaWeb extends Controller
     public function acturlizarNroFactura()
     {
         DB::select('UPDATE samira.nrofactura SET NroFactura = NroFactura + 1' );
+    }
+
+    public function controlNroFactura($nroFactura)
+    {
+        $existeFactura = FacturacionHist::where('NroFactura',$nroFactura)->exists();
+        return $existeFactura;
     }
 
     /*PEDIDOS*/
