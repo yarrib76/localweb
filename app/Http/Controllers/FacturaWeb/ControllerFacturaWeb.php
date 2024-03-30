@@ -112,6 +112,7 @@ class ControllerFacturaWeb extends Controller
         if($esPedido = "SI"){
             $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
         }
+        return "OK";
         // dump($vendedora);
         // dump($cliente_id,$tipo_pago_id, $nroFactura, $total, $descuento, $porcentajeDescuento, $envio, $totalEnvio);
     }

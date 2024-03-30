@@ -4,6 +4,13 @@
         <span id="close-factura" class="close">&times;</span>
         <div class="row">
             <div class="col-sm-30">
+                <div class="custom-dialog" id="customDialog">
+                    <div class="dialog-content">
+                        <p id="dialogMessage"></p>
+                        <button type="button" class="btn btn-primary" onclick="location.reload()">Cerrar</button>
+                    </div>
+                </div>
+
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-calculator"> Factura</i></div>
                         <table class="table table-striped table-bordered records_list">
@@ -176,6 +183,24 @@
         color: #000;
         text-decoration: none;
         cursor: pointer;
+    }
+
+    .custom-dialog {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: red; /* Cambiamos el color de fondo a rojo */
+        color: black; /* Cambiamos el color del texto a negro */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .dialog-content {
+        position: relative;
     }
 </style>
 
@@ -607,14 +632,18 @@
                     method: 'post',
                     data: datosCombinados,
                     success: function (json) {
+                        alert('La venta se realizo con correctamente')
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         // Manejar errores de la solicitud aquí
-                        alert('Ha ocurrido un error consultar con el administrador')
+                       // alert('Ha ocurrido un error consultar con el administrador')
+                        var dialog = document.getElementById("customDialog");
+                        var message = document.getElementById("dialogMessage");
+                        message.innerHTML = "Ha ocurrido un error, la factura no fue guardada. Intentar nuevamente.";
+                        dialog.style.display = "block";
                     }
                 });
-                alert('La venta se realizo con correctamente')
-                location.reload();
             }
         }else (alert('No se puede facturar con valor Total en 0'))
     }
