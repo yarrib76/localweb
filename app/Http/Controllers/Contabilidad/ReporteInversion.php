@@ -39,14 +39,43 @@ class ReporteInversion extends Controller
 
         // $result = DB::table('samira.reportearticulo')->whereIn('proveedor', $flatten)->get();
         $result = DB::select('SELECT Proveedor,
+                    ROUND(SUM(CASE
+                        WHEN (PrecioConvertido > 0 OR PrecioConvertido <> "") AND cantidad > 0 AND
+                             (Proveedor = "LINDA MODA 2" AND PrecioOrigen < 10) THEN (cantidad * PrecioConvertido)
+                        WHEN (PrecioConvertido > 0 OR PrecioConvertido <> "") AND cantidad > 0 AND
+                             (Proveedor != "LINDA MODA 2") THEN (cantidad * PrecioConvertido)
+                        ELSE (cantidad * PrecioManual)
+                    END), 2) AS Total
+                    FROM samira.articulos
+                    WHERE Proveedor IN ('. $string_coma .')
+                    GROUP BY Proveedor;');
+        
+        return Response::json($result);
+
+        /* Utilizo este if para los proveedores que tienen los precios en USD mal cargados ejmplo LindaModa2
+        *** Queda descontinuda este codigo ya que lo unifique como se obserba arriba***
+        $string_sin_comillas = str_replace('"', '', $string_coma);
+        if ($string_sin_comillas == 'LINDA MODA 2'){
+            $result = DB::select('SELECT Proveedor,
                                 ROUND(SUM(CASE
-                                    WHEN PrecioConvertido > 0 or PrecioConvertido <> "" THEN  (cantidad * PrecioConvertido)
+                                    WHEN (PrecioConvertido > 0 or PrecioConvertido <> "") and cantidad > 0 and PrecioOrigen < 10 THEN  (cantidad * PrecioConvertido)
                                     ELSE (cantidad * PrecioManual)
                                 END),2) as Total
                                 FROM samira.articulos
                                 WHERE Proveedor IN ('. $string_coma .')
                                 group by proveedor;');
+        } else {
+            $result = DB::select('SELECT Proveedor,
+                                ROUND(SUM(CASE
+                                    WHEN (PrecioConvertido > 0 or PrecioConvertido <> "") and cantidad > 0 THEN  (cantidad * PrecioConvertido)
+                                    ELSE (cantidad * PrecioManual)
+                                END),2) as Total
+                                FROM samira.articulos
+                                WHERE Proveedor IN ('. $string_coma .')
+                                group by proveedor;');
+        }
+            return Response::json($result);
+        */
 
-        return Response::json($result);
     }
 }
