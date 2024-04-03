@@ -49,7 +49,7 @@ class ReporteInversion extends Controller
                     FROM samira.articulos
                     WHERE Proveedor IN ('. $string_coma .')
                     GROUP BY Proveedor;');
-        
+
         return Response::json($result);
 
         /* Utilizo este if para los proveedores que tienen los precios en USD mal cargados ejmplo LindaModa2
