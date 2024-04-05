@@ -130,7 +130,7 @@
                                         <button id="btnBuscarPedido" onclick="cargoModalPedidos()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         <label style="font-size: 15px"> <input type="checkbox" id="chkBoxListoEnvio" disabled="true">Listo Para Envio</label>
                                         <!--PEDIDO-->
-                                        <button class="btn btn-danger" onclick="facturar()">Facturar</button>
+                                        <button id ="facturar" class="btn btn-danger" onclick="facturar()">Facturar</button>
                                         <label style="font-size: 15px"> <input type="checkbox" name="chkBoxOrdenarPorPrecio">Ordenar Precio</label>
                                         <button id="imprimir" onclick="imprimir()" class="btn btn-primary"><i class="fas fa-print"></i></button>
 
@@ -599,6 +599,7 @@
     function facturar(){
         if (document.getElementById('totalApagar').value != 0){
             if (confirm('Confirma la Factura?')){
+                document.getElementById('facturar').disabled = true;
                 var listaArticulos =  JSON.stringify(datosFactura)
                 var tipo_pago_id  = document.getElementById('tipo_pago').value
                 var esPedido;
@@ -632,7 +633,7 @@
                     method: 'post',
                     data: datosCombinados,
                     success: function (json) {
-                        alert('La venta se realizo con correctamente')
+                        alert('La venta se realizo correctamente')
                         location.reload();
                     },
                     error: function(xhr, status, error) {
