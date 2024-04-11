@@ -116,6 +116,7 @@
                 globalCantidad.focus();
                 globalCantidad.select();
                 globalBtnAgregar.disabled = false
+                globalNroArticulo.disabled = true
                 tableArticulos.clearFilter('Detalle', 'Articulo', 'Cantidad')
             },
                 formatter: function (cell) {
