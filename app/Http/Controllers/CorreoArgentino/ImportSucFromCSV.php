@@ -37,17 +37,24 @@ class ImportSucFromCSV extends Controller
             })->get();
             $this->truncoTabla();
             if (!empty($data) && $data->count()) {
-                foreach ($data->toArray() as $key => $value) {
-                    $insert[] = ['codigo_provincia' => strval($value['codigo_provincia']), 'nombre_provincia' => $value['nombre_provincia'],
-                        'codigo_sucursal' => $value['codigo_sucursal'], 'nombre_sucursal' => $value['nombre_sucursal']];
+                foreach ($data[0]->toArray() as $key => $value) {
+                    // $insert[] = ['codigo_provincia' => strval($value['codigo_provincia']), 'nombre_provincia' => $value['nombre_provincia'],
+                    //    'codigo_sucursal' => $value['codigo_sucursal'], 'nombre_sucursal' => $value['nombre_sucursal']];
+                    $insert[] = ['nombre_provincia' => $value['provincia'],
+                        'codigo_sucursal' => $value['codigo'], 'localidad' => $value['localidad'], 'direccion' => $value['calle'], 'numero' =>$value['numero']];
                 }
                 if (!empty($insert)) {
                     foreach ($insert as $data) {
-                        $id_provincia = DB::select('select id from samira.provincias
+                        if ($data['nombre_provincia'] !== null){
+                            $provincia = DB::select('select id,codigo_sucursal from samira.provincias
                                                 where nombre = "'.$data['nombre_provincia'].'"');
-                        DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal, nombre_sucursal)
-                                    VALUES ("' . $id_provincia[0]->id . '", "' . $data['codigo_provincia'] . '","'.$data['codigo_sucursal'].'",
-                                            "'.$data['nombre_sucursal'].'");');
+                            // DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal, nombre_sucursal)
+                            //             VALUES ("' . $id_provincia[0]->id . '", "' . $data['codigo_provincia'] . '","'.$data['codigo_sucursal'].'",
+                            //                     "'.$data['nombre_sucursal'].'");');
+                            DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal, localidad, direccion, nro_calle)
+                                    VALUES ("' . $provincia[0]->id . '", "' . $provincia[0]->codigo_sucursal . '","'.$data['codigo_sucursal'].'",
+                                            "'.$data['localidad'].'", "'.$data['direccion'].'", "'.$data['numero'].'");');
+                        }
                     }
 
                     $this->insertoProvinciasFaltantes();
@@ -77,12 +84,10 @@ class ImportSucFromCSV extends Controller
     private function insertoProvinciasFaltantes()
     {
         //Inserto el valor de la provincia 1 con nombre Otro
-        DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal, nombre_sucursal)
-                                    VALUES ("1", "NN","NN",
-                                            "Otros");');
+        DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal)
+                                    VALUES ("1", "NN","NN");');
         //Inserto el valor de la provincia 26 con nombre Gran Buenos Aires
-        DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal, nombre_sucursal)
-                                    VALUES ("26", "NN","NN",
-                                            "Gran Buenos Aires");');
+        DB::select('INSERT INTO samira.pub_sucursales (id_provincias, codigo_provincia, codigo_sucursal)
+                                    VALUES ("26", "NN","NN");');
     }
 }

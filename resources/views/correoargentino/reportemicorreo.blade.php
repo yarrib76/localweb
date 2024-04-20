@@ -210,6 +210,7 @@
                 {title: "tel", field: "tel", sortable: true, width: 1},
                 {title: "cod_area_cel", field: "cod_area_cel", sortable: true, editor:true, width: 80},
                 {title: "cel", field: "cel", sortable: true, editor:true, width: 110,headerFilter:"input"},
+                {title: "numero_orden", field: "numero_orden", sortable: true, editor:true, width: 110,headerFilter:"input"},
                 //    {title: "tipo_producto", field: "tipo_producto", sortable: true, width: 10,headerFilter:"input"},
                 //    {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup,headerFilter:"input"},
                 //    {title: "Estado", field: "nombre", sortable: true, width: 110,editor:"select",editorParams:estadosLookup,headerFilter:"input"},

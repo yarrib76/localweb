@@ -36,7 +36,7 @@ class MiCorreo extends Controller
     }
     public function obtengoEmpaquetados()
     {
-        $empaquetados = DB::select('select nropedido,concat(clientes.nombre," ", apellido) as nombre, vendedora, direccion,localidad, replace(telefono,"+54","") as cel
+        $empaquetados = DB::select('select nropedido,concat(clientes.nombre," ", apellido) as nombre, vendedora, clientes.direccion, clientes.localidad, replace(telefono,"+54","") as cel
                                     ,mail, provincias.nombre as provincia, codigopostal, total, transporte, ordenweb, pub_sucursales.codigo_provincia
                                     from samira.controlpedidos as pedidos
                                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
@@ -53,6 +53,10 @@ class MiCorreo extends Controller
         foreach ($empaquetados as $pedido){
             $total = ($pedido->total * 2);
             $nombre = $this->quitar_tildes($pedido->nombre);
+            //defino el tipo de envío si es a Sucursal el valor para el correo debe ser CP, si es Domicilio debe ser EP
+            if ($pedido->transporte == "Sucursal"){
+                $tipo_producto = "CP";
+            } else $tipo_producto = "EP";
             //Verifico si ya fue creado el pedido, si no existe lo creo
             $verificoExistencia = DB::select('select * from samira.mi_correo where nropedido = "'.$pedido->nropedido.'"');
             if (!$verificoExistencia) {
@@ -62,7 +66,7 @@ class MiCorreo extends Controller
                             cel,nropedido,vendedora,tipo_envio,ordenweb,transporte,provincia,sucursal_destino,cod_area_tel,tel,
                             altura_destino,dpto,piso)
                             VALUES
-                            ("CP","20","10","20","1","' . $total . '","' . $pedido->codigo_provincia . '","' . $this->quitar_tildes($pedido->localidad) . '",
+                            ("'.$tipo_producto.'","20","10","20","1","' . $total . '","' . $pedido->codigo_provincia . '","' . $this->quitar_tildes($pedido->localidad) . '",
                             "' . $this->quitar_tildes($pedido->direccion) . '","' . $pedido->codigopostal . '","' . $nombre . '",
                             "' . $pedido->mail . '","'.substr($pedido->cel,0,-8).'","' . substr($pedido->cel,-8) . '","' . $pedido->nropedido . '","' . $pedido->vendedora . '",
                             "' . $pedido->transporte . '","' . $pedido->ordenweb . '","' . $pedido->transporte . '","' . $pedido->provincia . '","","","",
@@ -109,9 +113,9 @@ class MiCorreo extends Controller
 
     public function sucursalesDestinos(){
         $codigo_provincia = Input::get('codigo_provincia');
-        $datos = Pub_sucursales::where('codigo_provincia','=', $codigo_provincia)->orderBy('nombre_sucursal', 'asc')->get();
+        $datos = Pub_sucursales::where('codigo_provincia','=', $codigo_provincia)->orderBy('localidad', 'asc')->get();
         for ($i = 0; $i < $datos->count(); $i++ ){
-            $arrEstadosFinanciera[$i] = [$datos[$i]->codigo_sucursal => $datos[$i]->nombre_sucursal];
+            $arrEstadosFinanciera[$i] = [$datos[$i]->codigo_sucursal => $datos[$i]->localidad . " - Direccion: (" . $datos[$i]->direccion . " Nro " . $datos[$i]->nro_calle . " )"];
         }
         return Response::json($arrEstadosFinanciera);
     }
