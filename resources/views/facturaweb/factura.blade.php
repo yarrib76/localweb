@@ -275,6 +275,7 @@
                             globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
                             document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
                             limpiezaVentanas();
+                            limpiezaCorreo();
                         } else {alert('Stock Insuficientessss!!!!')}
 
                         estado = 1
@@ -298,6 +299,7 @@
                     globalTotal += parseFloat(globalPrecioVenta.value).toFixed(2) * parseFloat(globalCantidad.value).toFixed(2);
                     document.getElementById('totalApagar').value = parseFloat(globalTotal).toFixed(2);
                     limpiezaVentanas();
+                    limpiezaCorreo();
                 }
                 refreshTabulator();
                 limpiezaCorreo();
@@ -420,7 +422,7 @@
         //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
         columns: [
-            {title: "Articulo", field: "Articulo", width: 150,headerFilter:"input"},
+            {title: "Articulo", field: "Articulo", width: 150,headerFilter:"input", topCalc:"count"},
             {title: "Detalle", field: "Detalle", width: 350,headerFilter:"input"},
             {title: "Cantidad", field: "Cantidad", width: 80},
             {title: "PrecioUnitario", field: "PrecioUnitario", width:140},
