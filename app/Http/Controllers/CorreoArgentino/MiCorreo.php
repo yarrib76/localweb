@@ -53,10 +53,8 @@ class MiCorreo extends Controller
         foreach ($empaquetados as $pedido){
             $total = ($pedido->total * 2);
             $nombre = $this->quitar_tildes($pedido->nombre);
-            //defino el tipo de envío si es a Sucursal el valor para el correo debe ser CP, si es Domicilio debe ser EP
-            if ($pedido->transporte == "Sucursal"){
-                $tipo_producto = "CP";
-            } else $tipo_producto = "EP";
+            //defino el tipo de envío en CP para envio clasico
+            $tipo_producto = "CP";
             //Verifico si ya fue creado el pedido, si no existe lo creo
             $verificoExistencia = DB::select('select * from samira.mi_correo where nropedido = "'.$pedido->nropedido.'"');
             if (!$verificoExistencia) {
