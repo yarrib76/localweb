@@ -264,6 +264,7 @@ Route::get('autoCargaObjetivos','Personal\Objetivos\ControlObjetivos@autoCargaOb
 /*Control Ordenes de Compra*/
 Route::get('ordenescomprascontrol','Articulo\OrdenesComprasControl@index');
 Route::get('ordenescomprasconsulta','Articulo\OrdenesComprasControl@consulta');
+Route::get('ordenesconsultasEspecificas','Articulo\OrdenesComprasControl@consultasEspecificas');
 Route::get('/ordenescomprasconsulta/todas','Articulo\OrdenesComprasControl@consultaTodas');
 Route::get('ordenescomprasnotas ','Articulo\OrdenesComprasControl@notas');
 Route::get('ordenescomprasnotas/agregar','Articulo\OrdenesComprasControl@agregarNotas');

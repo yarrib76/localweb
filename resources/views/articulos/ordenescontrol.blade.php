@@ -13,17 +13,48 @@
                                 <td>
                                     <input id='estado' onclick="cambioEstado()" type="checkbox">
                                 </td>
+                                <td>
+                                    <h5 className="element">Confirmadas</h5>
+                                </td>
+                                <td> <!-- Aquí se agrega el espacio -->
+                                    &nbsp; <!-- Espacio en blanco -->
+                                </td>
+                                <td>
+                                    <input id='tipo_confirmada' onclick="tipoConsulta('confirmada')" type="checkbox">
+                                </td>
+                                <td> <!-- Aquí se agrega el espacio -->
+                                    &nbsp; <!-- Espacio en blanco -->
+                                <td>
+                                    <h5 className="element">Incompletas</h5>
+                                </td>
+                                <td> <!-- Aquí se agrega el espacio -->
+                                    &nbsp; <!-- Espacio en blanco -->
+                                </td>
+                                <td>
+                                    <input id='tipo_incompleta' onclick="tipoConsulta('incompleta')" type="checkbox">
+                                </td>
+                                <td> <!-- Aquí se agrega el espacio -->
+                                    &nbsp; <!-- Espacio en blanco -->
+                                </td>
+                                <td>
+                                    <h5 className="element">Sin Procesar</h5>
+                                <td/>
+                                <td> <!-- Aquí se agrega el espacio -->
+                                    &nbsp; <!-- Espacio en blanco -->
+                                </td>
+                                <td>
+                                    <input id='tipo_sin_procesar' onclick="tipoConsulta('sin_procesar')" type="checkbox">
+                                </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="number" class="form-control" placeholder="Ingrese Orden" id="nroOrden">
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger" onclick="llenarTabla();">Buscar</button>
+                                    <button class="btn btn-danger" onclick="llenarTabla(0);">Buscar</button>
                                 </td>
                             </tr>
                         </table>
-
                     </div>
                     <div class="panel-body">
                         <div id="example-table"></div>
@@ -344,10 +375,25 @@
        }
        function llenarTabla(tipo) {
            nroOrden = document.getElementById('nroOrden').value
+           //Consulta por orden de Compras
+           if (tipo == 0) {
+               $("#example-table").tabulator("setData", '/ordenescomprasconsulta?nroOrden=' + nroOrden);
+           }
+           //Consulta todas las ordenes
            if(tipo == 1){
                $("#example-table").tabulator("setData", '/ordenescomprasconsulta/todas');
-           }else {
-               $("#example-table").tabulator("setData", '/ordenescomprasconsulta?nroOrden=' + nroOrden);
+           }
+           //Consulta ordenControlada = 1 Confirmadas
+           if(tipo == 2){
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 1);
+           }
+           //Consulta ordenControlada = 2 Incompletas
+           if(tipo == 3){
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 2);
+           }
+           //Consulta ordenControlada = 0 Sin Procesar
+           if(tipo == 4){
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 0);
            }
        }
        $(window).resize(function () {
@@ -443,12 +489,53 @@
 
        function cambioEstado(){
            if (document.getElementById("estado").checked){
+               document.getElementById("tipo_incompleta").checked = false
+               document.getElementById("tipo_confirmada").checked = false
+               document.getElementById("tipo_sin_procesar").checked = false
                llenarTabla(1);
                document.getElementById('nroOrden').disabled = true
            } else
            {
                llenarTabla(0);
                document.getElementById('nroOrden').disabled = false
+           }
+       }
+
+       function tipoConsulta(tipo_consulta){
+           //Opciones: confirmada valoe 2, incompleta valor 3 y sin_procesar valor 4
+           switch (tipo_consulta) {
+               case 'confirmada':
+                   if (document.getElementById("tipo_confirmada").checked){
+                       document.getElementById("estado").checked = false
+                       document.getElementById("tipo_incompleta").checked = false
+                       document.getElementById("tipo_sin_procesar").checked = false
+                       llenarTabla(2);
+                   }else {
+                       $("#example-table").tabulator("clearData");
+                   }
+                   break;
+               case 'incompleta': {
+                   if (document.getElementById("tipo_incompleta").checked) {
+                       document.getElementById("estado").checked = false
+                       document.getElementById("tipo_confirmada").checked = false
+                       document.getElementById("tipo_sin_procesar").checked = false
+                       llenarTabla(3);
+                   }else {
+                       $("#example-table").tabulator("clearData");
+                   }
+                   break;
+               }
+               case 'sin_procesar': {
+                   if (document.getElementById("tipo_sin_procesar").checked) {
+                       document.getElementById("estado").checked = false
+                       document.getElementById("tipo_confirmada").checked = false
+                       document.getElementById("tipo_incompleta").checked = false
+                       llenarTabla(4);
+                   }else {
+                       $("#example-table").tabulator("clearData");
+                   }
+                   break;
+               }
            }
        }
     </script>

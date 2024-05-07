@@ -60,6 +60,24 @@ class OrdenesComprasControl extends Controller
         return Response::json($resultados);
     }
 
+    public function consultasEspecificas()
+    {
+        $tipo = Input::get('tipo');
+        $resultados = DB::Select('SELECT id_compra,OrdenCompra AS OrdenCompra, ordenCompra1.Articulo, ordenCompra1.Detalle, ordenCompra1.Cantidad as Cantidad, DATE_FORMAT(FechaCompra, "%Y-%m-%d") as Fecha,
+                        repoArt.PrecioVenta as PVenta, Observaciones,
+                        (select count(*) from samira.notas_control_orden
+                                      where id_compras = id_compra) as cant_notas,
+                        ordenControlada
+                        FROM samira.compras as ordenCompra1
+                        inner join samira.reportearticulo as repoArt
+                        ON ordenCompra1.Articulo = repoArt.Articulo
+                        where TipoOrden IS NOT NULL
+                        and TipoOrden = 2 and ordenCompra1.Cantidad <> 0
+                        and ordenCompra1.ordenControlada = "'.$tipo.'"
+                        ORDER BY OrdenCompra DESC, FechaCompra DESC;');
+        return Response::json($resultados);
+
+    }
     public function notas()
     {
         $id_compra = Input::get('id_compra');
