@@ -13,7 +13,6 @@
                                     <th>Total</th>
                                     <th>Porcentaje</th>
                                     <th>Descuento</th>
-                                    <th>PagoMixto</th>
                                     <th>Cliente</th>
                                     <th>Accion</th>
                                 </tr>
@@ -25,7 +24,6 @@
                                         <td>{{$cierreDiario->Total}}</td>
                                         <td>{{$cierreDiario->Porcentaje}}</td>
                                         <td>{{$cierreDiario->Descuento}}</td>
-                                        <td>{{$cierreDiario->PagoMixto}}</td>
                                         <td>{{$cierreDiario->Cliente}}</td>
                                         <td><input type="button" value="Ver" class="btn btn-info" onclick="cargoTablaPopup({{$cierreDiario->NroFactura}});">
                                     </tr>
