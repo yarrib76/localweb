@@ -92,6 +92,7 @@ class ControllerFacturaWeb extends Controller
         $vendedora = Input::get('vendedora');
         $listoParaEnvio = Input::get('listoParaEnvio');
         $nroPedido = Input::get('nroPedido');
+        $pagoMixto = Input::get('pagoMixto');
         $esPedido = Input::get('esPedido');
 
         /*En caso de tener 2 Modal FacturaWeb Abiertos, antes de guardar la factura verifico que no exista.
@@ -107,7 +108,7 @@ class ControllerFacturaWeb extends Controller
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
         }
-        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina);
+        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto);
         $this->acturlizarNroFactura();
         if($esPedido = "SI"){
             $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
@@ -161,7 +162,7 @@ class ControllerFacturaWeb extends Controller
     }
 
 
-    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina)
+    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto)
     {
         if ($porcentajeDescuento > 0){
             $gananciaTotal = $descuento - $precioArgentina;
@@ -179,7 +180,8 @@ class ControllerFacturaWeb extends Controller
             'id_clientes' => $cliente_id,
             'envio' => $envio,
             'totalEnvio' => $totalEnvio,
-            'id_tipo_pago' => $tipo_pago_id
+            'id_tipo_pago' => $tipo_pago_id,
+            'pagomixto' => $pagoMixto
         ]);
     }
 

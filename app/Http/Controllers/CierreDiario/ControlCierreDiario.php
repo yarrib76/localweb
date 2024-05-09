@@ -33,8 +33,9 @@ class ControlCierreDiario extends Controller
                                 WHEN tipo_pago = "MercadoPago" THEN "mercadopago.png"
                                 WHEN tipo_pago = "Prestigio" THEN "financiera.png"
                                 WHEN tipo_pago = "CobroSur" THEN "cobrosur.png"
+                                WHEN tipo_pago = "Mixto" THEN "pagomixto.png"
                               END as tipo_pago_imagen,id_tipo_pago,
-                              count(*) as cantidad, ROUND(SUM(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE total END),2) as Total FROM samira.facturah
+                              count(*) as cantidad, if(tipo_pago <> "Mixto", ROUND(SUM(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE total END),2), ROUND(SUM(pagomixto),2)) as Total FROM samira.facturah
                               inner join samira.tipo_pagos ON tipo_pagos.id_tipo_pagos = facturah.id_tipo_pago
                               where fecha = "'.$fecha.'" and id_tipo_pagos > 1
                               group by tipo_pago;');
@@ -45,7 +46,7 @@ class ControlCierreDiario extends Controller
     {
         $fechaCierre = Input::get('fecha');
         $id_tipo_pogo = Input::get('id_tipo_pago');
-        $cierresDiarios = DB::SELECT ('SELECT  NroFactura,Total,Porcentaje, Descuento, tipo_pago, concat(nombre,",",apellido) as Cliente FROM samira.facturah
+        $cierresDiarios = DB::SELECT ('SELECT  NroFactura,Total,Porcentaje, Descuento, tipo_pago, concat(nombre,",",apellido) as Cliente, PagoMixto FROM samira.facturah
                                         inner join samira.tipo_pagos ON tipo_pagos.id_tipo_pagos = facturah.id_tipo_pago
                                         inner join samira.clientes ON clientes.id_clientes = facturah.id_clientes
                                         where fecha = "'.$fechaCierre.'" and id_tipo_pagos = "'.$id_tipo_pogo.'"');

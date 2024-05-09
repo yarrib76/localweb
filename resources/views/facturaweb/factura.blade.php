@@ -111,6 +111,8 @@
                                     <input type="number" id="totalApagar" min="0" disabled="true" style="width: 120px">
                                     <h4>Descuento</h4>
                                     <input type="number" id="totalDescuento" min="0" disabled="true" style="width: 120px">
+                                    <h4>Efectivo</h4>
+                                    <input type="number" id="efectivo" min="0" disabled="true" style="width: 120px">
                                 </td>
                             </tr>
                         </table>
@@ -216,7 +218,9 @@
     var checkboxDescuento = document.getElementById("chkBoxDescuento");
     var listDescuento = document.getElementById('select_descuento')
     var listRecargo = document.getElementById('select_recargo')
+    var listTipoPago = document.getElementById('tipo_pago');
     var textDescuento = document.getElementById('totalDescuento');
+    var textEfectivo = document.getElementById('efectivo');
     var glocalVendedora = document.getElementById('vendedora');
     document.getElementById('totalApagar').value = 0.00
     var globalClientId = 1;
@@ -489,6 +493,7 @@
         globalPrecioVenta.value = ""
         globalStock.value = ""
         textDescuento.value = 0.00
+        textEfectivo.value = 0.00
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
         listDescuento.disabled = true
@@ -504,6 +509,7 @@
         globalPrecioVenta.value = ""
         globalStock.value = ""
         textDescuento.value = 0.00
+        textEfectivo.value = 0.00
         globalBtnAgregar.disabled = true
         checkboxDescuento.checked = false
         listDescuento.disabled = true
@@ -601,6 +607,16 @@
             refreshTabulator()
         }
     });
+
+    // Agregar un listener para el evento change
+    listTipoPago.addEventListener('change', function(event){
+        if (listTipoPago.value == 7){
+            textEfectivo.disabled = false;
+        } else {
+            textEfectivo.disabled = true;
+            textEfectivo.value = 0
+        }
+    })
     /*LISTENER'S*/
 
     function facturar(){
@@ -634,6 +650,7 @@
                     esPedido: esPedido,
                     listoParaEnvio: listoParaEnvio,
                     nroPedido: nroPedido,
+                    pagoMixto: textEfectivo.value,
                 };
                 $.ajax({
                     url: "crearfactura",
