@@ -6,6 +6,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Mi Correo
                         <button class="btn btn-primary" onclick="llenarTabla()"><span class="glyphicon glyphicon-refresh"></span></button>
+                        <input id='PedidosPagos' onclick="pedidosPagos()" type="checkbox"> Pedidos Pagos
                     </div>
                     <div class="panel-body">
                         <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
@@ -205,6 +206,7 @@
                     return cell.getValue()
                 }},
                 {title: "destino_nombre", field: "destino_nombre", editor:true, sortable: true, width: 150,headerFilter:"input"},
+                {title: "Ordenweb", field: "ordenweb", sortable: true, download:false,width: 110,headerFilter:"input"},
                 {title: "destino_email", field: "destino_email", sortable: true, width: 80,headerFilter:"input"},
                 {title: "cod_area_tel", field: "cod_area_tel", sortable: true, width: 1},
                 {title: "tel", field: "tel", sortable: true, width: 1},
@@ -246,6 +248,7 @@
             }
         }
         function llenarTabla() {
+            document.getElementById("PedidosPagos").checked = false;
             $("#example-table").tabulator("setData", '/miCorreoCargaDatos');
         }
         $(window).resize(function () {
@@ -255,5 +258,11 @@
             $("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera", delimiter: ";"});
         });
 
+        function pedidosPagos(){
+            if (document.getElementById("PedidosPagos").checked){
+                $("#example-table").tabulator("redraw");
+                $("#example-table").tabulator("setData", '/miCorreoCargaDatos?tipo=Pagados');
+            }else llenarTabla();
+        }
     </script>
 @stop

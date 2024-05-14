@@ -28,15 +28,22 @@ class MiCorreo extends Controller
 
     public function listarEvios()
     {
-        $empaquetados = $this->obtengoEmpaquetados();
-        $this->crearEnvios($empaquetados);
-        $pedidosEmpaquetados = DB::select('select * from samira.mi_correo');
+        $tipo = Input::get('tipo');
+        if ($tipo == "Pagados") {
+            $envio = $this->obtengoPedidosPagos();
+            $tipo = 1;
+        } else {
+            $envio = $this->obtengoEmpaquetados();
+            $tipo = 0;
+        }
+        $this->crearEnvios($envio,$tipo);
+        $pedidosEmpaquetados = DB::select('select * from samira.mi_correo where tipo = "'.$tipo.'"');
         ob_start('ob_gzhandler');
         return Response::json($pedidosEmpaquetados);
     }
     public function obtengoEmpaquetados()
     {
-        $empaquetados = DB::select('select nropedido,concat(clientes.nombre," ", apellido) as nombre, vendedora, clientes.direccion, clientes.localidad, replace(telefono,"+54","") as cel
+        $envios = DB::select('select nropedido,concat(clientes.nombre," ", apellido) as nombre, vendedora, clientes.direccion, clientes.localidad, replace(telefono,"+54","") as cel
                                     ,mail, provincias.nombre as provincia, codigopostal, total, transporte, ordenweb, pub_sucursales.codigo_provincia
                                     from samira.controlpedidos as pedidos
                                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
@@ -45,12 +52,25 @@ class MiCorreo extends Controller
                                     where pedidos.estado = 0 and pedidos.empaquetado = 1
                                     and (pedidos.transporte = "Domicilio" or  pedidos.transporte = "Sucursal")
                                     group by (nropedido)');
-        return $empaquetados;
+        return $envios;
     }
 
-    public function crearEnvios($empaquetados)
+    public function obtengoPedidosPagos()
     {
-        foreach ($empaquetados as $pedido){
+        $envios = DB::select('select nropedido,concat(clientes.nombre," ", apellido) as nombre, vendedora, clientes.direccion, clientes.localidad, replace(telefono,"+54","") as cel
+                                    ,mail, provincias.nombre as provincia, codigopostal, total, transporte, ordenweb, pub_sucursales.codigo_provincia
+                                    from samira.controlpedidos as pedidos
+                                    INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
+                                    INNER JOIN samira.provincias ON provincias.id = clientes.id_provincia
+                                    INNER JOIN samira.pub_sucursales ON pub_sucursales.id_provincias = provincias.id
+                                    where pedidos.estado = 1 and pedidos.pagado = 1
+                                    and (pedidos.transporte = "Domicilio" or  pedidos.transporte = "Sucursal")
+                                    group by (nropedido)');
+        return $envios;
+    }
+    public function crearEnvios($envios,$tipo)
+    {
+        foreach ($envios as $pedido){
             $total = ($pedido->total * 2);
             $nombre = $this->quitar_tildes($pedido->nombre);
             //defino el tipo de envío en CP para envio clasico
@@ -62,13 +82,13 @@ class MiCorreo extends Controller
                             (tipo_producto,largo,ancho,altura,peso,valor_del_contenido,provincia_destino,localidad_destino,calle_destino,
                             codpostal_destino,destino_nombre,destino_email,cod_area_cel,
                             cel,nropedido,vendedora,tipo_envio,ordenweb,transporte,provincia,sucursal_destino,cod_area_tel,tel,
-                            altura_destino,dpto,piso)
+                            altura_destino,dpto,piso,tipo)
                             VALUES
                             ("'.$tipo_producto.'","20","10","20","1","' . $total . '","' . $pedido->codigo_provincia . '","' . $this->quitar_tildes($pedido->localidad) . '",
                             "' . $this->quitar_tildes($pedido->direccion) . '","' . $pedido->codigopostal . '","' . $nombre . '",
                             "' . $pedido->mail . '","'.substr($pedido->cel,0,-8).'","' . substr($pedido->cel,-8) . '","' . $pedido->nropedido . '","' . $pedido->vendedora . '",
                             "' . $pedido->transporte . '","' . $pedido->ordenweb . '","' . $pedido->transporte . '","' . $pedido->provincia . '","","","",
-                            "","","");');
+                            "","","","'.$tipo.'");');
             }
         }
     }
