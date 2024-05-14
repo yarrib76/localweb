@@ -25,7 +25,7 @@ class Test extends Controller
 {
     public function Test()
     {
-        //Priemer Commit FacturaWebSobrante
+        //Priemer Commit miCorreoPedidosPagos
 
         return view('test.pdf');
         $path = 'public/export/facturas/';
