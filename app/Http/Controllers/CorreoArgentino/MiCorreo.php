@@ -163,6 +163,10 @@ class MiCorreo extends Controller
         return "OK";
     }
 
+    //Este metodo actualiza el tipo a empaquetado = (0) cuando Roxana Factura y pone el tilde "listo para envio"
+    public function actualizarTipo($nroPedido){
+        DB::select('update samira.mi_correo set tipo = 0 where nropedido = "'.$nroPedido.'"');
+    }
     private function eliminarTodoslosEnvios()
     {
         DB::select('delete from samira.mi_correo');

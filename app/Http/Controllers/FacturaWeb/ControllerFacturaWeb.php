@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\FacturaWeb;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
+use Donatella\Http\Controllers\CorreoArgentino\MiCorreo;
 use Donatella\Models\Articulos;
 use Donatella\Models\ControlPedidos;
 use Donatella\Models\FacturacionHist;
@@ -111,6 +112,8 @@ class ControllerFacturaWeb extends Controller
         $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto);
         $this->acturlizarNroFactura();
         if($esPedido = "SI"){
+            $mi_correo = new MiCorreo();
+            $mi_correo->actualizarTipo($nroPedido);
             $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
         }
         return "OK";

@@ -6,7 +6,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Mi Correo
                         <button class="btn btn-primary" onclick="llenarTabla()"><span class="glyphicon glyphicon-refresh"></span></button>
-                        <input id='PedidosPagos' onclick="pedidosPagos()" type="checkbox"> Pedidos Pagos
+                        <input id='PedidosPagos' onclick="pedidosPagos()" type="checkbox"> Pedidos Pagos (Carita Feliz)
                     </div>
                     <div class="panel-body">
                         <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
