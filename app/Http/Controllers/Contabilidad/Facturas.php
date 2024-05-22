@@ -29,7 +29,7 @@ class Facturas extends Controller
     public function listarFacturas()
     {
         $facturas = DB::select ('SELECT CONCAT(clientes.nombre, ", ",clientes.apellido) as Cliente, NroFactura, ROUND(CASE WHEN Descuento <> "null" OR Descuento = 0 THEN Descuento ELSE total END,2) as Totales,
-                                    Envio, totalEnvio as TotalConEnvio, tipo_pagos.tipo_pago, estados.nombre, fecha,
+                                    Envio, totalEnvio as TotalConEnvio, tipo_pagos.tipo_pago, estados.nombre, fecha, pagomixto,
                                     (SELECT
                                     CASE WHEN TotalConEnvio = 0 THEN ROUND(sum(Totales - (Totales * 2.5 / 100)),2)
                                         else ROUND(sum(TotalConEnvio - (TotalConEnvio * 2.5 / 100)),2) end) as Cobrar, comentario
@@ -74,7 +74,8 @@ class Facturas extends Controller
         $articulo->update([
             'id_tipo_pago' => $id_tipo_pagos[0]->id_tipo_pagos,
             'id_estados_financiera' => $id_estados_financiera[0]->id_estado,
-            'comentario' =>$datos['comentario']
+            'comentario' =>$datos['comentario'],
+            'pagomixto' =>$datos['pagomixto']
         ]);
         return;
     }

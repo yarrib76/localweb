@@ -162,6 +162,7 @@
                     {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110,headerFilter:"input", bottomCalc:"sum"},
                     {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup,headerFilter:"input"},
                     {title: "Estado", field: "nombre", sortable: true, width: 110,editor:"select",editorParams:estadosLookup,headerFilter:"input"},
+                    {title: "pagomixto", field: "pagomixto", width: 115, editor:true},
                     {title: "Comentario", field: "comentario", width: 115,editor:"textarea"},
                 ],
                 cellEdited:function(cell, value, data){
