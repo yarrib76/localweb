@@ -36,6 +36,9 @@ class CierreDiarioController extends Controller
     {
         $fecha = Input::get('fecha');
         DB::select('UPDATE samira.facturah SET `Estado` = 1 where Fecha = "'.$fecha.'"');
+        //Cierre de Gastos por fecha
+        DB::select('UPDATE samira.gastos SET Estado = 1 where Fecha = "'.$fecha.'"');
+
         return "Done";
     }
 

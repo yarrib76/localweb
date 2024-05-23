@@ -166,30 +166,33 @@
         }
 
         function cierreCaja(fecha) {
-            $.ajax({
-                url: 'cierreCaja?fecha=' + fecha,
-                method: 'get',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (json) {
-                },
-                error: function (xhr, status, error) {
-                }
-            })
-            var rows = document.getElementById('reporte').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            for (i = 0; i < rows.length; i++) {
-                rows[i].cells[3].addEventListener("click", function() {
-                    if (event.target.id === 'cierreCaja') {
-                        //Paso a la variable la fila seleccionada
-                        posicionTable = this.parentNode.rowIndex;
-                        console.log(posicionTable);
-                        reporte.rows[posicionTable].cells[2].innerHTML = "Caja Cerrada";
-                        event.target.disabled = true;
+            var resultado = confirm('Esta seguro que desea cerrar la caja con fecha: ' + fecha)
+            if (resultado){
+                $.ajax({
+                    url: 'cierreCaja?fecha=' + fecha,
+                    method: 'get',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (json) {
+                    },
+                    error: function (xhr, status, error) {
                     }
-
                 })
+                var rows = document.getElementById('reporte').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+                for (i = 0; i < rows.length; i++) {
+                    rows[i].cells[3].addEventListener("click", function() {
+                        if (event.target.id === 'cierreCaja') {
+                            //Paso a la variable la fila seleccionada
+                            posicionTable = this.parentNode.rowIndex;
+                            console.log(posicionTable);
+                            reporte.rows[posicionTable].cells[2].innerHTML = "Caja Cerrada";
+                            event.target.disabled = true;
+                        }
+
+                    })
+                }
+                alert("Caja " + fecha + " Cerrada")
             }
-            alert("Caja " + fecha + " Cerrada")
         }
     </script>
 @stop
