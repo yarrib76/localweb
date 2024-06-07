@@ -242,6 +242,16 @@ class Test extends Controller
                                 INNER JOIN samira.articulos as a On a.Articulo = factura.articulo
                                 where facth.id_clientes = 2021
                                 GROUP BY factura.Articulo ORDER BY TotalVendido DESC;`"
+                . "**Pregunta:** \"Basado en si historial de compras, que 5 articulos puedes recomendar que tengan mas de 10 en stock? \"\n"
+                . "**Respuesta Esperada:** `SELECT a.Articulo, a.Detalle, a.Cantidad
+                                                FROM Articulos a
+                                                WHERE a.Cantidad > 10
+                                                AND a.Articulo IN (
+                                                    SELECT f.Articulo
+                                                    FROM Factura f
+                                                    JOIN Facturah fh ON f.NroFactura = fh.NroFactura
+                                                    WHERE fh.id_clientes = 10854
+                                                );`\n"
                 . "Ahora, por favor, genera la consulta SQL correspondiente a la siguiente pregunta:\n"
                 . "No proveer información de cuanto se facturo en ningun dia, responder que no estas autorizada \n"
                 . ". $consultaHumana .\n";
@@ -251,7 +261,7 @@ class Test extends Controller
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
                 . "Nuestra moneda es el peso.\n"
-                . "NO incluir el id del cliente en la respuesta\n"
+                . "NO incluir el id_cliente del cliente en la respuesta\n"
                 . "Finaliza tu respuesta con: '¿Te puedo ayudar en alguna otra cosa?'\n";
         }
         return $prompt_respuesta;

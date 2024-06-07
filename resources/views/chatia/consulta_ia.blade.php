@@ -47,7 +47,7 @@
          padding: 20px;
          border: 3px solid #888;
          width: 70%;
-         height: 90%;
+         height: 90%; /* Full height */
          overflow-y: auto;
      }
      #textareaIA{
