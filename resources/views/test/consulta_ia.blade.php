@@ -16,7 +16,7 @@
     <style>
         body {font-family: Arial, Helvetica, sans-serif;}
         /* The Modal (background) */
-        #myModalComentarios {
+        #myModalChatIA {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
             z-index: 1; /* Sit on top */
@@ -30,7 +30,7 @@
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
         /* Modal Content */
-        #modal-content-comentarios {
+        #modal-content-chatia {
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
@@ -55,9 +55,9 @@
         }
     </style>
 
-    <div id="myModalComentarios" class="modal">
+    <div id="myModalChatIA" class="modal">
         <!-- Modal content -->
-        <div id="modal-content-comentarios" class="modal-content">
+        <div id="modal-content-chatia" class="modal-content">
             <span class="close1">&times;</span>
             <h5 id="cliente"></h5>
             <div id="general">
@@ -70,7 +70,7 @@
                 </div>
                 <div id="mensajes">
                     <div class="col-xs-12 col-xs-offset-0 well">
-                        <table id="comentarios" class="table table table-scroll table-striped">
+                        <table id="chatia" class="table table table-scroll table-striped">
                             <thead>
                             <tr>
 
@@ -88,23 +88,23 @@
 @section('extra-javascript')
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
     <script>
-        var table = $("#comentarios");
+        var table = $("#chatia");
         function consulta_ia(){
             $("textarea").val("");
             table.children().remove()
             table.append("<thead><tr><th>Usuario</th><th>Comentarios</th><th>Fecha</th></tr></thead>")
             // Get the modal
-            var modalComentario = document.getElementById('myModalComentarios');
+            var modalChatIA = document.getElementById('myModalChatIA');
 
             // Get the <span> element that closes the modal
             var spanComentario = document.getElementsByClassName("close1")[0];
 
             // When the user clicks the button, open the modal
-            modalComentario.style.display = "block";
+            modalChatIA.style.display = "block";
 
             // When the user clicks on <span> (x), close the modal
             //spanComentario.onclick = function() {
-            //    modalComentario.style.display = "none";
+            //    modalChatIA.style.display = "none";
             //}
            // $(".modal-content #cliente").html( "Cliente: " + cliente);
         }
@@ -135,9 +135,9 @@
 
         function cerrar(){
             // Get the modal
-            var modalComentario = document.getElementById('myModalComentarios');
+            var modalChatIA = document.getElementById('myModalChatIA');
             // When the user clicks on <span> (x), close the modal
-            modalComentario.style.display = "none";
+            modalChatIA.style.display = "none";
         }
 
     </script>

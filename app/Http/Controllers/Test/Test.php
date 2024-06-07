@@ -89,6 +89,8 @@ class Test extends Controller
         $api_key = config('services.openai.api_key');
 
         $consultaHumana = Input::get('consultaHumana');
+        $id_cliente = Input::get('cliente_id');
+        $consultaHumana = $consultaHumana . " para la clienta con id " . $id_cliente;
         $question = "¿Cuál es la consulta SQL necesaria para la siguiente pregunta: " .$consultaHumana . " La salida debe ser solo la consulta sql";
         $texto_estructurado = "";
         $tipo = "Consulta";
@@ -112,9 +114,11 @@ class Test extends Controller
             $tipo = "Respuesta";
             $prompt_respuesta = $this->getPrompt($tipo,$texto_estructurado,$consultaHumana);
             $respuesta_data = $this->consultaApi($api_key,$question_respuesta,$prompt_respuesta);
-            return Response::json($respuesta_data['choices'][0]['message']['content']);
+            if (isset($respuesta_data['choices'][0]['message']['content'])) {
+                return Response::json($respuesta_data['choices'][0]['message']['content']);
+            } else return Response::json($respuesta = 'Por favor, volver a realizar la consulta, verifique la claridad de la misma');
         } else {
-            $respuesta = 'No se pudo obtener una respuesta de la API. Respuesta completa: ' . json_encode($respuesta_data);
+            return Response::json($respuesta = 'Por favor, volver a realizar la consulta, verifique la claridad de la misma');
         }
         return $respuesta;
     }
@@ -195,38 +199,23 @@ class Test extends Controller
                 . "    Campos: (`id_clientes`, `nombre`, `apellido`, `direccion`, `mail`, `telefono`, `cuit`, `provincia`, `localidad`, `apodo`, `id_provincia`, `updated_at`, `created_at`, `cant_ofertas`, `encuesta`, `codigopostal`)\n"
                 . "    Funcion: Contiene los datos de todos los clientes.\n"
                 . "2. Facturah\n"
-                . "    Campos: (`Id`, `NroFactura`, `Total`, `Porcentaje`, `Descuento`, `Ganancia`, `Fecha`, `Estado`, `id_clientes`, `id_tipo_pago`, `envio`, `totalEnvio`, `id_estados_financiera`, `comentario`, `pagomixto`)\n"
+                . "    Campos: (`Id`, `NroFactura`, `Total`, `Porcentaje`, `Descuento`, `Fecha`, `Estado`, `id_clientes`, `id_tipo_pago`, `envio`, `totalEnvio`, `id_estados_financiera`, `comentario`, `pagomixto`)\n"
                 . "    Funcion: Contiene los datos de las facturas de los clientes.\n"
                 . "3. Factura\n"
-                . "    Campos: (`NroFactura`, `Articulo`, `Detalle`, `Cantidad`, `PrecioArgen`, `PrecioUnitario`, `PrecioVenta`, `Ganancia`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
+                . "    Campos: (`NroFactura`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
                 . "    Funcion: Contiene los artículos de cada factura y tiene relación con la tabla Facturah. Permite calcular el artículo más vendido.\n"
                 . "4. Articulos\n"
-                . "    Campos: (`Articulo`, `Detalle`, `Cantidad`, `PrecioOrigen`, `PrecioConvertido`, `Moneda`, `PrecioManual`, `Gastos`, `Ganancia`, `Proveedor`, `Observaciones`, `Web`, `ImageName`, `websku`, `ProveedorSKU`, `CompraAuto`)\n"
+                . "    Campos: (`Articulo`, `Detalle`, `Cantidad`,`Proveedor`, `Observaciones`, `Web`, `ImageName`, `websku`, `ProveedorSKU`, `CompraAuto`)\n"
                 . "    Funcion: Contiene la información de todos los artículos.\n"
-                . "5. Vendedores\n"
-                . "    Campos: (`Id`, `Nombre`, `Apellido`, `Telefono`, `Tipo`, `Password`)\n"
-                . "    Funcion: Contiene todas las vendedoras.\n"
                 . "6. Users\n"
                 . "    Campos: (`id`, `name`, `email`, `created_at`, `updated_at`, `id_roles`, `codigo`, `foto`, `id_vendedoras`)\n"
                 . "    Funcion: Contiene todos los usuarios y tiene relación con la tabla Vendedores.\n"
-                . "7. Fichaje\n"
-                . "    Campos: (`id_fichaje`, `fecha_ingreso`, `fecha_egreso`, `id_user`)\n"
-                . "    Funcion: Contiene la información del horario de llegada y retiro de las vendedoras.\n"
                 . "8. ControlPedidos\n"
                 . "    Campos: (`id`, `id_cliente`, `nropedido`, `vendedora`, `cajera`, `fecha`, `estado`, `nrofactura`, `total`, `ordenWeb`, `empaquetado`, `transporte`, `encuesta`, `ultactualizacion`, `local`, `totalweb`, `instancia`, `fecha_inicio_instancia`, `fecha_fin_instancia`, `fecha_proveedor`, `fecha_ultima_nota`, `pagado`, `fecha_pago`)\n"
                 . "    Funcion: Contiene todos los pedidos realizados por los clientes. El campo `vendedora` hace referencia a quien armó el pedido y el campo `cajera` a quien lo facturó. Tiene relaciones con las tablas Facturah, Clientes, y Pedidotemp. Cada pedido tiene los siguientes estados: 0 - Facturado, 1 - Proceso, 2 - Cancelado.\n"
                 . "9. Pedidotemp\n"
                 . "    Campos: (`NroPedido`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
                 . "    Funcion: Contiene los ítems de cada pedido.\n"
-                . "10. Gastos\n"
-                . "    Campos: (`Id`, `Nbr_Gasto`, `Detalle`, `Importe`, `Fecha`, `Estado`)\n"
-                . "    Funcion: Contiene los gastos.\n"
-                . "11. Clientes_fidelizacion\n"
-                . "    Campos: (`idclientes_fidelizacion`, `id_clientes`, `fecha_creacion`, `estado`, `fecha_ultima_compra`, `vendedora`, `promedioTotal`, `cant_compras`,`id_clientes_fidel_etapas`)\n"
-                . "    Funcion: Contiene la informacion de resultados de fidelizacion de clientes. Tiene relacion con la tabla Clientes_fidel_etapas. El campo estado indica si la fidelizacion esta abierta o cerrada (0 Abierta 1 Cerrado)\n"
-                . "12. Clientes_fidel_etapas\n"
-                . "    Campos: (`id_clientes_fidel_etapas`,`nombre_etapa`)\n"
-                . "    Funcion: Contiene los estados o etapas de la fidelizacion. Las etapas son las siguientes: 1 Pendiente, 2 Contactado, 3 Avanzado, 4 Exitosa, 5 Fallida"
                 . "Instrucciones:\n"
                 . "- Cuando te haga una pregunta sobre los datos, genera solo la consulta SQL necesaria para obtener la información requerida.\n"
                 . "- Asegúrate de que las consultas estén correctamente formateadas para MySQL.\n"
@@ -246,15 +235,15 @@ class Test extends Controller
                 . "**Respuesta Esperada:** `SELECT * FROM clientes WHERE id_clientes = 5;`\n"
                 . "**Pregunta:** \"¿Cuántas compras realizaron los clientes en mayo de 2024?\"\n"
                 . "**Respuesta Esperada:** `SELECT c.id_clientes, c.nombre, c.apellido, COUNT(*) AS total_compras FROM clientes c JOIN Facturah f ON c.id_clientes = f.id_clientes WHERE MONTH(f.Fecha) = 5 AND YEAR(f.Fecha) = 2024 GROUP BY c.id_clientes, c.nombre, c.apellido ORDER BY total_compras DESC LIMIT 10;`\n"
-                . "**Pregunta:** \"Cuanto es la facturación del 31 de Mayo del 2024?\"\n"
-                . "**Respuesta Esperada:** `SELECT ROUND(SUM(CASE WHEN Descuento <> `null` OR Descuento = 0 THEN Descuento ELSE total END),2) as Total FROM samira.facturah WHERE Fecha = '2024-05-31';`\n"
-                . "**Pregunta:** \"Cuantas fidelizaciones hay con etapa 4 o Exitosa?\"\n"
-                . "**Respuesta Esperada:** `SELECT count(*) as cantidad_etapas, etapa.nombre_etapa as tipo_etapa FROM samira.clientes_fidelizacion as fidel inner join samira.clientes_fidel_etapas as etapa ON etapa.id_clientes_fidel_etapas = fidel.id_clientes_fidel_etapas where etapa.nombre_etapa = 'Exitosa';`\n"
-                . "**Pregunta:** \"Cuantas fidelizaciones de una determinada vendedora?\"\n"
-                . "**Respuesta Esperada:** `select * from samira.clientes_fidelizacion where vendedora = 'Roxana';`"
-                . "**Pregunta:** \"Cuantas fidelizaciones abiertas tiene la Vendedora Sofia?\"\n"
-                . "**Respuesta Esperada:** `SELECT COUNT(*) AS fidelizaciones_abiertas FROM Clientes_fidelizacion c WHERE c.estado = 0 AND c.vendedora = 'Sofia';`"
+                . "**Pregunta:** \"Cuantas compras realizo un determinado cliente \"\n"
+                . "**Respuesta Esperada:** `SELECT  factura.Articulo as Articulo, factura.Detalle as Descripcion, sum(factura.Cantidad) as TotalVendido, factura.fecha, a.cantidad as Stock
+                                FROM samira.facturah as facth
+                                INNER JOIN samira.factura as factura ON facth.NroFactura = factura.NroFactura
+                                INNER JOIN samira.articulos as a On a.Articulo = factura.articulo
+                                where facth.id_clientes = 2021
+                                GROUP BY factura.Articulo ORDER BY TotalVendido DESC;`"
                 . "Ahora, por favor, genera la consulta SQL correspondiente a la siguiente pregunta:\n"
+                . "No proveer información de cuanto se facturo en ningun dia, responder que no estas autorizada \n"
                 . ". $consultaHumana .\n";
             return $prompt;
         } else {
@@ -262,6 +251,7 @@ class Test extends Controller
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
                 . "Nuestra moneda es el peso.\n"
+                . "NO incluir el id del cliente en la respuesta\n"
                 . "Finaliza tu respuesta con: '¿Te puedo ayudar en alguna otra cosa?'\n";
         }
         return $prompt_respuesta;
@@ -289,5 +279,80 @@ class Test extends Controller
             $texto_estructurado .= $fila_texto;
         }
         return $texto_estructurado;
+    }
+
+
+    public function save()
+    {
+        $consultaHumana = "";
+        $prompt = "Basado en el esquema que te estoy proveyendo, escribe una consulta SQL que responda a las preguntas de los usuarios. Siempre utiliza los campos provistos en el esquema y asegúrate de que la consulta comience directamente con la palabra 'SELECT', sin ningún prefijo adicional. Asegúrate también de definir correctamente los alias de las tablas cuando sea necesario.\n"
+            . "Esquema de la base de datos:\n"
+            . "Nombre de la Base: Samira\n"
+            . "Tablas a utilizar:\n"
+            . "1. clientes\n"
+            . "    Campos: (`id_clientes`, `nombre`, `apellido`, `direccion`, `mail`, `telefono`, `cuit`, `provincia`, `localidad`, `apodo`, `id_provincia`, `updated_at`, `created_at`, `cant_ofertas`, `encuesta`, `codigopostal`)\n"
+            . "    Funcion: Contiene los datos de todos los clientes.\n"
+            . "2. Facturah\n"
+            . "    Campos: (`Id`, `NroFactura`, `Total`, `Porcentaje`, `Descuento`, `Ganancia`, `Fecha`, `Estado`, `id_clientes`, `id_tipo_pago`, `envio`, `totalEnvio`, `id_estados_financiera`, `comentario`, `pagomixto`)\n"
+            . "    Funcion: Contiene los datos de las facturas de los clientes.\n"
+            . "3. Factura\n"
+            . "    Campos: (`NroFactura`, `Articulo`, `Detalle`, `Cantidad`, `PrecioArgen`, `PrecioUnitario`, `PrecioVenta`, `Ganancia`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
+            . "    Funcion: Contiene los artículos de cada factura y tiene relación con la tabla Facturah. Permite calcular el artículo más vendido.\n"
+            . "4. Articulos\n"
+            . "    Campos: (`Articulo`, `Detalle`, `Cantidad`, `PrecioOrigen`, `PrecioConvertido`, `Moneda`, `PrecioManual`, `Gastos`, `Ganancia`, `Proveedor`, `Observaciones`, `Web`, `ImageName`, `websku`, `ProveedorSKU`, `CompraAuto`)\n"
+            . "    Funcion: Contiene la información de todos los artículos.\n"
+            . "5. Vendedores\n"
+            . "    Campos: (`Id`, `Nombre`, `Apellido`, `Telefono`, `Tipo`, `Password`)\n"
+            . "    Funcion: Contiene todas las vendedoras.\n"
+            . "6. Users\n"
+            . "    Campos: (`id`, `name`, `email`, `created_at`, `updated_at`, `id_roles`, `codigo`, `foto`, `id_vendedoras`)\n"
+            . "    Funcion: Contiene todos los usuarios y tiene relación con la tabla Vendedores.\n"
+            . "7. Fichaje\n"
+            . "    Campos: (`id_fichaje`, `fecha_ingreso`, `fecha_egreso`, `id_user`)\n"
+            . "    Funcion: Contiene la información del horario de llegada y retiro de las vendedoras.\n"
+            . "8. ControlPedidos\n"
+            . "    Campos: (`id`, `id_cliente`, `nropedido`, `vendedora`, `cajera`, `fecha`, `estado`, `nrofactura`, `total`, `ordenWeb`, `empaquetado`, `transporte`, `encuesta`, `ultactualizacion`, `local`, `totalweb`, `instancia`, `fecha_inicio_instancia`, `fecha_fin_instancia`, `fecha_proveedor`, `fecha_ultima_nota`, `pagado`, `fecha_pago`)\n"
+            . "    Funcion: Contiene todos los pedidos realizados por los clientes. El campo `vendedora` hace referencia a quien armó el pedido y el campo `cajera` a quien lo facturó. Tiene relaciones con las tablas Facturah, Clientes, y Pedidotemp. Cada pedido tiene los siguientes estados: 0 - Facturado, 1 - Proceso, 2 - Cancelado.\n"
+            . "9. Pedidotemp\n"
+            . "    Campos: (`NroPedido`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
+            . "    Funcion: Contiene los ítems de cada pedido.\n"
+            . "10. Gastos\n"
+            . "    Campos: (`Id`, `Nbr_Gasto`, `Detalle`, `Importe`, `Fecha`, `Estado`)\n"
+            . "    Funcion: Contiene los gastos.\n"
+            . "11. Clientes_fidelizacion\n"
+            . "    Campos: (`idclientes_fidelizacion`, `id_clientes`, `fecha_creacion`, `estado`, `fecha_ultima_compra`, `vendedora`, `promedioTotal`, `cant_compras`,`id_clientes_fidel_etapas`)\n"
+            . "    Funcion: Contiene la informacion de resultados de fidelizacion de clientes. Tiene relacion con la tabla Clientes_fidel_etapas. El campo estado indica si la fidelizacion esta abierta o cerrada (0 Abierta 1 Cerrado)\n"
+            . "12. Clientes_fidel_etapas\n"
+            . "    Campos: (`id_clientes_fidel_etapas`,`nombre_etapa`)\n"
+            . "    Funcion: Contiene los estados o etapas de la fidelizacion. Las etapas son las siguientes: 1 Pendiente, 2 Contactado, 3 Avanzado, 4 Exitosa, 5 Fallida"
+            . "Instrucciones:\n"
+            . "- Cuando te haga una pregunta sobre los datos, genera solo la consulta SQL necesaria para obtener la información requerida.\n"
+            . "- Asegúrate de que las consultas estén correctamente formateadas para MySQL.\n"
+            . "- La respuesta debe comenzar directamente con la palabra 'SELECT'.\n"
+            . "- Utiliza alias para las tablas y asegúrate de definir los alias correctamente en el `JOIN`.\n"
+            . "- Si la pregunta no es una consulta para verificar en la base de datos, por ejemplo Hola, puedes responder con un SELECT 'Cual es la pregunta' "
+            . "Ejemplos de Preguntas y Respuestas Esperadas:\n"
+            . "**Pregunta:** \"¿Me puedes listar los clientes?\"\n"
+            . "**Respuesta Esperada:** `SELECT * FROM clientes;`\n"
+            . "**Pregunta:** \"¿Cuál es el total de todas las facturas?\"\n"
+            . "**Respuesta Esperada:** `SELECT SUM(Total) FROM Facturah;`\n"
+            . "**Pregunta:** \"¿Cuántos artículos hay en stock?\"\n"
+            . "**Respuesta Esperada:** `SELECT COUNT(*) FROM Articulos WHERE Cantidad > 0;`\n"
+            . "**Pregunta:** \"¿Puedes mostrarme los nombres y precios de todos los artículos?\"\n"
+            . "**Respuesta Esperada:** `SELECT Articulo, PrecioConvertido FROM Articulos;`\n"
+            . "**Pregunta:** \"¿Quién es el cliente con el ID 5?\"\n"
+            . "**Respuesta Esperada:** `SELECT * FROM clientes WHERE id_clientes = 5;`\n"
+            . "**Pregunta:** \"¿Cuántas compras realizaron los clientes en mayo de 2024?\"\n"
+            . "**Respuesta Esperada:** `SELECT c.id_clientes, c.nombre, c.apellido, COUNT(*) AS total_compras FROM clientes c JOIN Facturah f ON c.id_clientes = f.id_clientes WHERE MONTH(f.Fecha) = 5 AND YEAR(f.Fecha) = 2024 GROUP BY c.id_clientes, c.nombre, c.apellido ORDER BY total_compras DESC LIMIT 10;`\n"
+            . "**Pregunta:** \"Cuanto es la facturación del 31 de Mayo del 2024?\"\n"
+            . "**Respuesta Esperada:** `SELECT ROUND(SUM(CASE WHEN Descuento <> `null` OR Descuento = 0 THEN Descuento ELSE total END),2) as Total FROM samira.facturah WHERE Fecha = '2024-05-31';`\n"
+            . "**Pregunta:** \"Cuantas fidelizaciones hay con etapa 4 o Exitosa?\"\n"
+            . "**Respuesta Esperada:** `SELECT count(*) as cantidad_etapas, etapa.nombre_etapa as tipo_etapa FROM samira.clientes_fidelizacion as fidel inner join samira.clientes_fidel_etapas as etapa ON etapa.id_clientes_fidel_etapas = fidel.id_clientes_fidel_etapas where etapa.nombre_etapa = 'Exitosa';`\n"
+            . "**Pregunta:** \"Cuantas fidelizaciones de una determinada vendedora?\"\n"
+            . "**Respuesta Esperada:** `select * from samira.clientes_fidelizacion where vendedora = 'Roxana';`"
+            . "**Pregunta:** \"Cuantas fidelizaciones abiertas tiene la Vendedora Sofia?\"\n"
+            . "**Respuesta Esperada:** `SELECT COUNT(*) AS fidelizaciones_abiertas FROM Clientes_fidelizacion c WHERE c.estado = 0 AND c.vendedora = 'Sofia';`"
+            . "Ahora, por favor, genera la consulta SQL correspondiente a la siguiente pregunta:\n"
+            . ". $consultaHumana .\n";
     }
 }
