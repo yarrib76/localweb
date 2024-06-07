@@ -260,8 +260,9 @@ class Test extends Controller
             $prompt_respuesta ="Información: ".$texto_estructurado . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
+                . "No responder información de ganancias.\n"
                 . "Nuestra moneda es el peso.\n"
-                . "NO incluir el id_cliente del cliente en la respuesta\n"
+                . "No incluir el id_cliente del cliente en la respuesta\n"
                 . "Finaliza tu respuesta con: '¿Te puedo ayudar en alguna otra cosa?'\n";
         }
         return $prompt_respuesta;
