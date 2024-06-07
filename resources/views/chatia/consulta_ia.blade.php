@@ -12,7 +12,7 @@
                 </div>
                 <div id="mensajes">
                     <div class="col-xs-12 col-xs-offset-0 well">
-                        <table id="chatia" class="table table table-scroll table-striped";>
+                        <table id="chatia" class="table table table-scroll table-striped" style="height: 5%">
                             <thead>
                             <tr>
 
@@ -47,7 +47,6 @@
          padding: 20px;
          border: 3px solid #888;
          width: 70%;
-         height: 90%; /* Full height */
          overflow-y: auto;
      }
      #textareaIA{
