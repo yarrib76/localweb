@@ -111,14 +111,15 @@
             let horaFormateada = fechaActual.toFormat('HH:mm:ss');
             // Formatear la fecha en el formato deseado
             let fechaFormateada = fechaActual.toFormat('dd/MM/yyyy');
+            let fechaCompleta = fechaFormateada+ " " + horaFormateada
             table.append("<tr><td>"+"Yamil"+"</td><td>"+consulta+
-                    "</td><td>"+fechaFormateada+ " " + horaFormateada +"</td>"+ "</tr>");
+                    "</td><td>"+fechaCompleta+"</td>"+ "</tr>");
             $.ajax({
                 url: '/chatia?consultaHumana=' + consulta + "&cliente_id=" + global_id_cliente + "&id_pedido=" + global_id_Pedido_chatIA + "&id_user=" + global_id_usuario,
                 dataType : "json",
                 success: function(json) {
-                    table.append("<tr><td>"+"Mia IA"+"</td><td>"+json+
-                            "</td><td>"+fechaFormateada+ " " + horaFormateada +"</td>"+ "</tr>");
+                    table.append("<tr><td>"+"Mia"+"</td><td>"+json+
+                            "</td><td>"+fechaCompleta+"</td>"+ "</tr>");
                 },
             });
         }
