@@ -305,6 +305,11 @@ Route::get('/getNroFactura', 'FacturaWeb\ControllerFacturaWeb@getNroFactura');
 Route::get('/pedidoWeb','PedidosWeb\ControllerPedidoWeb@view');
 Route::post('/crearPedidoWeb', 'PedidosWeb\ControllerPedidoWeb@inPedido');
 
+/*Inteligencia Artificail Mia*/
+//Solo para llamados directos sin pasar por ejemplo por pedidos
+Route::get('/chatiaindex', 'Ia\PedidosChat@chatIaIndex');
+Route::get('/chatia', 'Ia\PedidosChat@chatIA');
+Route::get('/carga_chatia', 'Ia\PedidosChat@carga_chatIA');
 
 Route::group(['prefix' => 'api'],
     function () {

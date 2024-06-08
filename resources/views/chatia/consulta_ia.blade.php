@@ -65,13 +65,27 @@
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
     <script>
         var global_id_cliente;
+        var global_id_usuario;
+        var global_id_Pedido_chatIA
         var textareaIA = document.getElementById('textareaIA')
         var table = $("#chatia");
-        function consulta_ia(id_cliente,nombreCliente, apellidoCliente){
-            global_id_cliente = id_cliente
+        function consulta_ia(id_pedido, id_usuario, id_cliente, nombreCliente, apellidoCliente){
+            global_id_cliente = id_cliente;
+            global_id_usuario = id_usuario;
+            global_id_Pedido_chatIA = id_pedido;
             textareaIA.value = "";
             table.children().remove()
             table.append("<thead><tr><th>Usuario</th><th>Comentarios</th><th>Fecha</th></tr></thead>")
+            $.ajax({
+                url: 'carga_chatia?id_pedido=' + global_id_Pedido_chatIA,
+                dataType : "json",
+                success : function(json) {
+                    $.each(json, function(index, json){
+                        table.append("<tr><td>"+json['nombre']+"</td><td>"+json['chat']+
+                                "</td><td>"+json['fecha']+"</td>"+ "</tr>");
+                    });
+                }
+            });
             // Get the modal
             var modalChatIA = document.getElementById('myModalChatIA');
 
@@ -100,7 +114,7 @@
             table.append("<tr><td>"+"Yamil"+"</td><td>"+consulta+
                     "</td><td>"+fechaFormateada+ " " + horaFormateada +"</td>"+ "</tr>");
             $.ajax({
-                url: '/testia?consultaHumana=' + consulta + "&cliente_id=" + global_id_cliente,
+                url: '/chatia?consultaHumana=' + consulta + "&cliente_id=" + global_id_cliente + "&id_pedido=" + global_id_Pedido_chatIA + "&id_user=" + global_id_usuario,
                 dataType : "json",
                 success: function(json) {
                     table.append("<tr><td>"+"Mia IA"+"</td><td>"+json+

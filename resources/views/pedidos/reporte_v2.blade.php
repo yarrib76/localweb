@@ -128,7 +128,7 @@
                                                         <button type="button" id="botonPago{{$a}}" class="btn btn-success" onclick="cambioPago('{{$pedido->nropedido}}',1,'{{$a}}');"><i class="fa fa-smile-o"></i></button>
                                                 @endif
                                                     <button id="botonCheckOut" value="CheckOut" class="btn btn-success" onclick="checkOut({{$pedido->id}},'{{$pedido->nropedido}}','{{$pedido->nombre}}','{{$pedido->apellido}}');"><i class="fa fa-check"></i></button>
-                                                    <button class="btn btn-info" onclick="consulta_ia('{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">IA</i></button>
+                                                    <button class="btn btn-info" onclick="consulta_ia('{{$pedido->id}}','{{$user_id}}','{{$pedido->id_clientes}}','{{$pedido->nombre}}','{{$pedido->apellido}}')">IA</i></button>
                                                 </td>
                                         @else
                                             <td bgcolor="#FF0000">Cancelado</td>
