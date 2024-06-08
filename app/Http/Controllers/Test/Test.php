@@ -102,7 +102,8 @@ class Test extends Controller
             $respuesta = $respuesta_data['choices'][0]['message']['content'];
             $respuesta = str_replace(["```", "sql"], "",$respuesta);
             try {
-                $consultaDB = DB::select($respuesta);
+                //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
+                $consultaDB =DB::connection('mysql_secondary')->select($respuesta);
             } catch (QueryException $e) {
                 return Response::json("Perdon,no entendi la pregunta, volver a consultar!!");
             }
@@ -268,6 +269,7 @@ class Test extends Controller
         return $prompt_respuesta;
     }
 
+    //Funcion Fuera de servicio
     public function estructuraDatos($respuestaConsultaDB)
     {
         // Inicializamos una variable para almacenar el texto estructurado
