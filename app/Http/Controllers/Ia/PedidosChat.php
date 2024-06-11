@@ -42,7 +42,7 @@ class PedidosChat extends Controller
             $respuesta = str_replace(["```", "sql"], "",$respuesta);
             try {
                 //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
-                $consultaDB =DB::connection('mysql_secondary')->select($respuesta);
+                $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
             } catch (QueryException $e) {
                 return Response::json("Perdon,no entendi la pregunta, volver a consultar!!");
             }
@@ -50,7 +50,7 @@ class PedidosChat extends Controller
             //Estoy haciendo pruebas sin texto estructurado paso diectamente el json
             // $texto_estructurado = $this->estructuraDatos($consultaDB);
             $texto_estructurado = $consultaSQL;
-            $question_respuesta = "Eres una asistente profesional en el area de ventas\n";
+            $question_respuesta = "Tu nombre es Mia y eres una asistente en ventas\n";
             $tipo = "Respuesta";
             $prompt_respuesta = $this->getPrompt($tipo,$texto_estructurado,$consultaHumana);
             $respuesta_data = $this->consultaApi($api_key,$question_respuesta,$prompt_respuesta);
@@ -83,7 +83,8 @@ class PedidosChat extends Controller
                     'content' => utf8_encode($prompt)
                 ]
             ],
-            'max_tokens' => 240
+            'max_tokens' => 240,
+            'temperature'=> 0.2,
         ];
 
         // Inicializa cURL
@@ -158,6 +159,9 @@ class PedidosChat extends Controller
                 . "9. Pedidotemp\n"
                 . "    Campos: (`NroPedido`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
                 . "    Funcion: Contiene los ítems de cada pedido.\n"
+                . "10. Registrollamadas\n"
+                . "    Campos: (`id`, `users_id`, `clientes_id`, `comentarios`, `fecha`)\n"
+                ."     Funcion: Contiene los registros de las notas de los clientes. Tiene relación con las tablas clientes y Users\n"
                 . "Instrucciones:\n"
                 . "- Cuando te haga una pregunta sobre los datos, genera solo la consulta SQL necesaria para obtener la información requerida.\n"
                 . "- Asegúrate de que las consultas estén correctamente formateadas para MySQL.\n"
@@ -176,7 +180,7 @@ class PedidosChat extends Controller
                 . "**Pregunta:** \"¿Quién es el cliente con el ID 5?\"\n"
                 . "**Respuesta Esperada:** `SELECT * FROM clientes WHERE id_clientes = 5;`\n"
                 . "**Pregunta:** \"¿Cuántas compras realizaron los clientes en mayo de 2024?\"\n"
-                . "**Respuesta Esperada:** `SELECT c.id_clientes, c.nombre, c.apellido, COUNT(*) AS total_compras FROM clientes c JOIN Facturah f ON c.id_clientes = f.id_clientes WHERE MONTH(f.Fecha) = 5 AND YEAR(f.Fecha) = 2024 GROUP BY c.id_clientes, c.nombre, c.apellido ORDER BY total_compras DESC LIMIT 10;`\n"
+                . "**Respuesta Esperada:** `SELECT c.id_clientes, c.nombre, c.apellido, COUNT(*) AS total_compras FROM clientes c JOIN Facturah f ON c.id_clientes = f.id_clientes WHERE MONTH(f.Fecha) = 5 AND YEAR(f.Fecha) = 2024 GROUP BY c.id_clientes, c.nombre, c.apellido ORDER BY total_compras DESC;`\n"
                 . "**Pregunta:** \"Cuantas compras realizo un determinado cliente \"\n"
                 . "**Respuesta Esperada:** `SELECT  factura.Articulo as Articulo, factura.Detalle as Descripcion, sum(factura.Cantidad) as TotalVendido, factura.fecha, a.cantidad as Stock
                                 FROM samira.facturah as facth
@@ -194,15 +198,20 @@ class PedidosChat extends Controller
                                                     JOIN Facturah fh ON f.NroFactura = fh.NroFactura
                                                     WHERE fh.id_clientes = 10854
                                                 );`\n"
+                . "**Pregunta:** \"¿Cuantos reclamos tiene la clienta con id 3412\"\n"
+                . "**Respuesta Esperada:** `SELECT count(*) as TotalComentaroios FROM samira.registrollamadas where clientes_id = 3534;`\n"
+                . "**Pregunta:** \"¿Que reclamos tiene la clienta con id 3412\"\n"
+                . "**Respuesta Esperada:** `SELECT comentarios, fecha FROM samira.registrollamadas where clientes_id = 3534;`\n"
                 . "Ahora, por favor, genera la consulta SQL correspondiente a la siguiente pregunta:\n"
                 . "No proveer información de cuanto se facturo en ningun dia, responder que no estas autorizada \n"
                 . ". $consultaHumana .\n";
             return $prompt;
         } else {
-            $prompt_respuesta ="Información: ".$texto_estructurado . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
+            $prompt_respuesta ="Información: ". $texto_estructurado . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
-                . "No responder información de ganancias.\n"
+                . "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
+                . "No responder información relacioanada a ganancias.\n"
                 . "Nuestra moneda es el peso.\n"
                 . "No incluir el id_cliente del cliente en la respuesta\n"
                 . "Finaliza tu respuesta con: '¿Te puedo ayudar en alguna otra cosa?'\n";

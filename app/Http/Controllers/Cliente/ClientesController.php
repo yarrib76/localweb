@@ -32,7 +32,8 @@ class ClientesController extends Controller
             ->get();
       //  dd($clientes[0]);
     */
-        return view('clientes.reporte2', compact('clientes'));
+        $user_id = Auth::user()->id;
+        return view('clientes.reporte2', compact('clientes','user_id'));
     }
 
     /**

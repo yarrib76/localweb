@@ -82,6 +82,7 @@
                 success : function(json) {
                     for (var i = 0, ien = json.length; i < ien; i++) {
                         json[i]['Accion'] = "<a href='/clientesedit/" + json[i]['id_clientes'] + " ' target='_blank' class = 'btn btn-primary'>Modificar</a>"
+                        json[i]['Accion'] += " <button id='agregar' class='btn btn-success' onclick='comentario(" + json[i]['id_clientes'] + ", \"" + json[i]['nombre'] + "\", \"" + json[i]['apellido'] + "\")'><i class='fa fa-book'></i></button>";
                     }
                      table =  $('#reporte').DataTable({
                                 dom: 'Bfrtip',
@@ -152,4 +153,5 @@
             } );
         });
     </script>
+    @include('clientes.notas')
 @stop
