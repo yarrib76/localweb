@@ -308,7 +308,9 @@ Route::post('/crearPedidoWeb', 'PedidosWeb\ControllerPedidoWeb@inPedido');
 /*Inteligencia Artificail Mia*/
 //Solo para llamados directos sin pasar por ejemplo por pedidos
 Route::get('/chatiaindex', 'Ia\PedidosChat@chatIaIndex');
+Route::get('/chat_mercaderia_iaindex', 'Ia\MercaderiaChat@chatIaIndex');
 Route::get('/chatia', 'Ia\PedidosChat@chatIA');
+Route::get('/chatia_mercaderia', 'Ia\MercaderiaChat@chatIA');
 Route::get('/carga_chatia', 'Ia\PedidosChat@carga_chatIA');
 
 Route::group(['prefix' => 'api'],
