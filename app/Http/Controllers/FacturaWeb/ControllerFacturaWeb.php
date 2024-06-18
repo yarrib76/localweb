@@ -109,7 +109,7 @@ class ControllerFacturaWeb extends Controller
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
         }
-        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto);
+        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto,$vendedora);
         $this->acturlizarNroFactura();
         if($esPedido = "SI"){
             $mi_correo = new MiCorreo();
@@ -165,7 +165,7 @@ class ControllerFacturaWeb extends Controller
     }
 
 
-    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto)
+    public function creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto,$vendedora)
     {
         if ($porcentajeDescuento > 0){
             $gananciaTotal = $descuento - $precioArgentina;
@@ -184,6 +184,7 @@ class ControllerFacturaWeb extends Controller
             'envio' => $envio,
             'totalEnvio' => $totalEnvio,
             'id_tipo_pago' => $tipo_pago_id,
+            'vendedora' => $vendedora,
             'pagomixto' => $pagoMixto
         ]);
     }
