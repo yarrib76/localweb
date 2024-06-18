@@ -4,15 +4,15 @@ namespace Donatella\Http\Controllers\Ia;
 
 use Carbon\Carbon;
 use Donatella\Models\ChatIAPedidos;
-use Illuminate\Http\Request;
-
+use Illuminate\Database\QueryException;
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
-// Clase Descontinuada se cambio por Pedidos.php
-class PedidosChat extends Controller
+
+
+class Pedidos extends Controller
 {
     public function __construct()
     {
@@ -24,119 +24,40 @@ class PedidosChat extends Controller
         return view('test.consulta_ia');
 
     }
-    public function chatIA()
+    public function iniciarChat()
     {
-        // Tu clave API de OpenAI
-        $api_key = config('services.openai.api_key');
-
         $consultaHumana = Input::get('consultaHumana');
         $id_cliente = Input::get('cliente_id');
         $id_pedido = Input::get('id_pedido');
         $id_user = Input::get('id_user');
         $this->guardaChat($id_pedido,$id_user,$consultaHumana);
         $consultaHumana = $consultaHumana . " para la clienta con id " . $id_cliente;
-        $question = "¿Cuál es la consulta SQL necesaria para la siguiente pregunta: " .$consultaHumana . " La salida debe ser solo la consulta sql";
-        $texto_estructurado = "";
+        $question_SQL = "¿Cuál es la consulta SQL necesaria para la siguiente pregunta: " .$consultaHumana . " La salida debe ser solo la consulta sql";
         $tipo = "Consulta";
-
-        $prompt = $this->getPrompt($tipo,$texto_estructurado,$consultaHumana);
-
-        $respuesta_data = $this->consultaApi($api_key,$question,$prompt);
-        if (isset($respuesta_data['choices'][0]['message']['content'])) {
-            $respuesta = $respuesta_data['choices'][0]['message']['content'];
-            $respuesta = str_replace(["```", "sql"], "",$respuesta);
-            try {
-                //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
-                $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
-            } catch (QueryException $e) {
-                return Response::json("Perdon,no entendi la pregunta, volver a consultar!!");
-            }
-            $consultaSQL = json_encode($consultaDB);
-            //Estoy haciendo pruebas sin texto estructurado paso diectamente el json
-            // $texto_estructurado = $this->estructuraDatos($consultaDB);
-            $texto_estructurado = $consultaSQL;
-            $question_respuesta = "Tu nombre es Mia y eres una asistente en ventas\n";
-            $tipo = "Respuesta";
-            $prompt_respuesta = $this->getPrompt($tipo,$texto_estructurado,$consultaHumana);
-            $respuesta_data = $this->consultaApi($api_key,$question_respuesta,$prompt_respuesta);
-            if (isset($respuesta_data['choices'][0]['message']['content'])) {
-                $id_user = DB::Select('select id from samira.users where name="Mia"');
-                $this->guardaChat($id_pedido,$id_user[0]->id,$respuesta_data['choices'][0]['message']['content']);
-                return Response::json($respuesta_data['choices'][0]['message']['content']);
-            } else return Response::json($respuesta = 'Por favor, volver a realizar la consulta, verifique la claridad de la misma');
-        } else {
-            return Response::json($respuesta = 'Por favor, volver a realizar la consulta, verifique la claridad de la misma');
+        $texto_respuesta = "";
+        $prompt = $this->getPrompt($tipo,$texto_respuesta,$consultaHumana);
+        $asistenteSQL = new ChatGPT();
+        $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt);
+        $respuesta = str_replace(["```", "sql"], "",$respuesta);
+        try {
+            //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
+            $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
+        } catch (QueryException $e) {
+            return Response::json("Perdon,no entendi la pregunta, volver a consultar!!");
         }
-        return $respuesta;
-    }
-
-    public function consultaApi($api_key,$question,$prompt)
-    {
-        // La URL de la API de OpenAI
-        $url = 'https://api.openai.com/v1/chat/completions';
-
-        // Los datos de la solicitud
-        $data = [
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => utf8_encode($question)
-                ],
-                [
-                    'role' => 'user',
-                    'content' => utf8_encode($prompt)
-                ]
-            ],
-            'max_tokens' => 240,
-            'temperature'=> 0.2,
-        ];
-
-        // Inicializa cURL
-        $ch = curl_init($url);
-
-        // Codifica los datos a JSON
-        $json_data = json_encode($data);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $api_key
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-
-        // Imprime el JSON para depuración
-        //echo $json_data;
-
-        // Ejecuta la solicitud y obtiene la respuesta
-        $response = curl_exec($ch);
-
-        // Comprueba si hay errores en cURL
-        if (curl_errno($ch)) {
-            $error_msg = curl_error($ch);
-            curl_close($ch);
-            return 'Error en cURL: ' . $error_msg;
-        }
-
-        // Obtiene el código de estado HTTP
-        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        // Cierra cURL
-        curl_close($ch);
-
-        // Verifica el código de estado HTTP
-        if ($http_status != 200) {
-            return 'Error: Código de estado HTTP ' . $http_status . '. Respuesta completa: ' . $response;
-        }
-
-        // Decodifica la respuesta JSON
-        $response_data = json_decode($response, true);
-        return $response_data;
+        $texto_respuesta = json_encode($consultaDB);
+        $question_respuesta = "Tu nombre es Mia y eres una asistente en ventas\n";
+        $tipo = "Respuesta";
+        $prompt_respuesta = $this->getPrompt($tipo,$texto_respuesta,$consultaHumana);
+        $asistenteVentas = new ChatGPT();
+        $respuesta = $asistenteVentas->chatIA($question_respuesta,$prompt_respuesta);
+        $id_user = DB::Select('select id from samira.users where name="Mia"');
+        $this->guardaChat($id_pedido,$id_user[0]->id,$respuesta);
+        return Response::json($respuesta);
     }
 
 
-    public function getPrompt($tipo,$texto_estructurado,$consultaHumana)
+    public function getPrompt($tipo,$texto_respuesta,$consultaHumana)
     {
         if ($tipo == "Consulta") {
             $prompt = "Basado en el esquema que te estoy proveyendo, escribe una consulta SQL que responda a las preguntas de los usuarios. Siempre utiliza los campos provistos en el esquema y asegúrate de que la consulta comience directamente con la palabra 'SELECT', sin ningún prefijo adicional. Asegúrate también de definir correctamente los alias de las tablas cuando sea necesario.\n"
@@ -208,11 +129,10 @@ class PedidosChat extends Controller
                 . "**Pregunta:** \"¿Que reclamos tiene la clienta con id 3412\"\n"
                 . "**Respuesta Esperada:** `SELECT comentarios, fecha FROM samira.registrollamadas where clientes_id = 3534;`\n"
                 . "Ahora, por favor, genera la consulta SQL correspondiente a la siguiente pregunta:\n"
-                . "No proveer información de cuanto se facturo en ningun dia, responder que no estas autorizada \n"
                 . ". $consultaHumana .\n";
             return $prompt;
         } else {
-            $prompt_respuesta ="Información: ". $texto_estructurado . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
+            $prompt_respuesta ="Información: ". $texto_respuesta . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
                 . "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
@@ -223,7 +143,6 @@ class PedidosChat extends Controller
         }
         return $prompt_respuesta;
     }
-
     public function guardaChat($id_pedido, $id_user, $chat)
     {
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
@@ -234,7 +153,6 @@ class PedidosChat extends Controller
             'fecha' => $fecha
         ]);
     }
-
     public function carga_chatIA()
     {
         $id_pedido = Input::get('id_pedido');
@@ -244,4 +162,7 @@ class PedidosChat extends Controller
                                 order by fecha asc;');
         return Response::json($chat);
     }
+
+
+
 }

@@ -163,8 +163,8 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 
 /*Test*/
 Route::get('/test','Test\Test@test');
-Route::get('/testia','Test\Test@pruebaApiIA');
-//Route::get('/testia','Test\TestIA@consultaIA');
+//Route::get('/testia','Test\Test@pruebaApiIA');
+Route::get('/testia','Ia\Pedidos@iniciarChat');
 Route::get('/testconvert','Test\Test@convert');
 Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
 Route::get('/cambioPrecios','Articulo\CambioPreciosControl@index');
@@ -307,11 +307,11 @@ Route::post('/crearPedidoWeb', 'PedidosWeb\ControllerPedidoWeb@inPedido');
 
 /*Inteligencia Artificail Mia*/
 //Solo para llamados directos sin pasar por ejemplo por pedidos
-Route::get('/chatiaindex', 'Ia\PedidosChat@chatIaIndex');
+Route::get('/chatiaindex', 'Ia\Pedidos@chatIaIndex');
 Route::get('/chat_mercaderia_iaindex', 'Ia\MercaderiaChat@chatIaIndex');
-Route::get('/chatia', 'Ia\PedidosChat@chatIA');
+Route::get('/chatia', 'Ia\Pedidos@iniciarChat');
 Route::get('/chatia_mercaderia', 'Ia\MercaderiaChat@chatIA');
-Route::get('/carga_chatia', 'Ia\PedidosChat@carga_chatIA');
+Route::get('/carga_chatia', 'Ia\Pedidos@carga_chatIA');
 
 Route::group(['prefix' => 'api'],
     function () {
