@@ -27,7 +27,7 @@ class Test extends Controller
 {
     public function Test()
     {
-        //Priemer Commit ApiGPT
+        //Priemer Commit ApiGPTClass
         return view('test.consulta_ia');
         $respuesta = $this->pruebaApiIA();
         return $respuesta;
