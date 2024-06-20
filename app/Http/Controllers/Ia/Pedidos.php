@@ -39,6 +39,7 @@ class Pedidos extends Controller
         $asistenteSQL = new ChatGPT();
         $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt);
         $respuesta = str_replace(["```", "sql"], "",$respuesta);
+        dd($respuesta);
         try {
             //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
             $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
@@ -93,6 +94,9 @@ class Pedidos extends Controller
                 . "- Asegúrate de que las consultas estén correctamente formateadas para MySQL.\n"
                 . "- La respuesta debe comenzar directamente con la palabra 'SELECT'.\n"
                 . "- Utiliza alias para las tablas y asegúrate de definir los alias correctamente en el `JOIN`.\n"
+                . "- Es muy importante que no confundas entre cantidad disponible y la cantidad comprada de un articulo. La catidad de disponible o stock se debe obtener del campo cantidad en la tabla Articulos, mientras que la cantidad vendida se obtine del campo cantidad en la tabla Factura"
+                . "- Cuando analices las compras de un cliente para poder recomendar artículos, debes tener en cuenta la cantidad comprados historicamente, ya que ese es un indicador de que el cliente suele comprar ese articulos"
+                . "- En tu analisis puedes incluir la cantidad de veces que se vendió ese articulo ya que esa información determina que es un artículo que se vende mucho. Siempre verifica que tengamos mas de 10 en Stock para recomendarlo"
                 . "- Si la pregunta no es una consulta para verificar en la base de datos, por ejemplo Hola, puedes responder con un SELECT 'Cual es la pregunta' "
                 . "Ejemplos de Preguntas y Respuestas Esperadas:\n"
                 . "**Pregunta:** \"¿Me puedes listar los clientes?\"\n"
@@ -135,6 +139,7 @@ class Pedidos extends Controller
             $prompt_respuesta ="Información: ". $texto_respuesta . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
+                . "Es fundamental para el area de ventas que las respuesta que tu brindes ayuden a nuestras vendedoras a potenciar las ventas.\n"
                 . "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
                 . "No responder información relacioanada a ganancias.\n"
                 . "Nuestra moneda es el peso.\n"
