@@ -39,7 +39,6 @@ class Pedidos extends Controller
         $asistenteSQL = new ChatGPT();
         $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt);
         $respuesta = str_replace(["```", "sql"], "",$respuesta);
-        dd($respuesta);
         try {
             //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
             $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
