@@ -139,7 +139,7 @@ class Pedidos extends Controller
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
                 . "Es fundamental para el area de ventas que las respuesta que tu brindes ayuden a nuestras vendedoras a potenciar las ventas.\n"
-                . "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
+                //. "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
                 . "No responder información relacioanada a ganancias.\n"
                 . "Nuestra moneda es el peso.\n"
                 . "No incluir el id_cliente del cliente en la respuesta\n"
