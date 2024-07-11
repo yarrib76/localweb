@@ -430,7 +430,7 @@
             {title: "Detalle", field: "Detalle", width: 350,headerFilter:"input"},
             {title: "Cantidad", field: "Cantidad", width: 80},
             {title: "PrecioUnitario", field: "PrecioUnitario", width:140},
-            {title: "PrecioVenta", field: "PrecioVenta", width:140},
+            {title: "PrecioVenta", field: "PrecioVenta", width:140, topCalc:"sum"},
             {title: "Accion",width:100, cellClick:function(e, cell){
                 eliminarAritculoFactura(cell.getRow().getData()['Articulo'])
             },
