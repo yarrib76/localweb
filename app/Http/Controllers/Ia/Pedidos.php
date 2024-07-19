@@ -135,7 +135,7 @@ class Pedidos extends Controller
                 . ". $consultaHumana .\n";
             return $prompt;
         } else {
-            $prompt_respuesta ="Información: ". $texto_respuesta . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
+            $prompt_respuesta ="Información de Respuesta: ". $texto_respuesta . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
                 . "Es fundamental para el area de ventas que las respuesta que tu brindes ayuden a nuestras vendedoras a potenciar las ventas.\n"

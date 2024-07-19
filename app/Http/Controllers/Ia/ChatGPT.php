@@ -32,7 +32,7 @@ class ChatGPT
 
         // Los datos de la solicitud
         $data = [
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4o-mini',
             'messages' => [
                 [
                     'role' => 'system',
@@ -43,7 +43,7 @@ class ChatGPT
                     'content' => utf8_encode($prompt)
                 ]
             ],
-            'max_tokens' => 240,
+            'max_tokens' => 440,
             'temperature'=> 0.2,
         ];
 
