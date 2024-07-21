@@ -313,6 +313,9 @@ Route::get('/chatia', 'Ia\Pedidos@iniciarChat');
 Route::get('/chatia_mercaderia', 'Ia\MercaderiaChat@chatIA');
 Route::get('/carga_chatia', 'Ia\Pedidos@carga_chatIA');
 
+/*IA Operador Bursatil*/
+Route::get('operadorBursatil','Ia\Bursatil@inicio');
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');
@@ -438,4 +441,7 @@ Route::group(['prefix' => 'api'],
 
         /*Lista Gastos por Fecha*/
         Route::get('/listaGastosFecha','Api\GastosController@listaGastosFecha');
+
+        /*Obtengo datos Bursatiles*/
+        Route::get('/datosbursatiles','Api\GetDataBursatil@obtengoDatos');
     });
