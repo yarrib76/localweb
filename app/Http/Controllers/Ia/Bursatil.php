@@ -35,7 +35,7 @@ class Bursatil extends Controller
                 . "2. cuantos días me recomiendas mantener la compra de la acción. \n"
                 . "Datos con información de la acción en fotmato Json\n"
                 . ". $datosBursatiles .\n"
-                . "Solo necesito que la respuesta sea Symbol, Probabilidad de Ganar y Días, no hace falta la explicación del analisis\n";
+                . "Solo necesito que la respuesta sea Symbol, Probabilidad de Ganar , Días, Detalle. En detalle hacer un pequeño resumen del analisis. \n";
             return $prompt;
     }
 
