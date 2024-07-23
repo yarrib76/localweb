@@ -22,7 +22,7 @@
                     @elseif (substr(Request::url('http://viamore.dyndns.org'),0,25) == 'http://viamore.dyndns.org')
                         <option>Samira</option>
                         <option>Donatella</option>
-                    @elseif (substr(Request::url('http://donalab.dyndns.org'),0,25) == 'http://donalab.dyndns.org')
+                    @elseif (substr(Request::url('http://donalab2.dyndns.org'),0,26) == 'http://donalab2.dyndns.org')
                         <option>Viamore</option>
                         <option>Samira</option>
                         <option>Donatella</option>

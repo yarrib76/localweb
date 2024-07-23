@@ -219,12 +219,14 @@ class GetArticulosTiendaNube extends Controller
         // dd(substr($categorias, 0, -1));
 
         $categorias = substr($categorias, 0, -1);
+        //************* Descontinuado ya que quitamos una subCategoría*****************
         // Quita o reemplaza por nada, de la variable de tipo String la palabra repetida "BAÑO EN ORO," adaptación para mas de 2 sub-Categorias
-        $categorias = str_replace("BAÑO EN ORO,","",$categorias);
+          //******$categorias = str_replace("BAÑO EN ORO,","",$categorias);
         // Quita o reemplaza por nada, de tipo String la palabra repetida "BAÑO EN PLATA, adaptación para mas de 2 sub-Categorias
-        $categorias = str_replace("BAÑO EN PLATA,","",$categorias);
+         //*******$categorias = str_replace("BAÑO EN PLATA,","",$categorias);
         // Agregar cuando se inciropre la categería BAÑO EN ACERO
-        $categorias = str_replace("BAÑO ACERO,","",$categorias);
+         //*******$categorias = str_replace("BAÑO ACERO,","",$categorias);
+        //*****************************************************************************
         return $categorias;
     }
 
