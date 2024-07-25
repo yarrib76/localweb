@@ -315,6 +315,9 @@ Route::get('/carga_chatia', 'Ia\Pedidos@carga_chatIA');
 
 /*IA Operador Bursatil*/
 Route::get('operadorBursatil','Ia\Bursatil@inicio');
+Route::get('panelinversor','OperadorBursatil\Inversor@index');
+Route::get('buscaracciones','OperadorBursatil\Inversor@buscarAcciones');
+Route::post('invertir','OperadorBursatil\Inversor@invertir');
 
 Route::group(['prefix' => 'api'],
     function () {

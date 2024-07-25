@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Input;
 
 class GetDataBursatil extends Controller
 {
-    public function obtengoDatos()
+    public function obtengoDatos($apikey,$empresa)
     {
-        $apikey = Input::get('apikey');
+        //$apikey = Input::get('apikey');
         // Definición de Parámetros
         // $apikey = 'H75CXB3AOHKM8Z';
-        $symbols = Input::get('empresa'); // Lista de símbolos que deseas analizar
+        //$symbols = Input::get('empresa'); // Lista de símbolos que deseas analizar
+        $symbols = $empresa;
         $range = '2month'; // Rango de fechas para el análisis
         $interval = 'DAILY'; // Intervalo de tiempo entre dos puntos de datos consecutivos
         $window_size = 20; // Tamaño de la ventana móvil
@@ -71,14 +72,14 @@ class GetDataBursatil extends Controller
 
         curl_multi_close($multi_handle);
 
-// Combinar todas las respuestas en un solo array
+        // Combinar todas las respuestas en un solo array
         $combined_data = [
             'data_1' => isset($responses[0]) ? $responses[0] : [],
             'data_2' => isset($responses[1]) ? $responses[1] : [],
             'data_3' => isset($responses[2]) ? $responses[2] : []
         ];
 
-// Codificar el array combinado en JSON
+        // Codificar el array combinado en JSON
         $json_output = json_encode($combined_data, JSON_PRETTY_PRINT);
         return $json_output;
     }
