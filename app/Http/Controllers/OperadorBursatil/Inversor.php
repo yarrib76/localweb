@@ -2,12 +2,16 @@
 
 namespace Donatella\Http\Controllers\OperadorBursatil;
 
+use Carbon\Carbon;
 use Donatella\Http\Controllers\Ia\Bursatil;
+use Donatella\Models\Inversiones;
 use Illuminate\Http\Request;
 
 use Donatella\Http\Requests;
 use Donatella\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 
 class Inversor extends Controller
 {
@@ -88,13 +92,37 @@ class Inversor extends Controller
         $apikey = Input::get('apikey');
         $empresas = Input::get('empresas');
         $operador = new Bursatil();
-        $empresa = $empresas[0];
-        $inversiones = $operador->inicio($apikey,$empresa);
+        foreach ($empresas as $empresa){
+            $inversiones = $operador->inicio($apikey,$empresa);
+            // Eliminar los caracteres de formato JSON (```json\n y \n```), si es necesario
+            $jsonResponse = preg_replace('/```json\n|\n```/', '', $inversiones);
+            // Decodificar el JSON a un array asociativo de PHP
+            $data = json_decode($jsonResponse, true);
+            $this->insertarDatos($data);
+        }
 
-        // Eliminar los caracteres de formato JSON (```json\n y \n```), si es necesario
-        $jsonResponse = preg_replace('/```json\n|\n```/', '', $inversiones);
-        // Decodificar el JSON a un array asociativo de PHP
-        $data = json_decode($jsonResponse, true);
-        dd($data[0]['precioAccion']);
+        //dd($data[0]['precioAccion']);
+    }
+
+    private function insertarDatos($data)
+    {
+        $fechaActual = Carbon::now()->format('Y-m-d H:i:s');
+        $fechaFinalizacion = Carbon::now();
+        $fechaFinalizacion = $fechaFinalizacion->addDays($data[0]['Dias']);
+        Inversiones::create([
+            'nbr_accion' => $data[0]['Symbol'],
+            'recomendacion' => $data[0]['Probabilidad de Ganar'],
+            'informeia' => $data[0]['Detalle'],
+            'dias_retencion' => $data[0]['Dias'],
+            'precio' => $data[0]['precioAccion'],
+            'fecha_compra' => $fechaActual,
+            'fecha_finalizacion' => $fechaFinalizacion,
+        ]);
+    }
+
+    public function cargaDatosTabuladorInversiones()
+    {
+        $listaInversiones = DB::select('select * from samira.inversiones');
+        return Response::json($listaInversiones);
     }
 }

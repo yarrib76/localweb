@@ -44,6 +44,9 @@
                             <button id="historico" class="btn btn-success" onclick="reporteHistorico()">ReporteHistorico</button>
                         </td>
                     </table>
+                    <div class="panel-body">
+                        <div id="table-inversiones"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,16 +111,9 @@
     </style>
 @stop
 @section('extra-javascript')
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
-    <link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-html5-2.4.2/datatables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
-
-    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
-
-    <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-html5-2.4.2/datatables.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="../../js/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css" rel="stylesheet">
+    <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
 
     <!-- DataTables -->
 
@@ -126,6 +122,8 @@
         var inputCantidadAcciones = document.getElementById('cantidad');
         var modalFinish = document.getElementById('myModalFinish');
         var inputapikey = document.getElementById('apikey')
+        var select1 = document.getElementById('select1');
+        var select2 = document.getElementById('select2');
         var headers = {
             'Content-Type': 'application/json'
         }
@@ -152,7 +150,31 @@
                 var selectedItem = $("#select1 option:selected");
                 $("#txtRight").val(selectedItem.text());
             });
+            cargaDatosTabulator()
         });
+
+        var tableInversiones = new Tabulator("#table-inversiones", {
+            height: "550px",
+            columns: [
+                {title: "Accion", field: "nbr_accion", width: 100, headerFilter:"input"},
+                {title: "Recomendacion", field: "recomendacion",  width: 110},
+                {title: "Dias Retencion", field: "dias_retencion", width: 110},
+                {title: "Precio Accion", field: "precio", width: 110},
+                {title: "Fecha de Compra", field: "fecha_compra", width: 155},
+                {title: "Estado", field: "estado", width: 100},
+                {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110},
+                {title: "Precio Venta", field: "precio_venta", width: 110},
+                {title: "Fecha de Finalizacion", field: "fecha_compra", width: 110},
+                {title: "Ganancia", field: "ganancia", width: 110},
+                {title: "Precio Actual", field: "precioactual", width: 110},
+                {title: "Fecha ultimo Precio", field: "fechaverificacionprecio", width: 110},
+                {title: "Informe Accion", field: "informeia", width: 110},
+            ],
+
+        });
+        function cargaDatosTabulator(){
+            tableInversiones.setData("/cargardatosinversores");
+        }
 
         function llenarSelectProveedor(){
             $.ajax({
@@ -172,8 +194,6 @@
 
             }); // ajax
         }
-
-
         function mostrarSeleccion() {
             var select2 = document.getElementById('select2');
             var allOptions = Array.from(select2.options);
@@ -183,7 +203,6 @@
 
             return allItems;
         }
-
         function selectores(tipo){
             switch (tipo){
                 case "checkBoxCantidadAcciones":
@@ -222,51 +241,128 @@
                 });
             } else alert('Debe agregar la cantidad de Empresas')
         }
-
-
         function cerrarFinish(){
             modalFinish.style.display = "none";
             location.reload();
             //close the modal
         }
-
-        function otro(){
-            $.ajax({
-                url: '/buscaracciones?apykey=' + inputapikey.value,
-                method: "POST",
-                headers: headers,
-                data: JSON.stringify({
-                    proveedores: datosSelecionados,
-                    calculo: calculo,
-                    tipo: tipo
-                }),
-                success: function (datos){
-
-                }
-            })
-        }
-
         function crearInversiones(){
-            var datosSelecionados = mostrarSeleccion()
-            $.ajax({
-                url: '/invertir',
-                method: "POST",
-                headers: headers,
-                data: JSON.stringify({
-                    empresas: datosSelecionados,
-                    apikey: inputapikey.value
-                }),
-                success: function (datos) {
-
-                }
-            })
+            if (select2.innerHTML.trim() === '') {
+                alert('Debe Seleccionar Una Accion')
+            } else {
+                var modal = document.getElementById('myModal');
+                // When the user clicks the button, open the modal
+                modal.style.display = "block"
+                var datosSelecionados = mostrarSeleccion()
+                $.ajax({
+                 url: '/invertir',
+                 method: "POST",
+                 headers: headers,
+                 data: JSON.stringify({
+                 empresas: datosSelecionados,
+                 apikey: inputapikey.value
+                 }),
+                 success: function (datos) {
+                 modal.style.display = "none";
+                 cargaDatosTabulator()
+                 }
+                 })
+            }
         }
-
         function limpiezaSelect(){
-            var select1 = document.getElementById('select1');
-            var select2 = document.getElementById('select2');
             select1.innerHTML = '';
             select2.innerHTML = '';
         }
+        var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
+            var end;
+            var container = document.createElement("span");
+            //create and style inputs
+            var start = document.createElement("input");
+            start.setAttribute("type", "number");
+            start.setAttribute("placeholder", "Min");
+            start.setAttribute("min", 0);
+            start.setAttribute("max", 100);
+            start.style.padding = "4px";
+            start.style.width = "50%";
+            start.style.boxSizing = "border-box";
+
+            start.value = cell.getValue();
+
+            function buildValues() {
+                success({
+                    start: start.value,
+                    end: end.value,
+                });
+            }
+
+            function keypress(e) {
+                if (e.keyCode == 13) {
+                    buildValues();
+                }
+
+                if (e.keyCode == 27) {
+                    cancel();
+                }
+            }
+
+            end = start.cloneNode();
+
+            start.addEventListener("change", buildValues);
+            start.addEventListener("blur", buildValues);
+            start.addEventListener("keydown", keypress);
+
+            end.addEventListener("change", buildValues);
+            end.addEventListener("blur", buildValues);
+            end.addEventListener("keydown", keypress);
+
+
+            container.appendChild(start);
+            container.appendChild(end);
+
+            return container;
+        }
+
+        //custom max min filter function
+        function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams) {
+            //headerValue - the value of the header filter element
+            //rowValue - the value of the column in this row
+            //rowData - the data for the row being filtered
+            //filterParams - params object passed to the headerFilterFuncParams property
+
+            if (rowValue) {
+                if (headerValue.start != "") {
+                    if (headerValue.end != "") {
+                        return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                    } else {
+                        return rowValue >= headerValue.start;
+                    }
+                } else {
+                    if (headerValue.end != "") {
+                        return rowValue <= headerValue.end;
+                    }
+                }
+            }
+
+            return true; //must return a boolean, true if it passes the filter.
+        }
+        function etapasLookup(cell){
+            //cell - the cell component
+            $.ajax({
+                url: '/clientesFidelizacion/etapasFidel',
+                dataType : "json",
+                success : function(json) {
+                    var arr= json
+                    var obj = {}; //create the empty output object
+                    arr.forEach( function(item){
+                        var key = Object.keys(item)[0]; //take the first key from every object in the array
+                        obj[ key ] = item [ key ] //assign the key and value to output obj
+                    });
+                    etapas = obj
+                }
+            });
+            //do some processing and return the param object
+            return etapas;
+        }
+
     </script>
 @stop

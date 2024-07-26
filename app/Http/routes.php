@@ -318,6 +318,7 @@ Route::get('operadorBursatil','Ia\Bursatil@inicio');
 Route::get('panelinversor','OperadorBursatil\Inversor@index');
 Route::get('buscaracciones','OperadorBursatil\Inversor@buscarAcciones');
 Route::post('invertir','OperadorBursatil\Inversor@invertir');
+Route::get('cargardatosinversores', 'OperadorBursatil\Inversor@cargaDatosTabuladorInversiones');
 
 Route::group(['prefix' => 'api'],
     function () {
