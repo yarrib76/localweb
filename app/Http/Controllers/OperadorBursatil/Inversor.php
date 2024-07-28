@@ -24,8 +24,8 @@ class Inversor extends Controller
     {
         $apikey = Input::get('apikey');
         $cantidadAcciones = Input::get('cantidad');
-        https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey
-        $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo";
+        //https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo
+        $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=$apikey";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -135,5 +135,12 @@ class Inversor extends Controller
             'porcentaje_ganancia' => $datos['porcentaje_ganancia'],
             'precio_venta' => $datos['precio_venta'],
         ]);
+    }
+
+    public function listaInversines()
+    {
+        $tipo = Input::get();
+        $datos = DB::select('select * from samira.inversiones where estado = "'.$tipo['tipo'].'"');
+        return Response::json($datos);
     }
 }

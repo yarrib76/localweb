@@ -320,7 +320,7 @@ Route::get('buscaracciones','OperadorBursatil\Inversor@buscarAcciones');
 Route::post('invertir','OperadorBursatil\Inversor@invertir');
 Route::get('cargardatosinversores','OperadorBursatil\Inversor@cargaDatosTabuladorInversiones');
 Route::post('actualizarinversion','OperadorBursatil\Inversor@actualizar');
-
+Route::get('listainversiones','OperadorBursatil\Inversor@listaInversines');
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');

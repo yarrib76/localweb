@@ -41,8 +41,12 @@
                             <button id="enviar_seleccion_acciones" class="btn btn-success" onclick="crearInversiones()">Invertir</button>
                         </td>
                         <td>
-                            <button id="historico" class="btn btn-success" onclick="reporteHistorico()">ReporteHistorico</button>
+                            <input id='tipo_todo' onclick="tipoEstado('todo')" type="checkbox">Todo
+                            <input id='tipo_espera' onclick="tipoEstado('espera')" type="checkbox">Espera
+                            <input id='tipo_corriendo' onclick="tipoEstado('corriendo')" type="checkbox">Corriendo
+                            <input id='tipo_vendida' onclick="tipoEstado('vendida')" type="checkbox">Vendida
                         </td>
+
                     </table>
                     <div class="panel-body">
                         <div id="table-inversiones"></div>
@@ -124,6 +128,11 @@
         var inputapikey = document.getElementById('apikey')
         var select1 = document.getElementById('select1');
         var select2 = document.getElementById('select2');
+        var tipo_todo = document.getElementById('tipo_todo');
+        var tipo_espera = document.getElementById('tipo_espera');
+        var tipo_corriendo = document.getElementById('tipo_corriendo');
+        var tipo_vendida = document.getElementById('tipo_vendida');
+
         var headers = {
             'Content-Type': 'application/json'
         }
@@ -157,9 +166,9 @@
             height: "550px",
             columns: [
                 {title: "Accion", field: "nbr_accion", width: 100, headerFilter:"input"},
-                {title: "Recomendacion", field: "recomendacion",  width: 110},
-                {title: "Dias Retencion", field: "dias_retencion", width: 110},
-                {title: "Precio Accion", field: "precio", width: 110},
+                {title: "Recomendacion", field: "recomendacion",  width: 150},
+                {title: "Dias Retencion", field: "dias_retencion", width: 140},
+                {title: "Precio Accion", field: "precio", width: 130},
                 {title: "Fecha de Compra", field: "fecha_compra", width: 155},
                 {title: "Estado", field: "estado", width: 100, editor:"select",editorParams: {
                     values: {
@@ -169,12 +178,12 @@
                     }
                 },headerFilter:"input"},
                 {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110,editor:true},
-                {title: "Precio Venta", field: "precio_venta", width: 110, editor:true},
-                {title: "Fecha de Finalizacion", field: "fecha_compra", width: 110},
+                {title: "Precio Venta", field: "precio_venta", width: 130, editor:true},
+                {title: "Fecha de Finalizacion", field: "fecha_compra", width: 140},
                 {title: "Ganancia", field: "ganancia", width: 110},
-                {title: "Precio Actual", field: "precioactual", width: 110},
-                {title: "Fecha ultimo Precio", field: "fechaverificacionprecio", width: 110},
-                {title: "Informe Accion", field: "informeia", width: 110},
+                {title: "Precio Actual", field: "precioactual", width: 140},
+                {title: "Fecha ultimo Precio", field: "fechaverificacionprecio", width: 180},
+                {title: "Informe Accion", field: "informeia", width: 3310},
             ]
         });
 
@@ -359,6 +368,67 @@
             }
 
             return true; //must return a boolean, true if it passes the filter.
+        }
+
+        function tipoEstado(tipoEstado){
+            switch (tipoEstado) {
+                case 'todo':
+                    if (tipo_todo.checked){
+                        tipo_espera.checked = false
+                        tipo_corriendo.checked = false
+                        tipo_vendida.checked = false
+                        cargaDatosTabulator()
+                    }else{
+                        tableInversiones.clearData();
+                    }
+                    break;
+                case 'espera':
+                    if (tipo_espera.checked){
+                        tipo_corriendo.checked = false
+                        tipo_vendida.checked = false
+                        tipo_todo.checked = false
+                        llenarTabla('espera');
+                    }else {
+                        tableInversiones.clearData();
+                    }
+                    break;
+                case 'corriendo': {
+                    if (tipo_corriendo.checked) {
+                        tipo_espera.checked = false
+                        tipo_vendida.checked = false
+                        tipo_todo.checked = false
+                        llenarTabla('corriendo');
+                    }else {
+                        tableInversiones.clearData();
+                    }
+                    break;
+                }
+                case 'vendida': {
+                    if (tipo_vendida.checked) {
+                        tipo_espera.checked = false
+                        tipo_corriendo.checked = false
+                        tipo_todo.checked = false
+                        llenarTabla('vendida');
+                    }else {
+                        tableInversiones.clearData();
+                    }
+                    break;
+                }
+            }
+        }
+
+        function llenarTabla(estado){
+            switch (estado){
+                case 'espera':
+                    tableInversiones.setData('/listainversiones?tipo=espera')
+                    break;
+                case 'corriendo':
+                    tableInversiones.setData('/listainversiones?tipo=corriendo')
+                    break;
+                case 'vendida':
+                    tableInversiones.setData('/listainversiones?tipo=vendida')
+                    break;
+            }
         }
 
     </script>
