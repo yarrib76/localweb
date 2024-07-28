@@ -161,17 +161,32 @@
                 {title: "Dias Retencion", field: "dias_retencion", width: 110},
                 {title: "Precio Accion", field: "precio", width: 110},
                 {title: "Fecha de Compra", field: "fecha_compra", width: 155},
-                {title: "Estado", field: "estado", width: 100},
-                {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110},
-                {title: "Precio Venta", field: "precio_venta", width: 110},
+                {title: "Estado", field: "estado", width: 100, editor:"select",editorParams: {
+                    values: {
+                        "Espera": "Espera",
+                        "Corriendo": "Corriendo",
+                        "Vendida": "Vendida"
+                    }
+                },headerFilter:"input"},
+                {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110,editor:true},
+                {title: "Precio Venta", field: "precio_venta", width: 110, editor:true},
                 {title: "Fecha de Finalizacion", field: "fecha_compra", width: 110},
                 {title: "Ganancia", field: "ganancia", width: 110},
                 {title: "Precio Actual", field: "precioactual", width: 110},
                 {title: "Fecha ultimo Precio", field: "fechaverificacionprecio", width: 110},
                 {title: "Informe Accion", field: "informeia", width: 110},
-            ],
-
+            ]
         });
+
+        // Suscríbete al evento cellEdited
+        tableInversiones.on("cellEdited", function(cell) {
+            $.ajax({
+                url: "/actualizarinversion",
+                data: cell.getRow().getData(),
+                type: "post"
+            })
+        });
+
         function cargaDatosTabulator(){
             tableInversiones.setData("/cargardatosinversores");
         }
@@ -344,24 +359,6 @@
             }
 
             return true; //must return a boolean, true if it passes the filter.
-        }
-        function etapasLookup(cell){
-            //cell - the cell component
-            $.ajax({
-                url: '/clientesFidelizacion/etapasFidel',
-                dataType : "json",
-                success : function(json) {
-                    var arr= json
-                    var obj = {}; //create the empty output object
-                    arr.forEach( function(item){
-                        var key = Object.keys(item)[0]; //take the first key from every object in the array
-                        obj[ key ] = item [ key ] //assign the key and value to output obj
-                    });
-                    etapas = obj
-                }
-            });
-            //do some processing and return the param object
-            return etapas;
         }
 
     </script>

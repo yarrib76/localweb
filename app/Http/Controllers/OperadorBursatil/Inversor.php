@@ -125,4 +125,15 @@ class Inversor extends Controller
         $listaInversiones = DB::select('select * from samira.inversiones');
         return Response::json($listaInversiones);
     }
+
+    public function actualizar()
+    {
+        $datos = Input::all();
+        $inversion = Inversiones::where('id_inversiones',$datos['id_inversiones']);
+        $inversion->update([
+            'estado' => $datos['estado'],
+            'porcentaje_ganancia' => $datos['porcentaje_ganancia'],
+            'precio_venta' => $datos['precio_venta'],
+        ]);
+    }
 }
