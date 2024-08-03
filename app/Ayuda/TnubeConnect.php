@@ -67,6 +67,13 @@ class TnubeConnect
             $tienda = 'LabLocales';
         }
 
+        if ($store_id == '4999055'){
+            $access_token = '9965c891d2b6d8481ad01fd5f6203aa7aece9b6d';
+            //    $store_id = '1043936';
+            $appsName = 'SincroDemo (yarrib76@gmail.com)';
+            $tienda = 'MegaNay';
+        }
+
         $connetion[0]= ['access_token' => $access_token,'appsName' => $appsName,'tienda' => $tienda];
         return $connetion;
     }

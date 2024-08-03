@@ -39,9 +39,9 @@ class ABMTiendaNubeNew extends Controller
 
 
         /*
-        $code = 'c20dd9b6d9a87d1ec7dca0e5e3278625e4abfd9b';
+        $code = '70fd57b8b55fdc24e99f407f252996c5e425a26d';
         // En Auth(Cliente_id,Client Secret)
-        $auth = new Auth(1358, 'WcuW5hyGiiPPqpnC5OEVOmg0r7oDjUcvlIXLEphoAanRFVd5');
+        $auth = new Auth(2261, 'sDfMTC6E0Umk444gRaYtuQ6Isv7k178uDmlcUDjHQGd055tc');
         $store_info = $auth->request_access_token($code);
         dd($store_info);
         */
