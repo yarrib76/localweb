@@ -27,7 +27,7 @@ class Test extends Controller
 {
     public function Test()
     {
-        //Priemer Commit IABursatil.
+        //Priemer Commit MegaNay
         return view('test.consulta_ia');
         $respuesta = $this->pruebaApiIA();
         return $respuesta;
