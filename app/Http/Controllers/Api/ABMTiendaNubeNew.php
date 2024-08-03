@@ -37,6 +37,7 @@ class ABMTiendaNubeNew extends Controller
         //3. Luego tomar el Code y pegarlo en el codigo de abajo:
         //4. En la creación del objeto ingresar el id de la aplicación y el Clien Secret (esta en https://partners.tiendanube.com/apps/?ref=menu)
 
+        //Para acceder a la pagina donde estan creadas las aplicaciones hay que ingresar al link "https://partners.tiendanube.com/"
 
         /*
         $code = '70fd57b8b55fdc24e99f407f252996c5e425a26d';

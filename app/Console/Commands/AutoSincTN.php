@@ -57,6 +57,8 @@ class AutoSincTN extends Command
                 break;
             case 'Dona' : $store_id = 972788;
                 break;
+            case 'MegaNay' : $store_id = 4999055;
+                break;
         }
         $artiCant = $option[0];
 

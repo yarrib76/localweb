@@ -29,6 +29,8 @@
                             <option>Viamore</option>
                             <option>Samira</option>
                             <option>Donatella</option>
+                        @elseif (substr(Request::url('http://meganaymayorista.dyndns.org'),0,34) == 'http://meganaymayorista.dyndns.org')
+                            <option>MegaNay</option>
                         @endif
                     </select>
                     <button class="btn btn-primary" onclick="verificar()"><span class="glyphicon glyphicon-refresh"></span></button>
@@ -132,6 +134,9 @@
                     break;
                 case 'Donatella':
                     store_id = 963000;
+                    break;
+                case 'MegaNay':
+                    store_id = 4999055;
                     break;
             }
             // Get the modal

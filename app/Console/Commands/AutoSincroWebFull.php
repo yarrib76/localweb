@@ -57,6 +57,8 @@ class AutoSincroWebFull extends Command
                 break;
             case 'Dona' : $store_id = 972788;
                 break;
+            case 'MegaNay' : $store_id = 4999055;
+                break;
         }
         $tipo_bajada = 'todo';
         $this->getProductos($store_id,$tipo_bajada);

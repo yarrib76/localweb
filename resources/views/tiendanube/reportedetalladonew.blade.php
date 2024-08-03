@@ -27,6 +27,7 @@
                         @elseif (substr(Request::url('http://donalab2.dyndns.org'),0,26) == 'http://donalab.dyndns.org')
                             <button class="btn btn-primary" onclick="sincro('972788',{{$id_corrida}})">Sincro</button>
                         @endif -->
+
                         <input type="checkbox" id="chkOrdenCompra" name="chkOrdenCompra1">
                         <label for="cars">Las ultimas
                             <select name="cantidad" id="ordenesCant" color = "blue">
