@@ -24,7 +24,7 @@ class Inversor extends Controller
     {
         $apikey = Input::get('apikey');
         $cantidadAcciones = Input::get('cantidad');
-        //https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo
+        // $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo";
         $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=$apikey";
 
         $ch = curl_init();
@@ -92,16 +92,20 @@ class Inversor extends Controller
         $apikey = Input::get('apikey');
         $empresas = Input::get('empresas');
         $operador = new Bursatil();
+
+        // $inversiones = $operador->inicio($apikey,$empresas);
+        // return $inversiones;
+
+
         foreach ($empresas as $empresa){
             $inversiones = $operador->inicio($apikey,$empresa);
             // Eliminar los caracteres de formato JSON (```json\n y \n```), si es necesario
+            // dump($inversiones);
             $jsonResponse = preg_replace('/```json\n|\n```/', '', $inversiones);
             // Decodificar el JSON a un array asociativo de PHP
             $data = json_decode($jsonResponse, true);
             $this->insertarDatos($data);
         }
-
-        //dd($data[0]['precioAccion']);
     }
 
     private function insertarDatos($data)

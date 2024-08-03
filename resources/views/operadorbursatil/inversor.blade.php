@@ -179,7 +179,7 @@
                 },headerFilter:"input"},
                 {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110,editor:true},
                 {title: "Precio Venta", field: "precio_venta", width: 130, editor:true},
-                {title: "Fecha de Finalizacion", field: "fecha_compra", width: 140},
+                {title: "Fecha de Finalizacion", field: "fecha_finalizacion", width: 140},
                 {title: "Ganancia", field: "ganancia", width: 110},
                 {title: "Precio Actual", field: "precioactual", width: 140},
                 {title: "Fecha ultimo Precio", field: "fechaverificacionprecio", width: 180},
