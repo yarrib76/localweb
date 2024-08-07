@@ -29,7 +29,7 @@
                             <option>Viamore</option>
                             <option>Samira</option>
                             <option>Donatella</option>
-                        @elseif (substr(Request::url('http://meganaymayorista.dyndns.org'),0,34) == 'http://meganaymayorista.dyndns.org')
+                        @elseif (substr(Request::url('http://meganay.dyndns.org'),0,25) == 'http://meganay.dyndns.org')
                             <option>MegaNay</option>
                         @endif
                     </select>
