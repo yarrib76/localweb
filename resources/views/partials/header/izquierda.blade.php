@@ -16,7 +16,7 @@
         @elseif (substr(Request::url('http://viamore.dyndns.org'),0,25) == 'http://viamore.dyndns.org')
             <a href="/" class="navbar-brand">Viamore</a>
     @elseif (substr(Request::url('http://meganay.dyndns.org'),0,25) == 'http://meganay.dyndns.org')
-        <a href="/" class="navbar-brand">Viamore</a>
+        <a href="/" class="navbar-brand">MegaNay</a>
     @endif
 
 </div>{{-- navbar-header--}}
