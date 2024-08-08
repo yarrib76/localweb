@@ -24,7 +24,8 @@ class Inversor extends Controller
     {
         $apikey = Input::get('apikey');
         $cantidadAcciones = Input::get('cantidad');
-        // $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo";
+        $tipoAccion = Input::get('tipoAccion');
+        //$url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo";
         $url = "https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=$apikey";
 
         $ch = curl_init();
@@ -35,9 +36,11 @@ class Inversor extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // No verificar el certificado SSL (útil para pruebas)
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
         $respuesta = curl_exec($ch);
-
         $respuestaOrdenada = $this->ordenaRespuesta($respuesta);
-        $top5Gainers = array_slice($respuestaOrdenada['top_gainers'], 0, $cantidadAcciones);
+        if ($tipoAccion === "Ganadoras") {
+            $top5Gainers = array_slice($respuestaOrdenada['top_gainers'], 0, $cantidadAcciones);
+        }else $top5Gainers = array_slice($respuestaOrdenada['top_losers'], 0, $cantidadAcciones);
+
         return $top5Gainers;
     }
 
@@ -100,7 +103,6 @@ class Inversor extends Controller
         foreach ($empresas as $empresa){
             $inversiones = $operador->inicio($apikey,$empresa);
             // Eliminar los caracteres de formato JSON (```json\n y \n```), si es necesario
-            // dump($inversiones);
             $jsonResponse = preg_replace('/```json\n|\n```/', '', $inversiones);
             // Decodificar el JSON a un array asociativo de PHP
             $data = json_decode($jsonResponse, true);

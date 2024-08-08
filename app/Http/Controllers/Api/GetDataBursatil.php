@@ -44,8 +44,8 @@ class GetDataBursatil extends Controller
         // $data_4Este_No = "https://www.alphavantage.co/query?function=SMA&symbol=$symbols&interval=daily&time_period=50&series_type=close&apikey=$apikey";
         $data_4 = "https://www.alphavantage.co/query?function=EMA&symbol=$symbols&interval=daily&time_period=15&series_type=close&apikey=$apikey";
        // $data_4 = "https://www.alphavantage.co/query?function=EMA&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
-       // $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=$symbols&interval=daily&time_period=15&series_type=close&apikey=$apikey";
-        $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
+        $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=$symbols&interval=daily&time_period=15&series_type=close&apikey=$apikey";
+       // $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
         // $data_7 = "https://www.alphavantage.co/query?function=ADX&symbol=$symbols&interval=daily&time_period=14&apikey=$apikey";
         // $data_8 = "https://www.alphavantage.co/query?function=BBANDS&symbol=$symbols&interval=daily&time_period=20&series_type=close&nbdevup=2&nbdevdn=2&apikey=$apikey";
         // $data_9 = "https://www.alphavantage.co/query?function=OBV&symbol=$symbols&interval=daily&apikey=$apikey";

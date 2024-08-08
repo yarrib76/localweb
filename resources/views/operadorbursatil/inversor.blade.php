@@ -30,11 +30,14 @@
                             </td>
                             <td>
                                 <div>
-                                    <input type="checkbox" id="checkBoxCantidadAcciones" name="opciones" checked="true" value="valor" onclick="selectores('checkBoxCantidadAcciones')"> Cantidad de Empresas (Principales ganadores)
+                                    <input type="checkbox" id="checkBoxCantidadAcciones" name="opciones" checked="true" value="valor" onclick="selectores('checkBoxCantidadAcciones')"> Cantidad de Empresas
                                 </div>
                                 <input type="number" id="cantidad" style="width: 60px;">
                                 ApiKey: <input type="text" id="apikey" style="width: 200px" value = "H75CXB3AOHKM8ZMW">
                                 <button id="enviar_consulta_mejeres_acciones" class="btn btn-success"  onclick="enviarSeleccion('verificacion')">Buscar</button>
+                                <div>
+                                    <input type="checkbox" id="checkBoxTipo">Seleccionar para Acciones Ganadoras
+                                </div>
                             </td>
                         </tr>
                         <td style="text-align: center;">
@@ -132,6 +135,7 @@
         var tipo_espera = document.getElementById('tipo_espera');
         var tipo_corriendo = document.getElementById('tipo_corriendo');
         var tipo_vendida = document.getElementById('tipo_vendida');
+        var checkBoxtipoAccion = document.getElementById('checkBoxTipo');
 
         var headers = {
             'Content-Type': 'application/json'
@@ -241,13 +245,18 @@
         }
         function enviarSeleccion(tipo){
             limpiezaSelect()
+            var tipoAccion;
+            if (checkBoxtipoAccion.checked){
+                tipoAccion = "Ganadoras"
+            }else tipoAccion = "Perdedora";
+
             if (inputCantidadAcciones.value != ""){
                 // Get the modal
                 var modal = document.getElementById('myModal');
                 // When the user clicks the button, open the modal
                 modal.style.display = "block";
                 $.ajax({
-                    url: '/buscaracciones?apikey=' + inputapikey.value + "&cantidad=" + inputCantidadAcciones.value,
+                    url: '/buscaracciones?apikey=' + inputapikey.value + "&cantidad=" + inputCantidadAcciones.value + "&tipoAccion=" + tipoAccion,
                     method: "GET",
                     headers:headers,
                     success: function(datos) {
