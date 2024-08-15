@@ -113,7 +113,7 @@ class Vendedoras extends Controller
                     INNER JOIN samira.clientes as clientes ON clientes.id_clientes = pedidos.id_cliente
                     left join samira.comentariospedidos as comentarios ON comentarios.controlpedidos_id = pedidos.id
                     INNER JOIN samira.facturah as facturah ON facturah.NroFactura = pedidos.nrofactura
-                    where pedidos.estado = 0 and pedidos.empaquetado = 1 and vendedora = "'. $vendedora .'"
+                    where pedidos.estado = 0 and pedidos.empaquetado = 1 and pedidos.vendedora = "'. $vendedora .'"
                     group by nropedido');
         $estado = 'Procesados';
         return view('pedidos.reporte_v2', compact('pedidos','user_id','estado'));

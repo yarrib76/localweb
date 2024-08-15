@@ -46,9 +46,9 @@ class GetDataBursatil extends Controller
        // $data_4 = "https://www.alphavantage.co/query?function=EMA&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
         $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=$symbols&interval=daily&time_period=15&series_type=close&apikey=$apikey";
        // $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
-        // $data_7 = "https://www.alphavantage.co/query?function=ADX&symbol=$symbols&interval=daily&time_period=14&apikey=$apikey";
-        // $data_8 = "https://www.alphavantage.co/query?function=BBANDS&symbol=$symbols&interval=daily&time_period=20&series_type=close&nbdevup=2&nbdevdn=2&apikey=$apikey";
-        // $data_9 = "https://www.alphavantage.co/query?function=OBV&symbol=$symbols&interval=daily&apikey=$apikey";
+        // $data_6 = "https://www.alphavantage.co/query?function=ADX&symbol=$symbols&interval=daily&time_period=14&apikey=$apikey";
+        // $data_7 = "https://www.alphavantage.co/query?function=BBANDS&symbol=$symbols&interval=daily&time_period=20&series_type=close&nbdevup=2&nbdevdn=2&apikey=$apikey";
+        // $data_8 = "https://www.alphavantage.co/query?function=OBV&symbol=$symbols&interval=daily&apikey=$apikey";
 
         // $urls = [$data_1, $data_2, $data_3, $data_4, $data_5, $data_6, $data_7, $data_8, $data_9];
 
@@ -85,13 +85,23 @@ class GetDataBursatil extends Controller
 
         curl_multi_close($multi_handle);
 
+        $data_4 = isset($responses[3]) ? $responses[3] : [];
+        $data_5 = isset($responses[4]) ? $responses[4] : [];
+
+        //Esta funcion filtra a N cantidad de años la respuesta de EMA
+        $cantAño = 1; // Número de años que quieres mantener.
+        $tipo = "EMA";
+        $data_4 = $this->filtroPorFecha($data_4,$cantAño,$tipo);
+        $tipo = "RSI";
+        $data_5 = $this->filtroPorFecha($data_5,$cantAño,$tipo);
+
         // Combinar todas las respuestas en un solo array
         $combined_data = [
             'data_1' => isset($responses[0]) ? $responses[0] : [],
             'data_2' => isset($responses[1]) ? $responses[1] : [],
             'data_3' => isset($responses[2]) ? $responses[2] : [],
-            'data_4' => isset($responses[3]) ? $responses[3] : [],
-            'data_5' => isset($responses[4]) ? $responses[4] : [],
+            'data_4' => $data_4,
+            'data_5' => $data_5,
             //'data_6' => isset($responses[5]) ? $responses[5] : [],
             //'data_7' => isset($responses[6]) ? $responses[6] : [],
             //'data_8' => isset($responses[7]) ? $responses[7] : [],
@@ -125,6 +135,53 @@ class GetDataBursatil extends Controller
             'time_to' => $time_to
         ];
     }
+
+
+
+    function filtroPorFecha($data,$cantAño,$tipo){
+        // Obtener la fecha actual
+        $currentDate = new DateTime();
+
+        switch ($tipo){
+            case "EMA":
+                // Filtrar datos para mantener solo los últimos "n" años
+                if (!empty($data) && isset($data['Technical Analysis: EMA'])) {
+                    foreach ($data['Technical Analysis: EMA'] as $date => $value) {
+                        $dateObject = new DateTime($date);
+                        $interval = $currentDate->diff($dateObject);
+
+                        // Si la fecha es mayor que "n" años, eliminarla
+                        if ($interval->y >= $cantAño) {
+                            unset($data['Technical Analysis: EMA'][$date]);
+                        }
+                    }
+                }
+            break;
+            case "RSI":
+                // Filtrar datos para mantener solo los últimos "n" años
+                if (!empty($data) && isset($data['Technical Analysis: RSI'])) {
+                    foreach ($data['Technical Analysis: RSI'] as $date => $value) {
+                        $dateObject = new DateTime($date);
+                        $interval = $currentDate->diff($dateObject);
+
+                        // Si la fecha es mayor que "n" años, eliminarla
+                        if ($interval->y >= $cantAño) {
+                            unset($data['Technical Analysis: RSI'][$date]);
+                        }
+                    }
+                }
+            break;
+        }
+
+        return $data;
+    }
+
+
+
+
+
+
+
 
     //Esta versión da TimeOut
     public function versionVieja()
