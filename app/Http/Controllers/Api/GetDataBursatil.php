@@ -46,13 +46,13 @@ class GetDataBursatil extends Controller
        // $data_4 = "https://www.alphavantage.co/query?function=EMA&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
         $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=$symbols&interval=daily&time_period=15&series_type=close&apikey=$apikey";
        // $data_5 = "https://www.alphavantage.co/query?function=RSI&symbol=IBM&interval=weekly&time_period=10&series_type=open&apikey=demo";
-        // $data_6 = "https://www.alphavantage.co/query?function=ADX&symbol=$symbols&interval=daily&time_period=14&apikey=$apikey";
-        // $data_7 = "https://www.alphavantage.co/query?function=BBANDS&symbol=$symbols&interval=daily&time_period=20&series_type=close&nbdevup=2&nbdevdn=2&apikey=$apikey";
-        // $data_8 = "https://www.alphavantage.co/query?function=OBV&symbol=$symbols&interval=daily&apikey=$apikey";
+        $data_6 = "https://www.alphavantage.co/query?function=ADX&symbol=$symbols&interval=daily&time_period=14&apikey=$apikey";
+        $data_7 = "https://www.alphavantage.co/query?function=BBANDS&symbol=$symbols&interval=daily&time_period=20&series_type=close&nbdevup=2&nbdevdn=2&apikey=$apikey";
+        $data_8 = "https://www.alphavantage.co/query?function=OBV&symbol=$symbols&interval=daily&apikey=$apikey";
 
         // $urls = [$data_1, $data_2, $data_3, $data_4, $data_5, $data_6, $data_7, $data_8, $data_9];
 
-        $urls = [$data_1, $data_2, $data_3, $data_4, $data_5];
+        $urls = [$data_1, $data_2, $data_3, $data_4, $data_5, $data_6, $data_7, $data_8];
 
         $curl_handles = [];
         $multi_handle = curl_multi_init();
@@ -87,6 +87,9 @@ class GetDataBursatil extends Controller
 
         $data_4 = isset($responses[3]) ? $responses[3] : [];
         $data_5 = isset($responses[4]) ? $responses[4] : [];
+        $data_6 = isset($responses[5]) ? $responses[5] : [];
+        $data_7 = isset($responses[6]) ? $responses[6] : [];
+        $data_8 = isset($responses[7]) ? $responses[7] : [];
 
         //Esta funcion filtra a N cantidad de años la respuesta de EMA
         $cantAño = 1; // Número de años que quieres mantener.
@@ -94,6 +97,12 @@ class GetDataBursatil extends Controller
         $data_4 = $this->filtroPorFecha($data_4,$cantAño,$tipo);
         $tipo = "RSI";
         $data_5 = $this->filtroPorFecha($data_5,$cantAño,$tipo);
+        $tipo = "ADX";
+        $data_6 = $this->filtroPorFecha($data_6,$cantAño,$tipo);
+        $tipo = "BBANDS";
+        $data_7 = $this->filtroPorFecha($data_7,$cantAño,$tipo);
+        $tipo = "OBV";
+        $data_8 = $this->filtroPorFecha($data_8,$cantAño,$tipo);
 
         // Combinar todas las respuestas en un solo array
         $combined_data = [
@@ -102,9 +111,9 @@ class GetDataBursatil extends Controller
             'data_3' => isset($responses[2]) ? $responses[2] : [],
             'data_4' => $data_4,
             'data_5' => $data_5,
-            //'data_6' => isset($responses[5]) ? $responses[5] : [],
-            //'data_7' => isset($responses[6]) ? $responses[6] : [],
-            //'data_8' => isset($responses[7]) ? $responses[7] : [],
+            'data_6' => $data_6,
+            'data_7' => $data_7,
+            'data_8' => $data_8,
             //'data_9' => isset($responses[8]) ? $responses[8] : [],
         ];
 
@@ -171,6 +180,48 @@ class GetDataBursatil extends Controller
                     }
                 }
             break;
+            case "ADX":
+                // Filtrar datos para mantener solo los últimos "n" años
+                if (!empty($data) && isset($data['Technical Analysis: ADX'])) {
+                    foreach ($data['Technical Analysis: ADX'] as $date => $value) {
+                        $dateObject = new DateTime($date);
+                        $interval = $currentDate->diff($dateObject);
+
+                        // Si la fecha es mayor que "n" años, eliminarla
+                        if ($interval->y >= $cantAño) {
+                            unset($data['Technical Analysis: ADX'][$date]);
+                        }
+                    }
+                }
+            break;
+            case "BBANDS":
+                // Filtrar datos para mantener solo los últimos "n" años
+                if (!empty($data) && isset($data['Technical Analysis: BBANDS'])) {
+                    foreach ($data['Technical Analysis: BBANDS'] as $date => $value) {
+                        $dateObject = new DateTime($date);
+                        $interval = $currentDate->diff($dateObject);
+
+                        // Si la fecha es mayor que "n" años, eliminarla
+                        if ($interval->y >= $cantAño) {
+                            unset($data['Technical Analysis: BBANDS'][$date]);
+                        }
+                    }
+                }
+                break;
+            case "OBV":
+                // Filtrar datos para mantener solo los últimos "n" años
+                if (!empty($data) && isset($data['Technical Analysis: OBV'])) {
+                    foreach ($data['Technical Analysis: OBV'] as $date => $value) {
+                        $dateObject = new DateTime($date);
+                        $interval = $currentDate->diff($dateObject);
+
+                        // Si la fecha es mayor que "n" años, eliminarla
+                        if ($interval->y >= $cantAño) {
+                            unset($data['Technical Analysis: OBV'][$date]);
+                        }
+                    }
+                }
+                break;
         }
 
         return $data;

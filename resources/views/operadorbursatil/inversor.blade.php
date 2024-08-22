@@ -178,7 +178,8 @@
                     values: {
                         "Espera": "Espera",
                         "Corriendo": "Corriendo",
-                        "Vendida": "Vendida"
+                        "Vendida": "Vendida",
+                        "Nula": "Nula"
                     }
                 },headerFilter:"input"},
                 {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110,editor:true},

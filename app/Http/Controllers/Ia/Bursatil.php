@@ -16,6 +16,7 @@ class Bursatil extends Controller
     {
         $jsonDatosBursatil = $this->obtengoDatosBursatiles($apikey,$empresa);
         // return $jsonDatosBursatil;
+        dump($jsonDatosBursatil);
         $rol = "Eres un experto en inversiones, con un perfil que está dispuesto a asumir cierto nivel de riesgo en función de una mejor rentabilidad.\n";
         $operadorBursatil = new ChatGPT();
         $prompt = $this->getPrompt($jsonDatosBursatil);
