@@ -43,7 +43,7 @@ class ChatGPT
                     'content' => utf8_encode($prompt)
                 ]
             ],
-            'max_tokens' => 740,
+            'max_tokens' => 15000,
             'temperature'=> 0.2,
         ];
 
