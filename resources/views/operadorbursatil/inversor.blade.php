@@ -171,6 +171,7 @@
             columns: [
                 {title: "Accion", field: "nbr_accion", width: 100, headerFilter:"input"},
                 {title: "Recomendacion", field: "recomendacion",  width: 150},
+                {title: "Probabilidad", field: "porcentajeprobabilidad",  width: 150},
                 {title: "Dias Retencion", field: "dias_retencion", width: 140},
                 {title: "Precio Accion", field: "precio", width: 130},
                 {title: "Fecha de Compra", field: "fecha_compra", width: 155},

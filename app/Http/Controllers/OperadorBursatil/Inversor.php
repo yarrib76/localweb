@@ -107,6 +107,7 @@ class Inversor extends Controller
             $jsonResponse = preg_replace('/```json\n|\n```/', '', $inversiones);
             // Decodificar el JSON a un array asociativo de PHP
             $data = json_decode($jsonResponse, true);
+            dump($data);
             $this->insertarDatos($data);
         }
     }
@@ -124,6 +125,7 @@ class Inversor extends Controller
             'precio' => $data[0]['precioAccion'],
             'fecha_compra' => $fechaActual,
             'fecha_finalizacion' => $fechaFinalizacion,
+            'porcentajeprobabilidad' => $data[0]['porcentaje'],
         ]);
     }
 
