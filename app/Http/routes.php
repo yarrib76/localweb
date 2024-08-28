@@ -308,9 +308,13 @@ Route::post('/crearPedidoWeb', 'PedidosWeb\ControllerPedidoWeb@inPedido');
 /*Inteligencia Artificail Mia*/
 //Solo para llamados directos sin pasar por ejemplo por pedidos
 Route::get('/chatiaindex', 'Ia\Compras@chatIaIndex');
+Route::get('/chatiaindexfinanzas', 'Ia\Finanzas@chatIaIndex');
+Route::post('/importExcelIa', 'Ia\Finanzas@importExcelIa');
+
 Route::get('/chat_mercaderia_iaindex', 'Ia\MercaderiaChat@chatIaIndex');
 Route::get('/chatia', 'Ia\Pedidos@iniciarChat');
 Route::get('/testia', 'Ia\Compras@iniciarChat');
+Route::get('/testiaFinanza', 'Ia\Finanzas@iniciarChat');
 Route::get('/carga_chatia', 'Ia\Pedidos@carga_chatIA');
 
 /*IA Operador Bursatil*/

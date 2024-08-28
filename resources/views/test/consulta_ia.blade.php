@@ -7,6 +7,17 @@
                     <div class="panel-heading"><i class="fa fa-cog">Principal</i></div>
                         <div class="panel-body">
                             <button onclick="consulta_ia()">Llamo a Mia</button>
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ Session::get('success') }}
+                                </div>
+                            @endif
+                            <form style="border: 4px solid #a1a1a1;margin-top: 15px;padding: 20px;" action="{{ URL::to('importExcelIa') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+                                <input type="file" name="import_file" />
+                                {{ csrf_field() }}
+                                <br/>
+                                <button class="btn btn-primary">Importar EXCEL-CSV</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -124,7 +135,7 @@
             table.append("<tr><td>"+"Yamil"+"</td><td>"+consulta+
                     "</td><td>"+fechaFormateada+ " " + horaFormateada +"</td>"+ "</tr>");
             $.ajax({
-                url: '/testia?consultaHumana=' + consulta,
+                url: '/testiaFinanza?consultaHumana=' + consulta,
                 dataType : "json",
                 success: function(json) {
                     table.append("<tr><td>"+"Mia IA"+"</td><td>"+json+
