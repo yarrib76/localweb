@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\FacturaWeb;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\Precio;
+use Donatella\Http\Controllers\Api\Notificaciones;
 use Donatella\Http\Controllers\CorreoArgentino\MiCorreo;
 use Donatella\Models\Articulos;
 use Donatella\Models\ControlPedidos;
@@ -115,6 +116,10 @@ class ControllerFacturaWeb extends Controller
             $mi_correo = new MiCorreo();
             $mi_correo->actualizarTipo($nroPedido);
             $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
+            if ($listoParaEnvio){
+                $crearNotificacion = new Notificaciones();
+                $crearNotificacion->crearNoti($nroPedido,$vendedora,'Factura');
+            }
         }
         return "OK";
         // dump($vendedora);

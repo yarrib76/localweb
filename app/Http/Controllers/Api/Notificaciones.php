@@ -53,6 +53,12 @@ class Notificaciones extends Controller
                              DB::select('INSERT INTO samira.notificaciones (fecha,tipo,id_users)
                                       values ("' .$fecha . '", CONCAT("Se le asigno el " , "'. $tipo .'" , " de " , "'. $nombre_Contacto[0]->nombre_contacto .'") , "'. $id_users[0]->id .'")');
                 break;
+            case "Factura": $transporte = DB::select('select transporte from samira.controlpedidos
+                                                      where nropedido = "'.$nroPedido_carrito .'"');
+                            if(empty($transporte[0]->transporte)){
+                                DB::select('INSERT INTO samira.notificaciones (fecha,tipo,id_users)
+                                      values ("' .$fecha . '", CONCAT("El pedido Nro: " , "'. $nroPedido_carrito .'" , " no tiene transporte, corregir") , "'. $id_users[0]->id .'")');
+                            }
         }
     }
 }
