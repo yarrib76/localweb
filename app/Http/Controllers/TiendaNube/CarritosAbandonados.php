@@ -4,6 +4,7 @@ namespace Donatella\Http\Controllers\TiendaNube;
 
 use Carbon\Carbon;
 use Donatella\Ayuda\TnubeConnect;
+use Donatella\Http\Controllers\Api\Notificaciones;
 use Donatella\Models\Carrito_abandonado;
 use Donatella\Models\Notas_Carrito_abandonado;
 use Donatella\Models\Vendedores;
@@ -135,6 +136,8 @@ class CarritosAbandonados extends Controller
         $articulo->update([
             'vendedora' => $datos['vendedora']
         ]);
+        $crearNotificacion = new Notificaciones();
+        $crearNotificacion->crearNoti($datos['id_carritos'],$datos['vendedora'],'Carrito');
         return;
     }
 

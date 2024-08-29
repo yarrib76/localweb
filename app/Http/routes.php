@@ -454,4 +454,10 @@ Route::group(['prefix' => 'api'],
 
         /*Obtengo datos Bursatiles*/
         Route::get('/datosbursatiles','Api\GetDataBursatil@obtengoDatos');
+
+        /*Notificaciones*/
+        Route::get('/getNotificaciones', 'Api\Notificaciones@getData');
+        Route::get('/getCantNoti', 'Api\Notificaciones@getCantNoti');
+        Route::get('/marcarLeido', 'Api\Notificaciones@marcarComoLeido');
+
     });

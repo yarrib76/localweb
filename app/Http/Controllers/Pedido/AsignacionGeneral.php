@@ -2,6 +2,7 @@
 
 namespace Donatella\Http\Controllers\Pedido;
 
+use Donatella\Http\Controllers\Api\Notificaciones;
 use Donatella\Models\ControlPedidos;
 use Donatella\Models\Vendedores;
 use Illuminate\Http\Request;
@@ -57,6 +58,8 @@ class AsignacionGeneral extends Controller
         $articulo->update([
             'Vendedora' => $datos['vendedora']
         ]);
+        $crearNotificacion = new Notificaciones();
+        $crearNotificacion->crearNoti($datos['nropedido'],$datos['vendedora'],'Pedido');
         return;
     }
 }
