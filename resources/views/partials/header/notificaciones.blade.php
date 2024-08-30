@@ -1,6 +1,6 @@
-<div id="myModalNotificaciones" class="modal">
+<div id="myModalNotificaciones" class="modal-noti">
         <!-- Modal Ingreso -->
-        <div id="modal-content-notificacion" class="modal-content">
+        <div id="modal-content-notificacion" class="modal-content-noti">
                 <span id="close-notificacion" class="close">&times;</span>
                 <div class="row">
                         <div class="col-sm-25">
@@ -14,7 +14,7 @@
 </div>
 
 <style>
-        .modal {
+        .modal-noti {
                 display: none; /* Hidden by default */
                 position: fixed; /* Stay in place */
                 z-index: 1; /* Sit on top */
@@ -28,7 +28,7 @@
                 background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
         /* Modal Content */
-        .modal-content {
+        .modal-content-noti {
                 background-color: rgba(243, 255, 242, 0.91);
                 margin: auto;
                 padding: 15px;
