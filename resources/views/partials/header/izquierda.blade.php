@@ -133,6 +133,7 @@
                     <li><a href="/reporteinversion"> Reporte Inversion</a></li>
                 </ul>
             </li>
+            <!--
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
                     Promociones <b class="caret"></b>
@@ -141,6 +142,7 @@
                     <li><a href="/panelpromocion"> Panel </a></li>
                 </ul>
             </li>
+            !-->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle fa fa-btn" data-toggle="dropdown">
                     E-Comerce <b class="caret"></b>
@@ -164,7 +166,7 @@
             <li class="dropdown ">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-bell"></i>
-                    <span id="alertCount" class="badgeAlertas"  onclick="notificaciones()">0</span> <!-- Número de notificaciones -->
+                    <span id="alertCount" class="badgeAlertas"  onclick="notificaciones()">0</span><!-- Número de notificaciones -->
                 </a>
             </li>
         </ul>

@@ -116,6 +116,7 @@ class ControllerFacturaWeb extends Controller
             $mi_correo = new MiCorreo();
             $mi_correo->actualizarTipo($nroPedido);
             $this->actualizaControlPedidos($nroFactura,$listoParaEnvio,$nroPedido);
+            //Si esta en listo para envío, llamo a crear notificaciones con el fin de notificar los pedidos para envío que no tengan transporte
             if ($listoParaEnvio){
                 $crearNotificacion = new Notificaciones();
                 $crearNotificacion->crearNoti($nroPedido,$vendedora,'Factura');
