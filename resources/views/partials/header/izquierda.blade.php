@@ -14,11 +14,10 @@
         @elseif (substr(Request::url('http://samirasrl.dyndns.org'),0,27) == 'http://samirasrl.dyndns.org')
                 <a href="/" class="navbar-brand">Samira</a>
         @elseif (substr(Request::url('http://viamore.dyndns.org'),0,25) == 'http://viamore.dyndns.org')
-            <a href="/" class="navbar-brand">Viamore</a>
+                <a href="/" class="navbar-brand"><img src="/refresh/logo-blanco.png" width="90" height="35" ></a>
     @elseif (substr(Request::url('http://meganay.dyndns.org'),0,25) == 'http://meganay.dyndns.org')
-        <a href="/" class="navbar-brand">MegaNay</a>
+            <a href="/" class="navbar-brand">MegaNay</a>
     @endif
-
 </div>{{-- navbar-header--}}
 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     @if (Auth::check())
