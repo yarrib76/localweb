@@ -27,6 +27,7 @@ class Test extends Controller
 {
     public function Test()
     {
+        return view('test.menu');
         //Priemer Commit MegaNay
         return view('test.consulta_ia');
         $respuesta = $this->pruebaApiIA();

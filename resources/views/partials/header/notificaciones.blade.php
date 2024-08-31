@@ -1,7 +1,7 @@
 <div id="myModalNotificaciones" class="modal-noti">
         <!-- Modal Ingreso -->
         <div id="modal-content-notificacion" class="modal-content-noti">
-                <span id="close-notificacion" class="close">&times;</span>
+                <span id="close-notificacion" class="close-noti">&times;</span>
                 <div class="row">
                         <div class="col-sm-25">
                                 <div class="panel panel-primary">
@@ -39,15 +39,15 @@
         }
 
         /* The Close Button */
-        .close {
+        .close-noti {
                 color: #aaaaaa;
                 float: right;
                 font-size: 28px;
                 font-weight: bold;
         }
 
-        .close:hover,
-        .close:focus {
+        .close-noti:hover,
+        .close-noti:focus {
                 color: #000;
                 text-decoration: none;
                 cursor: pointer;

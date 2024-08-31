@@ -168,6 +168,8 @@ Route::get('/testia','Ia\Pedidos@iniciarChat');
 Route::get('/testconvert','Test\Test@convert');
 Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
 Route::get('/cambioPrecios','Articulo\CambioPreciosControl@index');
+
+
 /*Notas Adhesivas*/
 Route::resource('notasadmin','Notas\NotasAdhesivasAdmin');
 Route::get('/notasadhesivas', 'Notas\NotasAdhesivas@index');
