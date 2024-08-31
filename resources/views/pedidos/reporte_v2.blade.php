@@ -1103,6 +1103,6 @@
             });
         }
     </script>
-    @include('chatia.consulta_ia')
+    @include('chatia.consulta_ia_v2')
 
 @stop

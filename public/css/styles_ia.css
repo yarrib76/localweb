@@ -1,0 +1,126 @@
+/* Estilo del botón de cerrar la barra */
+.closebtn {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    font-size: 36px;
+    margin-left: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+/* Estilos para el encabezado del chat */
+.chat-header {
+    padding: 10px;
+    background-color: #444;
+    color: white;
+    text-align: center;
+}
+/* Estilos para los nombre de la persona que envia los mensajes del chat */
+.message-name {
+    text-align: left; /* Alinea el nombre a la izquierda */
+    font-weight: bold; /* Resalta el nombre */
+    margin-bottom: 2px; /* Espacio entre el nombre y el mensaje */
+}
+
+.mia-icon {
+    width: 24px; /* Ajusta el tamaño del ícono */
+    height: 24px;
+    margin-right: 10px; /* Espacio entre el ícono y el nombre/mensaje */
+}
+/* Estilos para los mensajes del chat */
+.chat-messages {
+    flex: 1; /* Toma el espacio disponible */
+    padding: 15px;
+    height: 70%;
+    background-color: #f1f1f1;
+    overflow-y: auto; /* Añade scroll si es necesario */
+}
+
+/* Estilos para el formulario de chat */
+.chat-form {
+    display: flex;
+    padding: 10px;
+    background-color: #444;
+}
+
+/* Estilos para el input de texto */
+.chat-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Estilos para el botón de enviar */
+.sendbtn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sendbtn:hover {
+    background-color: #218838;
+}
+
+/* Estilo para el botón de abrir la barra de chat */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    transition: background-color 0.3s;
+}
+
+.openbtn:hover {
+    background-color: #555;
+}
+body {font-family: Arial, Helvetica, sans-serif;}
+/* The Modal (background) */
+#myModalChatIA {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 80%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+#modal-content-chatia {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 3px solid #888;
+    width: 50%;
+    height: 80%;
+    overflow-y: auto;
+}
+
+/* The Close Button */
+.close-chat_ia {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-chat_ia:hover,
+.close-chat_ia:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
