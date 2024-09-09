@@ -205,6 +205,6 @@
                         }
                 })
         }
-        // Ejecutar la función cada 5 segundos (5000 milisegundos), para 2 minutos (120,000 milisegundos)
-        setInterval(getCantiNoti, 10000);
+        // Ejecutar la función cada 5 segundos (5000 milisegundos), para 2 minutos (120,000 milisegundos). Aumente a 10min
+        setInterval(getCantiNoti, 600000);
 </script>
