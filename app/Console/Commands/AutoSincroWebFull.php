@@ -150,8 +150,12 @@ class AutoSincroWebFull extends Command
             }catch (Exception $e){
                 // echo " error en " . $i;
                 $i = $i-1;
+                //Envio error
+                $this->logFile($e);
             };
+            $this->logFile($i);
         }
+        $this->logFile("Finalizo correctamente");
         return Response::json("ok");
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
@@ -164,5 +168,16 @@ class AutoSincroWebFull extends Command
         }else $query = $api->get("products?page=1&per_page=1&published=true");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
+    }
+
+    function logFile($error){
+        // Definir la ruta del archivo .log
+        $logFile = storage_path('logs/mi_archivo.log');
+
+        // Definir el mensaje a registrar
+        $mensaje = "[" . date('Y-m-d H:i:s') . "]" . $error . "\n";
+        // Guardar el mensaje en el archivo
+        file_put_contents($logFile, $mensaje, FILE_APPEND);
+        // FILE_APPEND asegura que el contenido se agregue al archivo, en lugar de sobrescribirlo.
     }
 }
