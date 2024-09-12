@@ -153,9 +153,9 @@ class AutoSincroWebFull extends Command
                 //Envio error
                 $this->logFile($e);
             };
-            $this->logFile($i);
+           // $this->logFile($i);
         }
-        $this->logFile("Finalizo correctamente");
+        // $this->logFile("Finalizo correctamente");
         return Response::json("ok");
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
