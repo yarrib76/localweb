@@ -120,7 +120,7 @@ class AutoSincroWebFull extends Command
         $anioActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->year;
         $anioActualMasuno = $anioActual + 1;
         while ($anio < $anioActualMasuno) {
-            $cantidadConsultas = $this->obtengoCantConsultas($api, $cantidadPorPaginas, $tipo_bajada,$anio);
+            $cantidadConsultas = $this->obtengoCantConsultas($api, $cantidadPorPaginas, $tipo_bajada, $anio);
 
             for ($i = 1; $i <= $cantidadConsultas; $i++) {
                 try {
@@ -128,7 +128,7 @@ class AutoSincroWebFull extends Command
                         //$articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
                         $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
                     } else if ($tipo_bajada == 'visible') {
-                        $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
+                        $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
                     }
                     foreach ($articulosTiendaNube->body as $articulo) {
                         $image = 0;
@@ -159,10 +159,7 @@ class AutoSincroWebFull extends Command
                     //Envio error
                     $this->logFile($e);
                 };
-                // $this->logFile($i);
             }
-            // $this->logFile("Finalizo correctamente");
-            //return Response::json("ok");
             $anio++;
         }
     }
@@ -174,7 +171,7 @@ class AutoSincroWebFull extends Command
         if ($tipo_bajada == 'todo'){
             //$query = $api->get("products?page=1&per_page=1");
             $query = $api->get("products?page=1&per_page=1&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
-        }else $query = $api->get("products?page=1&per_page=1&published=true");
+        }else $query = $api->get("products?page=1&per_page=1&published=true&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
     }
