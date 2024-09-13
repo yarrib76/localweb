@@ -107,7 +107,6 @@ class AutoSincroWebFull extends Command
         $connect = $tnConnect->getConnectionTN($store_id);
 
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
-        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas,$tipo_bajada);
         $id_provEcomerce = ProvEcomerce::Create([
             'proveedor' => 'TiendaNube',
             'id_users' => 1,
@@ -116,54 +115,65 @@ class AutoSincroWebFull extends Command
             'tienda' => $connect[0]['tienda']
         ]);
 
-        for ($i = 1; $i <= $cantidadConsultas; $i++){
-            try {
-                if($tipo_bajada == 'todo'){
-                    $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
-                }else if ($tipo_bajada == 'visible') {
-                    $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
-                }
-                foreach ($articulosTiendaNube->body as $articulo){
-                    $image = 0;
-                    if (!empty($articulo->images)){
-                        $image = 1;
+
+        $anio = 2019;
+        $anioActual = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->year;
+        $anioActualMasuno = $anioActual + 1;
+        while ($anio < $anioActualMasuno) {
+            $cantidadConsultas = $this->obtengoCantConsultas($api, $cantidadPorPaginas, $tipo_bajada,$anio);
+
+            for ($i = 1; $i <= $cantidadConsultas; $i++) {
+                try {
+                    if ($tipo_bajada == 'todo') {
+                        //$articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                        $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
+                    } else if ($tipo_bajada == 'visible') {
+                        $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&published=true");
                     }
-                    foreach ($articulo->variants as $variant){
-                        //Verifico que no sea null la cantidad
-                        if (!empty($articulo->images[0]->src)){
-                            $imagesSrc = $articulo->images[0]->src;
-                        }else $imagesSrc = "";
-                        StatusEcomerceSinc::Create([
-                            'id_provecomerce' => $id_provEcomerce->id,
-                            'status' => 'Pending',
-                            'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
-                            'articulo' => $variant->sku,
-                            'product_id' => $variant->product_id,
-                            'articulo_id' => $variant->id,
-                            'visible' => $articulo->published,
-                            'images' => $image,
-                            'imagessrc' => $imagesSrc
-                        ]);
+                    foreach ($articulosTiendaNube->body as $articulo) {
+                        $image = 0;
+                        if (!empty($articulo->images)) {
+                            $image = 1;
+                        }
+                        foreach ($articulo->variants as $variant) {
+                            //Verifico que no sea null la cantidad
+                            if (!empty($articulo->images[0]->src)) {
+                                $imagesSrc = $articulo->images[0]->src;
+                            } else $imagesSrc = "";
+                            StatusEcomerceSinc::Create([
+                                'id_provecomerce' => $id_provEcomerce->id,
+                                'status' => 'Pending',
+                                'fecha' => Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString(),
+                                'articulo' => $variant->sku,
+                                'product_id' => $variant->product_id,
+                                'articulo_id' => $variant->id,
+                                'visible' => $articulo->published,
+                                'images' => $image,
+                                'imagessrc' => $imagesSrc
+                            ]);
+                        }
                     }
-                }
-            }catch (Exception $e){
-                // echo " error en " . $i;
-                $i = $i-1;
-                //Envio error
-                $this->logFile($e);
-            };
-           // $this->logFile($i);
+                } catch (Exception $e) {
+                    // echo " error en " . $i;
+                    $i = $i - 1;
+                    //Envio error
+                    $this->logFile($e);
+                };
+                // $this->logFile($i);
+            }
+            // $this->logFile("Finalizo correctamente");
+            //return Response::json("ok");
+            $anio++;
         }
-        // $this->logFile("Finalizo correctamente");
-        return Response::json("ok");
     }
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
     Esta información la urilizo en el FOR para solicitar todas las pagínas que tienen los artículos*/
-    private function obtengoCantConsultas($api,$cantidadPorPaginas,$tipo_bajada)
+    private function obtengoCantConsultas($api,$cantidadPorPaginas,$tipo_bajada,$anio)
     {
         if ($tipo_bajada == 'todo'){
-            $query = $api->get("products?page=1&per_page=1");
+            //$query = $api->get("products?page=1&per_page=1");
+            $query = $api->get("products?page=1&per_page=1&created_at_min=$anio-01-01&created_at_max=$anio-12-31");
         }else $query = $api->get("products?page=1&per_page=1&published=true");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
