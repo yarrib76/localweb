@@ -28,6 +28,14 @@
                         <option>Donatella</option>
                     @endif
                 </select>
+                <div class="col-sm-3">
+                    Fecha Inicio
+                    <input type="date" class="form-control" placeholder="Fecha" id="Fecha_min" required="required">
+                </div>
+                <div class="col-sm-3">
+                    Fecha Fin
+                    <input type="date" class="form-control" placeholder="Fecha" id="Fecha_max" required="required">
+                </div>
                 <div class="panel-body" id="sincro">
                     <input type="button" value="Bajar" class="btn btn-success" onclick="sincro({{$store_id}})">
                 </div>
@@ -116,7 +124,11 @@
 
         var modalFinish = document.getElementById('myModalFinish');
         var modalError = document.getElementById('myModalError');
+        document.getElementById('Fecha_min').valueAsDate = new Date();
+        document.getElementById('Fecha_max').valueAsDate = new Date();
         function sincro(store_id){
+            let fecha_min = document.getElementById("Fecha_min").value;
+            let fecha_max = document.getElementById("Fecha_max").value;
             var selectLocal = document.getElementById("select");
             selectLocal = selectLocal.options[selectLocal.selectedIndex].text
             if (selectLocal == "Selecciona un Local") {
@@ -127,7 +139,7 @@
                 // When the user clicks the button, open the modal
                 modal.style.display = "block";
                 $.ajax({
-                    url: '/api/tiendanubeGetArticulos?store_id=' + store_id + "&" + "local=" + selectLocal,
+                    url: '/api/tiendanubeGetArticulos?store_id=' + store_id + "&" + "local=" + selectLocal + '&fecha_min=' + fecha_min + '&fecha_max=' + fecha_max,
                     dataType : "json",
                     success : function(json) {
                         console.log(json)

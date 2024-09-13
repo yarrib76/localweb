@@ -56,6 +56,8 @@ class GetArticulosTiendaNube extends Controller
         Viamore = 1043936
         */
         $store_id = Input::get('store_id');
+        $fecha_min = Input::get('fecha_min');
+        $fecha_max = Input::get('fecha_max');
         $tnConnect = new TnubeConnect();
         $connect = $tnConnect->getConnectionTN($store_id);
 
@@ -64,13 +66,13 @@ class GetArticulosTiendaNube extends Controller
         $api = new API($store_id, $connect[0]['access_token'], $connect[0]['appsName']);
         // $query = $api->get("products/39750826");
         // dd($query);
-        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas);
+        $cantidadConsultas = $this->obtengoCantConsultas($api,$cantidadPorPaginas, $fecha_min, $fecha_max);
 
         //obtengo todas las categorìas
         $allCategorias = $this->obtengoSubCategoria($api);
         for ($i = 1; $i <= $cantidadConsultas; $i++){
             try {
-                $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas");
+                $articulosTiendaNube = $api->get("products?page=$i&per_page=$cantidadPorPaginas&created_at_min=$fecha_min&created_at_max=$fecha_max");
                 foreach ($articulosTiendaNube->body as $articulo){
                     // dd($articulo->categories);
                     // dd($articulo->categories);
@@ -191,9 +193,9 @@ class GetArticulosTiendaNube extends Controller
     /*Debido a que la API de tienda nube, no puede enviar mas de 200 productos por pagina, lo que hace esta funcion
     es tomar la cantidad de productos que hay en tienda nube y lo divide por la cantidad de productos por pagina. Con
     Esta información la urilizo en el FOR para solicitar todas las pagínas que tienen los artículos*/
-    private function obtengoCantConsultas($api,$cantidadPorPaginas)
+    private function obtengoCantConsultas($api,$cantidadPorPaginas,$fecha_min,$fecha_max)
     {
-        $query = $api->get("products?page=1&per_page=1");
+        $query = $api->get("products?page=1&per_page=1&created_at_min=$fecha_min&created_at_max=$fecha_max");
         $cantidadConsultas = (ceil(($query->headers['x-total-count'] / $cantidadPorPaginas)));
         return $cantidadConsultas;
     }

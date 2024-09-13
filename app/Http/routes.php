@@ -165,6 +165,7 @@ Route::get('/whatsappMkT','Whatsapp\Marketing@index');
 Route::get('/test','Test\Test@test');
 //Route::get('/testia','Test\Test@pruebaApiIA');
 Route::get('/testia','Ia\Pedidos@iniciarChat');
+Route::get('/testn','Test\TestTiendaNube@test');
 Route::get('/testconvert','Test\Test@convert');
 Route::get('/checkout','TiendaNube\CarritosAbandonados@main');
 Route::get('/cambioPrecios','Articulo\CambioPreciosControl@index');

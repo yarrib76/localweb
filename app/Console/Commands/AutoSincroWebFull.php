@@ -129,7 +129,6 @@ class AutoSincroWebFull extends Command
                         $image = 1;
                     }
                     foreach ($articulo->variants as $variant){
-                        //dd($variant);
                         //Verifico que no sea null la cantidad
                         if (!empty($articulo->images[0]->src)){
                             $imagesSrc = $articulo->images[0]->src;
