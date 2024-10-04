@@ -30,13 +30,13 @@ class TestTiendaNube extends Controller
     public function Test()
     {
 
-
+        /*
         $product_id = DB::select('select product_id from samira.statusecomercesincro
                                   where id_provecomerce = 2486
                                   ');
         $this->delCurl($product_id);
         dd('listo');
-
+        */
 
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
         $cantidadConsultas =  $this->obtengoPaginas();
@@ -96,12 +96,12 @@ class TestTiendaNube extends Controller
 
         // Definir los encabezados
         $headers = [
-            'Authentication: bearer fa4dae089b6475c03622ecff3fc4680d1c3d5c97',
+            'Authentication: bearer 9d4e7d6c96a5256904d289d6425b969c043bd1cf',
             'User-Agent: SincroApps (yarrib76@gmail.com)'
         ];
 
         // URL con paginación
-        $url = 'https://api.tiendanube.com/v1/5209165/products?page=2&per_page=100';
+        $url = 'https://api.tiendanube.com/v1/938857/products?page=2&per_page=100';
 
         // Configurar cURL
         curl_setopt_array($curl, [
@@ -148,14 +148,14 @@ class TestTiendaNube extends Controller
 
         // Definir los encabezados
         $headers = [
-            'Authentication: bearer fa4dae089b6475c03622ecff3fc4680d1c3d5c97',
+            'Authentication: bearer 9d4e7d6c96a5256904d289d6425b969c043bd1cf',
             'User-Agent: SincroApps (yarrib76@gmail.com)',
             'Content-Type: application/json'
         ];
 
 
         // URL para obtener los productos (con paginación si es necesario)
-        $url = "https://api.tiendanube.com/v1/5209165/products?page=$pagina&per_page=$cantidadPorPaginas";
+        $url = "https://api.tiendanube.com/v1/938857/products?page=$pagina&per_page=$cantidadPorPaginas";
         //$url = "https://api.tiendanube.com/v1/938857/products?page=1&per_page=1";
 
         // Configurar cURL

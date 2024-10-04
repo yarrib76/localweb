@@ -180,7 +180,8 @@
                         "Espera": "Espera",
                         "Corriendo": "Corriendo",
                         "Vendida": "Vendida",
-                        "Nula": "Nula"
+                        "Nula": "Nula",
+                        "Perdida": "Perdida"
                     }
                 },headerFilter:"input"},
                 {title: "Porcentaje de Ganancia", field: "porcentaje_ganancia", width: 110,editor:true},

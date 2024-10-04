@@ -104,13 +104,14 @@ class ControllerFacturaWeb extends Controller
             $nroFactura = $this->getNroFactura()[0]->NroFactura;
         };
 
+        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto,$vendedora);
+
         foreach ($articulosFactura as $articuloFactura) {
             $gananciaTotal += $articuloFactura->Ganancia;
             $precioArgentina += $articuloFactura->PrecioArgen * $articuloFactura->Cantidad;
             $this->descontarArticulos($articuloFactura->Articulo, $articuloFactura->Cantidad);
             $this->addArticulosToFactura($articuloFactura,$nroFactura,$fecha,$vendedora);
         }
-        $this->creaFacturaHistorica($nroFactura,$total,$porcentajeDescuento,$descuento,$gananciaTotal,$fecha,$cliente_id,$envio,$totalEnvio,$tipo_pago_id,$precioArgentina,$pagoMixto,$vendedora);
         $this->acturlizarNroFactura();
         if($esPedido = "SI"){
             $mi_correo = new MiCorreo();
