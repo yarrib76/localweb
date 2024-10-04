@@ -621,55 +621,58 @@
 
     function facturar(){
         if (document.getElementById('totalApagar').value != 0){
-            if (confirm('Confirma la Factura?')){
-                document.getElementById('facturar').disabled = true;
-                var listaArticulos =  JSON.stringify(datosFactura)
-                var tipo_pago_id  = document.getElementById('tipo_pago').value
-                var esPedido;
-                var listoParaEnvio;
-                var nroPedido;
-                if (chkBoxPedido.checked){
-                    esPedido = "SI"
-                    nroPedido = inputNroPedido.value
-                    if (chkBoxListoEnvio.checked){
-                        listoParaEnvio = 1
-                    } else listoParaEnvio = 0
-                }else esPedido = "NO"
+            //Ferifico que el combo vendedor y tipo de pago no esten vacios.
+            if (document.getElementById('tipo_pago').value != "" && glocalVendedora.value != ""){
+                if (confirm('Confirma la Factura?')){
+                    document.getElementById('facturar').disabled = true;
+                    var listaArticulos =  JSON.stringify(datosFactura)
+                    var tipo_pago_id  = document.getElementById('tipo_pago').value
+                    var esPedido;
+                    var listoParaEnvio;
+                    var nroPedido;
+                    if (chkBoxPedido.checked){
+                        esPedido = "SI"
+                        nroPedido = inputNroPedido.value
+                        if (chkBoxListoEnvio.checked){
+                            listoParaEnvio = 1
+                        } else listoParaEnvio = 0
+                    }else esPedido = "NO"
 
-                var datosCombinados = {
-                    articulos: listaArticulos,
-                    cliente_id: globalClientId,
-                    tipo_pago_id: tipo_pago_id,
-                    nroFactura: document.getElementById('nroFactura').value,
-                    total: document.getElementById('totalApagar').value,
-                    descuento: document.getElementById('totalDescuento').value,
-                    porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
-                    envio: document.getElementById('correo').value,
-                    totalEnvio: document.getElementById('total_correo').value,
-                    vendedora: glocalVendedora.value,
-                    esPedido: esPedido,
-                    listoParaEnvio: listoParaEnvio,
-                    nroPedido: nroPedido,
-                    pagoMixto: textEfectivo.value,
-                };
-                $.ajax({
-                    url: "crearfactura",
-                    method: 'post',
-                    data: datosCombinados,
-                    success: function (json) {
-                        alert('La venta se realizo correctamente')
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        // Manejar errores de la solicitud aquí
-                       // alert('Ha ocurrido un error consultar con el administrador')
-                        var dialog = document.getElementById("customDialog");
-                        var message = document.getElementById("dialogMessage");
-                        message.innerHTML = "Ha ocurrido un error, la factura no fue guardada. Intentar nuevamente.";
-                        dialog.style.display = "block";
-                    }
-                });
-            }
+                    var datosCombinados = {
+                        articulos: listaArticulos,
+                        cliente_id: globalClientId,
+                        tipo_pago_id: tipo_pago_id,
+                        nroFactura: document.getElementById('nroFactura').value,
+                        total: document.getElementById('totalApagar').value,
+                        descuento: document.getElementById('totalDescuento').value,
+                        porcentajeDescuento: document.getElementById('select_descuento').options[document.getElementById('select_descuento').selectedIndex].text,
+                        envio: document.getElementById('correo').value,
+                        totalEnvio: document.getElementById('total_correo').value,
+                        vendedora: glocalVendedora.value,
+                        esPedido: esPedido,
+                        listoParaEnvio: listoParaEnvio,
+                        nroPedido: nroPedido,
+                        pagoMixto: textEfectivo.value,
+                    };
+                    $.ajax({
+                        url: "crearfactura",
+                        method: 'post',
+                        data: datosCombinados,
+                        success: function (json) {
+                            alert('La venta se realizo correctamente')
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            // Manejar errores de la solicitud aquí
+                            // alert('Ha ocurrido un error consultar con el administrador')
+                            var dialog = document.getElementById("customDialog");
+                            var message = document.getElementById("dialogMessage");
+                            message.innerHTML = "Ha ocurrido un error, la factura no fue guardada. Intentar nuevamente.";
+                            dialog.style.display = "block";
+                        }
+                    });
+                }
+            }else alert ('Debe tener un vendedor y tipo de pago')
         }else (alert('No se puede facturar con valor Total en 0'))
     }
 
