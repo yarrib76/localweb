@@ -206,8 +206,8 @@
         }
 
         .table-scroll tr {
-            width: 100%;
             table-layout: fixed;
+            width: 100%;
             display: inline-table;
         }
 
@@ -564,6 +564,7 @@
         var tableCheckInTN
         var tableCheckInLocalSystem
         var tableCheckInDiff
+        var clickeado = false; // Flag para evitar múltiples ejecuciones
         $(document).keyup(function(e) {
             if (e.keyCode == 27) { // escape key maps to keycode `27`
                 cerrar()
@@ -849,34 +850,45 @@
 
 
         function cambioInstancia (nroPedido,instancia,posicionBoton){
+            // Reiniciar el flag al llamar la función
+            clickeado = false;
             var rows = document.getElementById('reporte').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
             for (i = 0; i < rows.length; i++) {
                 rows[i].onclick = function() {
-                    //Paso a la variable la fila seleccionada
-                    posicionTable = this.rowIndex
+                    if (!clickeado) {
+                        // Marcamos el flag como true para evitar múltiples clics
+                        clickeado = true;
+                        //Paso a la variable la fila seleccionada
+                        posicionTable = this.rowIndex
+                        console.log(instancia)
+                        if (reporte.rows[posicionTable].cells[8].innerHTML !== "" || instancia !== 2){
+                            $.ajax({
+                                url: 'api/instanciaPedidos?nroPedido=' + nroPedido + '&&instancia=' + instancia,
+                                dataType: "json",
+                                success: function (json) {
+                                    modal.style.display = "none";
+                                    //El "json" es la respuesta del valor que se cambio por la API del webSky
+                                    //Luego se lo cargo a la tabla en le posición "posicionTable"
+                                    reporte.rows[posicionTable].cells[9].innerHTML = json;
+                                    if (json == 'Iniciado'){
+                                        document.getElementById("botonInstanciaFin" + posicionBoton).style.display = 'block'
+                                        document.getElementById("botonInstancia" + posicionBoton).style.display = 'none'
+                                    }else {
+                                        if (document.getElementById("botonInstanciaFin" + posicionBoton) != null){
+                                            document.getElementById("botonInstanciaFin" + posicionBoton).disabled = true
+                                        } else {
+                                            document.getElementById("botonInstancia" + posicionBoton).disabled = true
+                                        }
+                                    }
+
+                                }
+                            });
+                        }else alert('Para poder finalizar un pedido debe completar el campo Transporte')
+                        // Sobrescribir el evento click para que no se vuelva a ejecutar
+                        this.onclick = null;
+                    }
                 }
             }
-            $.ajax({
-                url: 'api/instanciaPedidos?nroPedido=' + nroPedido + '&&instancia=' + instancia,
-                dataType: "json",
-                success: function (json) {
-                    modal.style.display = "none";
-                    //El "json" es la respuesta del valor que se cambio pot la API del webSky
-                    //Luego se lo cargo a la tabla en le posición "posicionTable"
-                    reporte.rows[posicionTable].cells[9].innerHTML = json;
-                    if (json == 'Iniciado'){
-                        document.getElementById("botonInstanciaFin" + posicionBoton).style.display = 'block'
-                        document.getElementById("botonInstancia" + posicionBoton).style.display = 'none'
-                    }else {
-                        if (document.getElementById("botonInstanciaFin" + posicionBoton) != null){
-                            document.getElementById("botonInstanciaFin" + posicionBoton).disabled = true
-                        } else {
-                            document.getElementById("botonInstancia" + posicionBoton).disabled = true
-                        }
-                    }
-
-                }
-            });
         }
 
         function checkOut (controlpedidos_id,nroPedido,nombre_cliente,apellido_cliente){

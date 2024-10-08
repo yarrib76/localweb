@@ -216,6 +216,7 @@ class ControllerFacturaWeb extends Controller
                             FROM samira.controlpedidos as control
                             inner join samira.clientes cli ON control.id_cliente = cli.id_clientes
                             WHERE estado = 1
+                            and (instancia = 2 or ordenweb = 0 or ordenweb is null)
                             ORDER BY control.nropedido DESC;');
         return Response::json($pedidos);
     }
