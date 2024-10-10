@@ -664,11 +664,27 @@
                         },
                         error: function(xhr, status, error) {
                             // Manejar errores de la solicitud aquí
-                            // alert('Ha ocurrido un error consultar con el administrador')
+                            var errorMessage = "Error: " + xhr.status + " - " + xhr.statusText + "\n" +
+                                    "Detalle: " + xhr.responseText + "\n" +
+                                    "Error: " + error;
                             var dialog = document.getElementById("customDialog");
                             var message = document.getElementById("dialogMessage");
                             message.innerHTML = "Ha ocurrido un error, la factura no fue guardada. Intentar nuevamente.";
                             dialog.style.display = "block";
+                            $.ajax({
+                                url: "/saveFile",
+                                method: 'post',
+                                data: {
+                                    fileName: 'logFactura',
+                                    error: errorMessage
+                                },
+                                success: function(response) {
+                                    console.log('Error registrado correctamente en los logs');
+                                },
+                                error: function(xhr, status, error) {
+                                    console.log('Error al registrar el error en los logs');
+                                }
+                            })
                         }
                     });
                 }

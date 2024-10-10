@@ -329,6 +329,11 @@ Route::post('invertir','OperadorBursatil\Inversor@invertir');
 Route::get('cargardatosinversores','OperadorBursatil\Inversor@cargaDatosTabuladorInversiones');
 Route::post('actualizarinversion','OperadorBursatil\Inversor@actualizar');
 Route::get('listainversiones','OperadorBursatil\Inversor@listaInversines');
+
+//Se utiliza para guardar logs
+Route::post('saveFile', 'Logfile\ArchivoLog@SaveLog');
+
+
 Route::group(['prefix' => 'api'],
     function () {
         Route::get('/listar', 'Api\FacturacionH@listar');
