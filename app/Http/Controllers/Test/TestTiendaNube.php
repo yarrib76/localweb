@@ -41,7 +41,7 @@ class TestTiendaNube extends Controller
         $fecha = Carbon::createFromFormat('Y-m-d H:i:s', date("Y-m-d H:i:s"))->toDateTimeString();
         $cantidadConsultas =  $this->obtengoPaginas();
         //$cantidadConsultas = 10;
-        $store_id = 963000;
+        $store_id = 938857;
         $cantidadPorPaginas = 200;
 
         $id_provEcomerce = ProvEcomerce::Create([
@@ -49,11 +49,12 @@ class TestTiendaNube extends Controller
                 'id_users' => 1,
                 'fecha' => $fecha,
                 'id_cliente' => $store_id,
-                'tienda' => 'Donatella'
+                'tienda' => 'Samira'
             ]);
             for ($i = 1; $i <= $cantidadConsultas; $i++){
                 try {
                     $data = $this->consultaCurl($i,$cantidadPorPaginas);
+                    dd($data);
                     foreach ($data as $articulo){
                         // dump($i, $articulo);
                         $image = 0;
@@ -95,13 +96,22 @@ class TestTiendaNube extends Controller
         $curl = curl_init();
 
         // Definir los encabezados
+
         $headers = [
             'Authentication: bearer 9d4e7d6c96a5256904d289d6425b969c043bd1cf',
             'User-Agent: SincroApps (yarrib76@gmail.com)'
         ];
 
+        //Vamore
+        /*
+        $headers = [
+            'Authentication: bearer 986093261acb4e02ad78a42b891f9ca52592a8cf',
+            'User-Agent: SincoAppsViamore (yarrib76@gmail.com)'
+        ];
+        */
         // URL con paginación
         $url = 'https://api.tiendanube.com/v1/938857/products?page=2&per_page=100';
+        //$url = 'https://api.tiendanube.com/v1/1043936/products?page=2&per_page=100';
 
         // Configurar cURL
         curl_setopt_array($curl, [
@@ -147,6 +157,7 @@ class TestTiendaNube extends Controller
         $curl = curl_init();
 
         // Definir los encabezados
+
         $headers = [
             'Authentication: bearer 9d4e7d6c96a5256904d289d6425b969c043bd1cf',
             'User-Agent: SincroApps (yarrib76@gmail.com)',
@@ -154,8 +165,19 @@ class TestTiendaNube extends Controller
         ];
 
 
+        //Vamore
+        /*
+        $headers = [
+            'Authentication: bearer 986093261acb4e02ad78a42b891f9ca52592a8cf',
+            'User-Agent: SincoAppsViamore (yarrib76@gmail.com)',
+            'Content-Type: application/json'
+        ];
+        */
+
         // URL para obtener los productos (con paginación si es necesario)
         $url = "https://api.tiendanube.com/v1/938857/products?page=$pagina&per_page=$cantidadPorPaginas";
+        //$url = "https://api.tiendanube.com/v1/1043936/products?page=$pagina&per_page=$cantidadPorPaginas";
+
         //$url = "https://api.tiendanube.com/v1/938857/products?page=1&per_page=1";
 
         // Configurar cURL

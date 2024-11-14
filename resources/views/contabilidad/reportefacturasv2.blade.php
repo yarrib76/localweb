@@ -19,15 +19,15 @@
 
 @section('extra-javascript')
 
-   <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
-   <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+   <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css">
+   <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
    <script type="text/javascript" src="../../js/tabulador/xlsx.full.min.js"></script>
 
    <script>
        $(document).ready( function () {
-           llenarTabla();
-           paramLookup();
-           estadosLookup();
+          // llenarTabla();
+           // paramLookup();
+           // estadosLookup();
        });
 
        //custom max min header filter
@@ -114,6 +114,7 @@
            $.ajax({
                url: '/tipo_pagos',
                dataType : "json",
+               async: false,
                success : function(json) {
                    var arr= json
                    var obj = {}; //create the empty output object
@@ -133,6 +134,7 @@
            $.ajax({
                url: '/estados_financiera',
                dataType : "json",
+               async: false,
                success : function(json) {
                    var arr= json
                    var obj = {}; //create the empty output object
@@ -147,33 +149,55 @@
            return estados;
        }
 
-       $("#example-table").tabulator({
+       var tableFacturas = new Tabulator ("#example-table",
+               {
+       // $("#example-table").tabulator({
                 height: "550px",
           // initialSort:[
           //     {column:"NroFactura", dir:"asc"}, //sort by this first
         //   ],
                 columns: [
-                    {title: "Cliente", field: "Cliente", sortable: true, width: 200,headerFilter:"input"},
-                    {title: "Fecha", field: "fecha", sortable: true, width: 100,headerFilter:"input"},
-                    {title: "NroFactura", field: "NroFactura", sortable: true, width: 110,headerFilter:"input"},
-                    {title: "Total", field: "Totales", sortable: true, width: 110,headerFilter:"input"},
-                    {title: "Envio", field: "Envio", sortable: true, width: 80},
-                    {title: "TotalEnvio", field: "TotalConEnvio", sortable: true, width: 110,headerFilter:"input"},
-                    {title: "A Cobrar", field: "Cobrar", sortable: true, width: 110,headerFilter:"input", bottomCalc:"sum"},
-                    {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup,headerFilter:"input"},
-                    {title: "Estado", field: "nombre", sortable: true, width: 110,editor:"select",editorParams:estadosLookup,headerFilter:"input"},
+                    {title: "Cliente", field: "Cliente",  width: 200,headerFilter:"input"},
+                    {title: "Fecha", field: "fecha",  width: 100,headerFilter:"input"},
+                    {title: "NroFactura", field: "NroFactura",  width: 110,headerFilter:"input"},
+                    {title: "Total", field: "Totales",  width: 110,headerFilter:"input"},
+                    {title: "Envio", field: "Envio",  width: 80},
+                    {title: "TotalEnvio", field: "TotalConEnvio", width: 110,headerFilter:"input"},
+                    {title: "A Cobrar", field: "Cobrar", width: 110,headerFilter:"input", bottomCalc:"sum"},
+                    {
+                        title: "Tipo de Pago",
+                        field: "tipo_pago",
+                        width: 150,
+                        editor: "list",
+                        editorParams: {
+                            values: paramLookup(), // Lista de opciones para "Tipo de Pago"
+                            clearable: true // Permite limpiar la selección si es necesario
+                        },
+                        headerFilter: "input"
+                    },
+                    {
+                        title: "Estado",
+                        field: "nombre",
+                        width: 110,
+                        editor: "list",
+                        editorParams: {
+                            values: estadosLookup(), // Lista de opciones para "Estado"
+                            clearable: true // Permite limpiar la selección si es necesario
+                        },
+                        headerFilter: "input"
+                    },
                     {title: "pagomixto", field: "pagomixto", width: 115, editor:true},
                     {title: "Comentario", field: "comentario", width: 115,editor:"textarea"},
                 ],
-                cellEdited:function(cell, value, data){
-                    $.ajax({
-                        url: "/updateFactura/update",
-                        data: cell.getRow().getData(),
-                        type: "post"
-                    })
-                },
+                });
 
-            });
+       tableFacturas.on("cellEdited", function(cell){
+           $.ajax({
+               url: "/updateFactura/update",
+               data: cell.getRow().getData(),
+               type: "post"
+           })
+       })
 
        function buscarProveedor(){
            // Get the <span> element that closes the modal
@@ -195,13 +219,22 @@
            }
        }
        function llenarTabla() {
-           $("#example-table").tabulator("setData", '/listarfacturas');
+          // $("#example-table").tabulator("setData", '/listarfacturas');
+           tableFacturas.setData('/listarfacturas');
        }
-       $(window).resize(function () {
-           $("#example-table").tabulator("redraw");
-       });
+       
+       // Evento para descargar la tabla en formato Excel
        $("#download-xlsx").click(function(){
-           $("#example-table").tabulator("download", "xlsx", "data.xlsx", {sheetName:"ReporteFinanciera"});
+           tableFacturas.download("xlsx", "data.xlsx", {sheetName:"ReporteFinanciera"});
+       });
+
+       // Llama a la función `llenarTabla` después de que la tabla se haya construido completamente
+       tableFacturas.on("tableBuilt", function() {
+           llenarTabla();
+       });
+
+       $(window).resize(function () {
+           tableFacturas.redraw();
        });
 
     </script>
