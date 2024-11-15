@@ -18,8 +18,8 @@
 
 @section('extra-javascript')
 
-   <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
-   <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+    <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css">
+    <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
 
    <script>
        idleTimer = null;
@@ -27,8 +27,8 @@
        idleWait = 180000;
        (function ($) {
        $(document).ready( function () {
-           llenarTabla();
-           paramLookup();
+           //llenarTabla();
+           //paramLookup();
            $('*').bind('mousemove keydown scroll', function () {
 
                clearTimeout(idleTimer);
@@ -137,6 +137,7 @@
            $.ajax({
                url: '/asignaciongeneral/vendedoras',
                dataType : "json",
+               async: false,
                success : function(json) {
                    var arr= json
                    var obj = {}; //create the empty output object
@@ -151,9 +152,9 @@
            //do some processing and return the param object
            return vendedoras;
        }
-
+       /*
        $("#example-table").tabulator({
-                height: "550px",
+           height: "550px",
            initialSort:[
                {column:"nropedido", dir:"desc"}, //sort by this first
            ],
@@ -174,6 +175,41 @@
                     })
                 }
             });
+            */
+
+       var tableAsignacionPedidos = new Tabulator ("#example-table", {
+           height: "550px",
+           initialSort:[
+               {column:"nropedido", dir:"desc"}, //sort by this first
+           ],
+           columns: [
+               {title: "Pedido", field: "nropedido", headerSort : true, width: 115},
+               {title: "Cliente", field: "cliente", headerSort : true, width: 300, headerFilter:"input"},
+               {
+                   title: "Vendedora",
+                   field: "vendedora",
+                   width: 200,
+                   editor:"list",
+                   editorParams: {
+                       values: paramLookup(), // Lista de opciones para "Estado"
+                       clearable: true // Permite limpiar la selección si es necesario
+                   },
+                   headerFilter:"input"},
+               {title: "OrdenWeb", field: "ordenweb", headerSort : true, width: 110},
+               {title: "Total", field: "total", headerSort : true, width: 110},
+               {title: "TotalWeb", field: "totalweb", headerSort : true, width: 110, bottomCalc:"sum",bottomCalcParams:{precision:2}},
+               {title: "Local", field: "local", headerSort : true, width: 145},
+           ],
+       })
+
+
+       tableAsignacionPedidos.on("cellEdited", function(cell){
+           $.ajax({
+               url: "/asignaciongeneral/update",
+               data: cell.getRow().getData(),
+               type: "post"
+           })
+       })
 
        function buscarProveedor(){
            // Get the <span> element that closes the modal
@@ -195,10 +231,18 @@
            }
        }
        function llenarTabla() {
-           $("#example-table").tabulator("setData", '/asignaciongeneral/query');
+           // $("#example-table").tabulator("setData", '/asignaciongeneral/query');
+           tableAsignacionPedidos.setData('/asignaciongeneral/query');
        }
+
+       // Llama a la función `llenarTabla` después de que la tabla se haya construido completamente
+       tableAsignacionPedidos.on("tableBuilt", function() {
+           llenarTabla();
+       });
+
        $(window).resize(function () {
-           $("#example-table").tabulator("redraw");
+           // $("#example-table").tabulator("redraw");
+           tableAsignacionPedidos.redraw()
        });
     </script>
 @stop
