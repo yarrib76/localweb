@@ -21,15 +21,15 @@
 
 @section('extra-javascript')
 
-    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
-    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+    <link rel="stylesheet" href="../../js/tabulador/tabulator5-5-2min.css">
+    <script type="text/javascript" src="../../js/tabulador/tabulator5-5-2.min.js"></script>
     <script type="text/javascript" src="../../js/tabulador/xlsx.full.min.js"></script>
 
     <script>
         $(document).ready( function () {
-            llenarTabla();
-            paramLookup();
-            sucursalesLookup();
+            //llenarTabla();
+            //paramLookup();
+            //sucursalesLookup();
         });
 
         //custom max min header filter
@@ -129,6 +129,7 @@
             //do some processing and return the param object
             return tipo_transporte;
         }
+        /*
         var estados = {}
         function sucursalesLookup (tipo_envio,cod_provincia){
             if (tipo_envio == "Sucursal"){
@@ -151,7 +152,36 @@
             //do some processing and return the param object
             return "";
         }
+        */
 
+        // Función sucursalesLookup con llamada sincrónica
+        function sucursalesLookup(tipo_envio, cod_provincia) {
+            var opciones = [];
+            if (tipo_envio == "Sucursal") {
+                $.ajax({
+                    url: '/pub_sucursales?codigo_provincia=' + cod_provincia,
+                    dataType: 'json',
+                    async: false, // Llamada sincrónica
+                    success: function(data) {
+                        opciones = data.map(function(item){
+                            var key = Object.keys(item)[0];
+                            var value = item[key];
+                            return {
+                                label: value,
+                                value: key
+                            };
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error al obtener las sucursales:', textStatus, errorThrown);
+                    }
+                });
+            }
+            return opciones;
+        }
+
+
+        /*
         $("#example-table").tabulator({
             height: "550px",
             // initialSort:[
@@ -227,41 +257,154 @@
             },
 
         });
+        */
+        var tableCorreo = new Tabulator("#example-table", {
+            height: "550px",
+            // initialSort:[
+            //     {column:"NroFactura", dir:"asc"}, //sort by this first
+            // ],
+            columns: [
+                {
+                    title:"Del",
+                    width:80,
+                    hozAlign:"center",
+                    formatter:"buttonCross",
+                    cellClick:function(e, cell){
+                        cell.getRow().delete();
+                        $.ajax({
+                            url: "/miCorreoEliminar",
+                            data: cell.getRow().getData(),
+                            type: "post"
+                        });
+                    }
+                },
+                {title: "Cliente", field: "destino_nombre", download:false, headerSort: true, width: 150, headerFilter:"input"},
+                {title: "Pedido", field: "nropedido", headerSort: true, download:false, width: 100, headerFilter:"input"},
+                {title: "vendedora", field: "vendedora", headerSort: true, download:false, width: 110, headerFilter:"input"},
+                {title: "Ordenweb", field: "ordenweb", headerSort: true, download:false, width: 110, headerFilter:"input"},
+                {title: "tipo_envio", field: "tipo_envio", headerSort: true, download:false, width: 100, headerFilter:"input"},
+                {title: "tipo_producto", field: "tipo_producto", headerSort: true, width: 10},
+                {title: "largo", field: "largo", headerSort: true, editor:"input", width: 80},
+                {title: "altura", field: "altura", headerSort: true, editor:"input", width: 80},
+                {title: "ancho", field: "ancho", headerSort: true, editor:"input", width: 80},
+                {title: "peso", field: "peso", headerSort: true, editor:"input", width: 80},
+                {title: "valor_del_contenido", field: "valor_del_contenido", editor:"input", headerSort: true, width: 110},
+                {
+                    title: "provincia",
+                    field: "provincia",
+                    headerSort: true,
+                    download:false,
+                    width: 120,
+                    formatter: function(cell){
+                        var data = cell.getRow().getData();
+                        if (data.provincia === "Gran Buenos Aires" || data.provincia === "Otro"){
+                            cell.getElement().style.backgroundColor = "red";
+                        } else {
+                            cell.getElement().style.backgroundColor = "";
+                        }
+                        return cell.getValue();
+                    }
+                },
+                {title: "provincia_destino", field: "provincia_destino", headerSort: true, width: 50},
+                {
+                    title: "sucursal_destino",
+                    field: "sucursal_destino",
+                    headerSort: true,
+                    width: 110,
+                    editor: "list",
+                    editorParams: function(cell) {
+                        var tipo_envio = cell.getData().tipo_envio;
+                        var provincia_destino = cell.getData().provincia_destino;
+                        var opciones = sucursalesLookup(tipo_envio, provincia_destino);
+                        console.log(opciones)
+                        return {
+                            values: opciones
+                        };
+                    },
+                    formatter: function(cell){
+                        var data = cell.getRow().getData();
+                        if (data.tipo_envio === "Sucursal" && data.sucursal_destino === ""){
+                            cell.getElement().style.backgroundColor = "red";
+                        } else {
+                            cell.getElement().style.backgroundColor = "";
+                        }
+                        return cell.getValue();
+                    },
+                    headerFilter:"input"
+                },
+                {title: "localidad_destino", field: "localidad_destino", headerSort: true, editor:"input", width: 150},
+                {title: "calle_destino", field: "calle_destino", editor:"input", headerSort: true, width: 130},
+                {title: "altura_destino", field: "altura_destino", editor:"input", headerSort: true, width: 150},
+                {title: "piso", field: "piso", headerSort: true, editor:"input", width: 80},
+                {title: "dpto", field: "dpto", headerSort: true, editor:"input", width: 80},
+                {
+                    title: "codpostal_destino",
+                    field: "codpostal_destino",
+                    editor:"number",
+                    headerSort: true,
+                    width: 130,
+                    headerFilter:"input",
+                    formatter: function(cell){
+                        if (cell.getValue() === ""){
+                            cell.getElement().style.backgroundColor = "red";
+                        } else {
+                            cell.getElement().style.backgroundColor = "";
+                        }
+                        return cell.getValue();
+                    }
+                },
+                {title: "destino_nombre", field: "destino_nombre", editor:"input", headerSort: true, width: 150, headerFilter:"input"},
+                {title: "Ordenweb", field: "ordenweb", headerSort: true, download:false, width: 110, headerFilter:"input"},
+                {title: "destino_email", field: "destino_email", headerSort: true, width: 80, headerFilter:"input"},
+                {title: "cod_area_tel", field: "cod_area_tel", headerSort: true, width: 1},
+                {title: "tel", field: "tel", headerSort: true, width: 1},
+                {title: "cod_area_cel", field: "cod_area_cel", headerSort: true, editor:"input", width: 80},
+                {title: "cel", field: "cel", headerSort: true, editor:"input", width: 110, headerFilter:"input"},
+                {title: "numero_orden", field: "numero_orden", headerSort: true, editor:"input", width: 110, headerFilter:"input"},
+                // Comentado porque parece ser código de ejemplo o pendiente de uso:
+                // {title: "tipo_producto", field: "tipo_producto", headerSort: true, width: 10, headerFilter:"input"},
+                // {title: "Tipo de Pago", field: "tipo_pago", width: 150, editor:"select", editorParams:paramLookup, headerFilter:"input"},
+                // {title: "Estado", field: "nombre", headerSort: true, width: 110, editor:"select", editorParams:estadosLookup, headerFilter:"input"},
+                // {title: "Comentario", field: "comentario", width: 115, editor:"textarea"},
+            ],
+        });
 
-        function buscarProveedor(){
-            // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
+        tableCorreo.on("cellEdited", function(cell){
+            $.ajax({
+                url: "/miCorreoUpdate",
+                data: cell.getRow().getData(),
+                type: "post"
+            })
+        })
 
-            // When the user clicks the button, open the modal
-            modal.style.display = "block";
-
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        }
         function llenarTabla() {
             document.getElementById("PedidosPagos").checked = false;
-            $("#example-table").tabulator("setData", '/miCorreoCargaDatos');
+            //$("#example-table").tabulator("setData", '/miCorreoCargaDatos');
+            tableCorreo.setData('/miCorreoCargaDatos');
         }
-        $(window).resize(function () {
-            $("#example-table").tabulator("redraw");
+
+        // Llama a la función `llenarTabla` después de que la tabla se haya construido completamente
+        tableCorreo.on("tableBuilt", function() {
+            llenarTabla();
         });
+
+
+        $(window).resize(function () {
+            //$("#example-table").tabulator("redraw");
+            tableCorreo.redraw();
+        });
+
         $("#download-xlsx").click(function(){
-            $("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera", delimiter: ";"});
+            //$("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera", delimiter: ";"});
+            tableCorreo.download("xlsx", "data.xlsx", {sheetName:"ReporteCorreo"});
         });
 
         function pedidosPagos(){
             if (document.getElementById("PedidosPagos").checked){
-                $("#example-table").tabulator("redraw");
-                $("#example-table").tabulator("setData", '/miCorreoCargaDatos?tipo=Pagados');
+                //$("#example-table").tabulator("redraw");
+                tableCorreo.redraw();
+                //$("#example-table").tabulator("setData", '/miCorreoCargaDatos?tipo=Pagados');
+                tableCorreo.setData('/miCorreoCargaDatos?tipo=Pagados')
             }else llenarTabla();
         }
     </script>

@@ -222,7 +222,7 @@
           // $("#example-table").tabulator("setData", '/listarfacturas');
            tableFacturas.setData('/listarfacturas');
        }
-       
+
        // Evento para descargar la tabla en formato Excel
        $("#download-xlsx").click(function(){
            tableFacturas.download("xlsx", "data.xlsx", {sheetName:"ReporteFinanciera"});
