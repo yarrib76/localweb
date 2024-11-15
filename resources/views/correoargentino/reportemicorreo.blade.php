@@ -396,7 +396,7 @@
 
         $("#download-xlsx").click(function(){
             //$("#example-table").tabulator("download", "csv", "data.csv", {sheetName:"ReporteFinanciera", delimiter: ";"});
-            tableCorreo.download("xlsx", "data.xlsx", {sheetName:"ReporteCorreo"});
+            tableCorreo.download("csv", "data.csv",{delimiter:";"}, {sheetName:"ReporteCorreo"});
         });
 
         function pedidosPagos(){
