@@ -268,6 +268,7 @@
                     title:"Del",
                     width:80,
                     hozAlign:"center",
+                    download:false,
                     formatter:"buttonCross",
                     cellClick:function(e, cell){
                         cell.getRow().delete();
