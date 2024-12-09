@@ -333,6 +333,10 @@ Route::get('listainversiones','OperadorBursatil\Inversor@listaInversines');
 //Se utiliza para guardar logs
 Route::post('saveFile', 'Logfile\ArchivoLog@SaveLog');
 
+//Procesa Archivos Excel Prestigio
+Route::get('prestigiofile', 'Contabilidad\Financiera\Prestigio@getExcel');
+Route::post('/prestigioImportExcel', 'Contabilidad\Financiera\Prestigio@importExcel');
+
 
 Route::group(['prefix' => 'api'],
     function () {

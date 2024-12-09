@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Response;
 
 class ChatGPT
 {
-    public function chatIA($question,$prompt)
+    public function chatIA($question,$prompt,$modelo)
     {
-        $respuesta_data = $this->consultaApi($question,$prompt);
+        $respuesta_data = $this->consultaApi($question,$prompt,$modelo);
         if (isset($respuesta_data['choices'][0]['message']['content'])) {
             $respuesta = $respuesta_data['choices'][0]['message']['content'];
             return $respuesta;
@@ -22,7 +22,7 @@ class ChatGPT
         return $respuesta;
     }
 
-    public function consultaApi($question,$prompt)
+    public function consultaApi($question,$prompt,$modelo)
     {
         // Tu clave API de OpenAI
         $api_key = config('services.openai.api_key');
@@ -30,22 +30,39 @@ class ChatGPT
         // La URL de la API de OpenAI
         $url = 'https://api.openai.com/v1/chat/completions';
 
+        /*Modelo 0 = gpt-4o-mini
+          Modelo 1 = o1-mini Con razonammiento
+        */
         // Los datos de la solicitud
-        $data = [
-            'model' => 'gpt-4o-mini',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => utf8_encode($question)
+        if ($modelo == 0){
+            $data = [
+                'model' => 'gpt-4o-mini',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => utf8_encode($question)
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => utf8_encode($prompt)
+                    ]
                 ],
-                [
-                    'role' => 'user',
-                    'content' => utf8_encode($prompt)
-                ]
-            ],
-            'max_tokens' => 15000,
-            'temperature'=> 0.2,
-        ];
+                'max_tokens' => 15000,
+                'temperature'=> 0.2,
+            ];
+        }
+        if ($modelo == 1){
+            $data = [
+                'model' => 'o1-mini',
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => utf8_encode($prompt)
+                    ]
+                ],
+            ];
+        }
+
 
         // Inicializa cURL
         $ch = curl_init($url);

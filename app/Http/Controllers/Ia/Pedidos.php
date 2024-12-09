@@ -37,7 +37,11 @@ class Pedidos extends Controller
         $texto_respuesta = "";
         $prompt = $this->getPrompt($tipo,$texto_respuesta,$consultaHumana);
         $asistenteSQL = new ChatGPT();
-        $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt);
+        /*Modelo 0 = gpt-4o-mini
+          Modelo 1 = o1-mini Con razonammiento
+        */
+        $modelo = 0;
+        $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt,$modelo);
         $respuesta = str_replace(["```", "sql"], "",$respuesta);
         try {
             //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
@@ -50,7 +54,11 @@ class Pedidos extends Controller
         $tipo = "Respuesta";
         $prompt_respuesta = $this->getPrompt($tipo,$texto_respuesta,$consultaHumana);
         $asistenteVentas = new ChatGPT();
-        $respuesta = $asistenteVentas->chatIA($question_respuesta,$prompt_respuesta);
+        /*Modelo 0 = gpt-4o-mini
+          Modelo 1 = o1-mini Con razonammiento
+        */
+        $modelo=0;
+        $respuesta = $asistenteVentas->chatIA($question_respuesta,$prompt_respuesta,$modelo);
         $id_user = DB::Select('select id from samira.users where name="Mia"');
         $this->guardaChat($id_pedido,$id_user[0]->id,$respuesta);
         return Response::json($respuesta);
@@ -77,10 +85,10 @@ class Pedidos extends Controller
                 . "    Campos: (`Articulo`, `Detalle`, `Cantidad`,`Proveedor`, `Observaciones`, `Web`, `ImageName`, `websku`, `ProveedorSKU`, `CompraAuto`)\n"
                 . "    Funcion: Contiene la información de todos los artículos.\n"
                 . "6. Users\n"
-                . "    Campos: (`id`, `name`, `email`, `created_at`, `updated_at`, `id_roles`, `codigo`, `foto`, `id_vendedoras`)\n"
+                . "    Campos: (`id` int(10), `name` varchar(255), `email` varchar(255), `created_at` timestamp, `updated_at` timestamp, `id_roles` int(11), `codigo` varchar(45), `foto` varchar(45), `id_vendedoras` int(11))\n"
                 . "    Funcion: Contiene todos los usuarios y tiene relación con la tabla Vendedores.\n"
                 . "8. ControlPedidos\n"
-                . "    Campos: (`id`, `id_cliente`, `nropedido`, `vendedora`, `cajera`, `fecha`, `estado`, `nrofactura`, `total`, `ordenWeb`, `empaquetado`, `transporte`, `encuesta`, `ultactualizacion`, `local`, `totalweb`, `instancia`, `fecha_inicio_instancia`, `fecha_fin_instancia`, `fecha_proveedor`, `fecha_ultima_nota`, `pagado`, `fecha_pago`)\n"
+                . "    Campos: (`id` int(11), `id_cliente` int(11), `nropedido` int(11), `vendedora` varchar(45), `cajera` varchar(45), `fecha` datetime, `estado` int(11), `nrofactura` int(11), `total` double, `ordenWeb` int(11), `empaquetado` int(2), `transporte` varchar(45), `encuesta` varchar(45), `ultactualizacion` datetime, `local` varchar(45), `totalweb` double, `instancia` int(2), `fecha_inicio_instancia` datetime, `fecha_fin_instancia` datetime, `fecha_proveedor` datetime, `fecha_ultima_nota` datetime, `pagado` int(2), `fecha_pago` datetime)\n"
                 . "    Funcion: Contiene todos los pedidos realizados por los clientes. El campo `vendedora` hace referencia a quien armó el pedido y el campo `cajera` a quien lo facturó. Tiene relaciones con las tablas Facturah, Clientes, y Pedidotemp. Cada pedido tiene los siguientes estados: 0 - Facturado, 1 - Proceso, 2 - Cancelado.\n"
                 . "9. Pedidotemp\n"
                 . "    Campos: (`NroPedido`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
