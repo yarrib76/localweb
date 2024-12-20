@@ -13,9 +13,9 @@ class Ganancias extends Controller
     public function run()
     {
         //Solo consulta si hay divrencias de ganancias entre Factura y FacturaH
-        $facturasErroneas = $this->query();
+        //$facturasErroneas = $this->query();
         //Resuelve el problema de las diferencias. Comentar después de utilizar
-        //$facturasErroneas = $this->resolveIssue();
+        $facturasErroneas = $this->resolveIssue();
         return $facturasErroneas;
 
        /*
