@@ -53,7 +53,7 @@ class ChatGPT
         }
         if ($modelo == 1){
             $data = [
-                'model' => 'o1-mini',
+                'model' => 'gpt-5-mini',
                 'messages' => [
                     [
                         'role' => 'user',

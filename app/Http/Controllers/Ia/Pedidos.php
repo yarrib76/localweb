@@ -43,6 +43,7 @@ class Pedidos extends Controller
         $modelo = 0;
         $respuesta = $asistenteSQL->chatIA($question_SQL,$prompt,$modelo);
         $respuesta = str_replace(["```", "sql"], "",$respuesta);
+        // dd($respuesta);
         try {
             //Utilizo una conexion secundaria ya que el usuario de esta conexion solo tiene privilegios Select sobre la base de datos
             $consultaDB = DB::connection('mysql_secondary')->select($respuesta);
@@ -57,7 +58,7 @@ class Pedidos extends Controller
         /*Modelo 0 = gpt-4o-mini
           Modelo 1 = o1-mini Con razonammiento
         */
-        $modelo=0;
+        $modelo=1;
         $respuesta = $asistenteVentas->chatIA($question_respuesta,$prompt_respuesta,$modelo);
         $id_user = DB::Select('select id from samira.users where name="Mia"');
         $this->guardaChat($id_pedido,$id_user[0]->id,$respuesta);
@@ -83,7 +84,7 @@ class Pedidos extends Controller
                 . "    Funcion: Contiene los artículos de cada factura y tiene relación con la tabla Facturah. Permite calcular el artículo más vendido.\n"
                 . "4. Articulos\n"
                 . "    Campos: (`Articulo`, `Detalle`, `Cantidad`,`Proveedor`, `Observaciones`, `Web`, `ImageName`, `websku`, `ProveedorSKU`, `CompraAuto`)\n"
-                . "    Funcion: Contiene la información de todos los artículos.\n"
+                . "    Funcion: Contiene la información de todos los artículos y su stock actual. \n"
                 . "6. Users\n"
                 . "    Campos: (`id` int(10), `name` varchar(255), `email` varchar(255), `created_at` timestamp, `updated_at` timestamp, `id_roles` int(11), `codigo` varchar(45), `foto` varchar(45), `id_vendedoras` int(11))\n"
                 . "    Funcion: Contiene todos los usuarios y tiene relación con la tabla Vendedores.\n"
@@ -92,7 +93,7 @@ class Pedidos extends Controller
                 . "    Funcion: Contiene todos los pedidos realizados por los clientes. El campo `vendedora` hace referencia a quien armó el pedido y el campo `cajera` a quien lo facturó. Tiene relaciones con las tablas Facturah, Clientes, y Pedidotemp. Cada pedido tiene los siguientes estados: 0 - Facturado, 1 - Proceso, 2 - Cancelado.\n"
                 . "9. Pedidotemp\n"
                 . "    Campos: (`NroPedido`, `Articulo`, `Detalle`, `Cantidad`, `Descuento`, `Cajera`, `Vendedora`, `Fecha`, `Estado`, `ID`)\n"
-                . "    Funcion: Contiene los ítems de cada pedido.\n"
+                . "    Funcion: Contiene los ítems de cada pedido. \n"
                 . "10. Registrollamadas\n"
                 . "    Campos: (`id`, `users_id`, `clientes_id`, `comentarios`, `fecha`)\n"
                 ."     Funcion: Contiene los registros de las notas de los clientes. Tiene relación con las tablas clientes y Users\n"
@@ -146,7 +147,7 @@ class Pedidos extends Controller
             $prompt_respuesta ="Información de Respuesta: ". $texto_respuesta . "\n\n"  // Asegúrate de que $consultaSQL contiene el resultado en formato JSON
                 . "Pregunta original del usuario: " . $consultaHumana . "\n\n"
                 . "Proporciona una respuesta en lenguaje natural basada en al información provista.\n"
-                . "Es fundamental para el area de ventas que las respuesta que tu brindes ayuden a nuestras vendedoras a potenciar las ventas.\n"
+                //. "Es fundamental para el area de ventas que las respuesta que tu brindes ayuden a nuestras vendedoras a potenciar las ventas.\n"
                 //. "En caso que la información no devuelva nungún resultado, responder no hay resultados para su consulta."
                 . "No responder información relacioanada a ganancias.\n"
                 . "Nuestra moneda es el peso.\n"

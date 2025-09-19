@@ -6,7 +6,7 @@
                 <div class="panel panel-primary">
                     <span id="close-clientes" class="close">&times;</span>
 
-                    <div class="panel-heading"><i class="fa fa-cog">Clientes</i></div>
+                    <div class="panel-heading"><i class="fa fa-cog">Clientes</i> <button class="btn btn-primary">Nuevo</button></div>
                         <div class="panel-body">
                             <div id="table-clientes"></div>
                         </div>
