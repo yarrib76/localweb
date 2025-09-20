@@ -307,6 +307,7 @@ Route::post('/crearfactura', 'FacturaWeb\ControllerFacturaWeb@facturar');
 Route::get('/getNroFactura', 'FacturaWeb\ControllerFacturaWeb@getNroFactura');
 Route::get('/pedidoWeb','PedidosWeb\ControllerPedidoWeb@view');
 Route::post('/crearPedidoWeb', 'PedidosWeb\ControllerPedidoWeb@inPedido');
+Route::post('/crearCliente', 'FacturaWeb\ControllerFacturaWeb@crearCliente');
 
 /*Inteligencia Artificail Mia*/
 //Solo para llamados directos sin pasar por ejemplo por pedidos

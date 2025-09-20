@@ -263,4 +263,37 @@ class ControllerFacturaWeb extends Controller
         ]);
     }
     /*PEDIDOS*/
+
+    /*CrearCliene*/
+    public function crearCliente(){
+        $nombre = Input::get('nombre');
+        $apellido = Input::get('apellido');
+        $cuit = Input::get('cuit');
+        $direccion = Input::get('direccion');
+        $localidad = Input::get('localidad');
+        $provincia_id = Input::get('provincia_id');
+        $codigo_postal = Input::get('cod_postal');
+        $mail = Input::get('mail');
+        $telefono = Input::get('telefono');
+        $encuesta = Input::get('encuesta');
+
+        $verificaMail = DB::select('select mail from samira.clientes where mail = "'.$mail.'"');
+        if (!empty($verificaMail)) {
+            // El cliente existe ? devolvemos error 409 (conflict)
+            return response()->json(['error' => 'El cliente ya existe'], 409);
+        }
+        Clientes::create([
+            "Nombre" => $nombre,
+            "Apellido" => $apellido,
+            "Direccion" => $direccion,
+            "Mail" => $mail,
+            "Telefono" => $telefono,
+            "Cuit" => $cuit,
+            "Localidad" => $localidad,
+            "CodigoPostal" => $codigo_postal,
+            "Id_provincia" => $provincia_id,
+            'encuesta' => $encuesta,
+        ]);
+    }
+    /*CrearCliene*/
 }

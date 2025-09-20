@@ -20,6 +20,7 @@
     @include('facturaweb.listararticulos')
     @include('facturaweb.listaclientes')
     @include('facturaweb.listapedidos')
+    @include('facturaweb.formcliente')
     <script>
         $(document).ready ( function(){
             callPedido()
