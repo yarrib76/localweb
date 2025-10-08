@@ -412,7 +412,8 @@
     });
 
     function refreshTabulator(){
-        tablePedido.setData(datosFactura);
+        //tablePedido.setData(datosFactura);
+        tablePedido.setData(datosFactura.slice().reverse());
     }
 
     function cargoComboVendedoras(){
