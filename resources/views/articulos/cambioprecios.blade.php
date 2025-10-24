@@ -42,6 +42,11 @@
                                 </div>
                                 <input type="number" id="quitarPorcentaje" style="width: 60px;" disabled="true">Quita
                                 <input type="number" id="agregarPorcentaje" style="width: 60px;" disabled="true">Agrega
+                                <div>
+                                    <input type="checkbox" id="checkboxQuitoAgregoDolar" name="opciones" value="valor" onclick="selectores('checkboxQuitoAgregoDolar')"> Aumentos quitando y agregando USD (China)
+                                </div>
+                                <input type="number" id="quitarDolar" style="width: 60px;" disabled="true">Quita USD
+                                <input type="number" id="agregarDolar" style="width: 60px;" disabled="true">Agrega USD
                             </td>
                             <td>
                                 <div>
@@ -159,11 +164,15 @@
         var checkboxAgregoPorcentaje = document.getElementById('checkboxAgregoPorcentaje');
         var checkboxBasadoDolar = document.getElementById('checkboxBasadoDolar');
         var checkboxQuitoAgregoPorcentaje = document.getElementById('checkboxQuitoAgregoPorcentaje');
+        var checkboxQuitoAgregoDolar = document.getElementById('checkboxQuitoAgregoDolar');
+        var checkboxPorcentajeDescuento = document.getElementById('checkboxPorcentajeDescuento')
         var inputporcentaje = document.getElementById('porcentaje');
         var inputprecioDolar = document.getElementById('precioDolar');
         var inputquitarPorcentaje = document.getElementById('quitarPorcentaje');
         var inputagregarPorcentaje = document.getElementById('agregarPorcentaje');
         var inputPorcentajedescuento = document.getElementById('porcentajeDescuento');
+        var inputquitarDolar = document.getElementById('quitarDolar');
+        var inputagregarDolar = document.getElementById('agregarDolar')
         inputPorcentajedescuento.value = ""
         var modalFinish = document.getElementById('myModalFinish');
 
@@ -240,12 +249,23 @@
                         inputporcentaje.disabled = false
                         checkboxBasadoDolar.checked = false
                         checkboxQuitoAgregoPorcentaje.checked = false
+                        checkboxPorcentajeDescuento.disabled = true
+                        checkboxPorcentajeDescuento.checked = false
+                        checkboxQuitoAgregoDolar.checked = false
+                        inputagregarDolar.disabled = false
+                        inputquitarDolar.disabled = false
+                        inputPorcentajedescuento.disabled = true;
                         inputagregarPorcentaje.disabled = true
                         inputquitarPorcentaje.disabled = true
                         inputprecioDolar.disabled = true
+                        inputagregarDolar.disabled = true
+                        inputquitarDolar.disabled = true
                         inputagregarPorcentaje.value = ""
                         inputquitarPorcentaje.value = ""
                         inputprecioDolar.value = ""
+                        inputPorcentajedescuento.value = ""
+                        inputagregarDolar.value = ""
+                        inputquitarDolar.value = ""
 
                     } else {
                         inputporcentaje.disabled = true
@@ -258,12 +278,19 @@
                         checkboxAgregoPorcentaje.checked = false
                         checkboxQuitoAgregoPorcentaje.checked = false
                         checkboxPorcentajeDescuento.disabled = false
+                        checkboxQuitoAgregoDolar.checked = false
+                        inputagregarDolar.disabled = false
+                        inputquitarDolar.disabled = false
                         inputagregarPorcentaje.disabled = true
                         inputquitarPorcentaje.disabled = true
                         inputporcentaje.disabled = true
+                        inputagregarDolar.disabled = true
+                        inputquitarDolar.disabled = true
                         inputagregarPorcentaje.value = ""
                         inputquitarPorcentaje.value = ""
                         inputporcentaje.value = ""
+                        inputagregarDolar.value = ""
+                        inputquitarDolar.value = ""
                     } else {
                         inputprecioDolar.disabled = true
                         inputprecioDolar.value = ""
@@ -279,15 +306,44 @@
                         inputquitarPorcentaje.disabled = false
                         checkboxAgregoPorcentaje.checked = false
                         checkboxBasadoDolar.checked = false
+                        checkboxQuitoAgregoDolar.checked = false
+                        inputagregarDolar.disabled = false
+                        inputquitarDolar.disabled = false
                         inputporcentaje.disabled = true
                         inputprecioDolar.disabled = true
+                        inputagregarDolar.disabled = true
+                        inputquitarDolar.disabled = true
                         inputporcentaje.value = ""
                         inputprecioDolar.value = ""
+                        inputagregarDolar.value = ""
+                        inputquitarDolar.value = ""
                     } else {
                         inputagregarPorcentaje.disabled = true
                         inputquitarPorcentaje.disabled = true
                         inputagregarPorcentaje.value = ""
                         inputquitarPorcentaje.value = ""
+                    }
+                    break;
+                case "checkboxQuitoAgregoDolar":
+                    if (checkboxQuitoAgregoDolar.checked){
+                        inputagregarDolar.disabled = false
+                        inputquitarDolar.disabled = false
+                        checkboxBasadoDolar.checked = false
+                        checkboxAgregoPorcentaje.checked = false
+                        checkboxQuitoAgregoPorcentaje.checked = false
+                        inputporcentaje.disabled = true
+                        inputprecioDolar.disabled = true
+                        inputporcentaje.value = ""
+                        inputprecioDolar.value = ""
+                        inputagregarPorcentaje.disabled = true
+                        inputquitarPorcentaje.disabled = true
+                        inputagregarPorcentaje.value = ""
+                        inputquitarPorcentaje.value = ""
+                    } else {
+                        inputagregarDolar.value = ""
+                        inputquitarDolar.value = ""
+                        inputagregarDolar.disabled = true
+                        inputquitarDolar.disabled = true
                     }
                     break;
                 case "checkboxPorcentajeDescuento":
@@ -324,6 +380,14 @@
                         tipo: "agregoQuito",
                         valorAgrego: inputagregarPorcentaje.value,
                         valorQuito: inputquitarPorcentaje.value,
+                        porcentajeDescuento: inputPorcentajedescuento.value
+                    }
+                }
+                if (checkboxQuitoAgregoDolar.checked){
+                    var calculo = {
+                        tipo: "agregoQuitoUSD",
+                        valorAgregoUSD: inputagregarDolar.value,
+                        valorQuitoUSD: inputquitarDolar.value,
                         porcentajeDescuento: inputPorcentajedescuento.value
                     }
                 }
@@ -378,7 +442,7 @@
         }
 
         function validacionOpciones(){
-            if (checkboxAgregoPorcentaje.checked == false && checkboxBasadoDolar.checked == false && checkboxQuitoAgregoPorcentaje.checked == false){
+            if (checkboxAgregoPorcentaje.checked == false && checkboxBasadoDolar.checked == false && checkboxQuitoAgregoPorcentaje.checked == false && checkboxQuitoAgregoDolar.checked == false){
                 alert('Debe haber al menos un checkbox seleccionado.')
                 return false
             }
@@ -391,6 +455,10 @@
                 return false
             }
             if (checkboxQuitoAgregoPorcentaje.checked && (inputagregarPorcentaje.value == "" || inputquitarPorcentaje.value == "")){
+                alert('Debe agregar porcentaje para quitar y porcentaje para agregar')
+                return false
+            }
+            if (checkboxQuitoAgregoDolar.checked && (inputagregarDolar.value == "" || inputquitarDolar.value == "")){
                 alert('Debe agregar porcentaje para quitar y porcentaje para agregar')
                 return false
             }
