@@ -80,9 +80,9 @@ class CambioPreciosControl extends Controller
             $valorAgrego = $calculo['valorAgrego'];
             $valorQuito = $calculo['valorQuito'];
             $resultadoPreview = DB::select("SELECT  :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
-                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND((precioConvertido / $valorQuito) * $valorAgrego,2), precioConvertido) AS nuevoPrecioConvertido,
-                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND((precioManual / $valorQuito) * $valorAgrego,2), precioManual) AS nuevoPrecioManual,
-                                PrecioOrigen as PrecioOrigenViejo, ROUND((precioOrigen / $valorQuito) * $valorAgrego,2) AS nuevoPrecioOrigen, proveedor as Proveedor
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND(((precioConvertido / $valorQuito) * $valorAgrego)/10,0)*10, precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND(((precioManual / $valorQuito) * $valorAgrego)/10,0)*10, precioManual) AS nuevoPrecioManual,
+                                PrecioOrigen as PrecioOrigenViejo, ROUND(((precioOrigen / $valorQuito) * $valorAgrego)/10,0)*10 AS nuevoPrecioOrigen, proveedor as Proveedor
                                 FROM articulos
                                 WHERE Proveedor IN ($proveedores)",  ['fecha' => $fecha]);
 
@@ -93,8 +93,8 @@ class CambioPreciosControl extends Controller
             $valorAgregoUSD = $calculo['valorAgregoUSD'];
             $valorQuitoUSD = $calculo['valorQuitoUSD'];
             $resultadoPreview = DB::select("SELECT  :fecha as Fecha, Articulo, PrecioConvertido as PrecioConvertidoViejo,
-                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND((precioConvertido / $valorQuitoUSD) * $valorAgregoUSD,0), precioConvertido) AS nuevoPrecioConvertido,
-                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND((precioManual / $valorQuitoUSD) * $valorAgregoUSD,0), precioManual) AS nuevoPrecioManual,
+                                IF(PrecioManual IS NULL OR PrecioManual = 0, ROUND(((precioConvertido / $valorQuitoUSD) * $valorAgregoUSD)/10,0)*10 , precioConvertido) AS nuevoPrecioConvertido,
+                                PrecioManual as PrecioManualViejo, IF(PrecioManual IS NOT NULL AND PrecioManual <> 0, ROUND(((precioManual / $valorQuitoUSD) * $valorAgregoUSD)/10,0)*10, precioManual) AS nuevoPrecioManual,
                                 PrecioOrigen as PrecioOrigenViejo, precioOrigen AS nuevoPrecioOrigen, proveedor as Proveedor
                                 FROM articulos
                                 WHERE Proveedor IN ($proveedores)",  ['fecha' => $fecha]);
@@ -162,10 +162,10 @@ class CambioPreciosControl extends Controller
                 $valorAgregoUSD = $calculo['valorAgregoUSD'];
                 $valorQuitoUSD = $calculo['valorQuitoUSD'];
                 // Actualiza precioConvertido cuando precioManual es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND((precioConvertido / $valorQuitoUSD) * $valorAgregoUSD,0) WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
+                DB::unprepared("UPDATE articulos SET precioConvertido = ROUND(((precioConvertido / $valorQuitoUSD) * $valorAgregoUSD)/10,0)*10 WHERE (PrecioManual IS NULL OR PrecioManual = 0) AND Proveedor IN ($proveedores)");
 
                 // Actualiza precioManual cuando precioManual no es nulo y el proveedor está en la lista
-                DB::unprepared("UPDATE articulos SET precioManual = ROUND((precioManual / $valorQuitoUSD) * $valorAgregoUSD,0) WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
+                DB::unprepared("UPDATE articulos SET precioManual = ROUND(((precioManual / $valorQuitoUSD) * $valorAgregoUSD)/10,0)*10 WHERE PrecioManual IS NOT NULL AND PrecioManual <> 0 AND Proveedor IN ($proveedores)");
 
             });
         }
