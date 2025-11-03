@@ -46,6 +46,29 @@ class OrdenesComprasControl extends Controller
 
     public function consultaTodas()
     {
+        $fechaInicio = Input::get('FechaInicio');
+        $fechaFin = Input::get('FechaFin');
+        $condiciones = 'where TipoOrden IS NOT NULL
+                        and TipoOrden = 2 and ordenCompra1.Cantidad <> 0';
+        $params = [];
+        if ($fechaInicio && $fechaFin) {
+            $condiciones .= ' AND DATE(FechaCompra) BETWEEN ? AND ?';
+            $params[] = $fechaInicio;
+            $params[] = $fechaFin;
+        }
+        $sql = 'SELECT id_compra,OrdenCompra AS OrdenCompra, ordenCompra1.Articulo, ordenCompra1.Detalle, ordenCompra1.Cantidad as Cantidad, DATE_FORMAT(FechaCompra, "%Y-%m-%d") as Fecha,
+                        repoArt.PrecioVenta as PVenta, Observaciones,
+                        (select count(*) from samira.notas_control_orden
+                                      where id_compras = id_compra) as cant_notas,
+                        ordenControlada, ordenCompra1.Proveedor, ordenCompra1.PrecioArgen
+                        FROM samira.compras as ordenCompra1
+                        inner join samira.reportearticulo as repoArt
+                        ON ordenCompra1.Articulo = repoArt.Articulo
+                        '.$condiciones.'
+                        ORDER BY OrdenCompra DESC, FechaCompra DESC;';
+
+        $resultados = DB::select($sql,$params);
+        /*
         $resultados = DB::Select('SELECT id_compra,OrdenCompra AS OrdenCompra, ordenCompra1.Articulo, ordenCompra1.Detalle, ordenCompra1.Cantidad as Cantidad, DATE_FORMAT(FechaCompra, "%Y-%m-%d") as Fecha,
                         repoArt.PrecioVenta as PVenta, Observaciones,
                         (select count(*) from samira.notas_control_orden
@@ -57,12 +80,36 @@ class OrdenesComprasControl extends Controller
                         where TipoOrden IS NOT NULL
                         and TipoOrden = 2 and ordenCompra1.Cantidad <> 0
                         ORDER BY OrdenCompra DESC, FechaCompra DESC;');
+        */
         return Response::json($resultados);
     }
 
     public function consultasEspecificas()
     {
         $tipo = Input::get('tipo');
+        $fechaInicio = Input::get('FechaInicio');
+        $fechaFin = Input::get('FechaFin');
+        $condiciones = 'where TipoOrden IS NOT NULL
+                        and TipoOrden = 2 and ordenCompra1.Cantidad <> 0
+                        and ordenCompra1.ordenControlada = "'.$tipo.'"';
+        $params = [];
+        if ($fechaInicio && $fechaFin) {
+            $condiciones .= ' AND DATE(FechaCompra) BETWEEN ? AND ?';
+            $params[] = $fechaInicio;
+            $params[] = $fechaFin;
+        }
+        $sql = 'SELECT id_compra,OrdenCompra AS OrdenCompra, ordenCompra1.Articulo, ordenCompra1.Detalle, ordenCompra1.Cantidad as Cantidad, DATE_FORMAT(FechaCompra, "%Y-%m-%d") as Fecha,
+                        repoArt.PrecioVenta as PVenta, Observaciones,
+                        (select count(*) from samira.notas_control_orden
+                                      where id_compras = id_compra) as cant_notas,
+                        ordenControlada, ordenCompra1.Proveedor, ordenCompra1.PrecioArgen
+                        FROM samira.compras as ordenCompra1
+                        inner join samira.reportearticulo as repoArt
+                        ON ordenCompra1.Articulo = repoArt.Articulo
+                        '.$condiciones .'
+                        ORDER BY OrdenCompra DESC, FechaCompra DESC;';
+        $resultados = DB::select($sql, $params);
+        /*
         $resultados = DB::Select('SELECT id_compra,OrdenCompra AS OrdenCompra, ordenCompra1.Articulo, ordenCompra1.Detalle, ordenCompra1.Cantidad as Cantidad, DATE_FORMAT(FechaCompra, "%Y-%m-%d") as Fecha,
                         repoArt.PrecioVenta as PVenta, Observaciones,
                         (select count(*) from samira.notas_control_orden
@@ -75,6 +122,7 @@ class OrdenesComprasControl extends Controller
                         and TipoOrden = 2 and ordenCompra1.Cantidad <> 0
                         and ordenCompra1.ordenControlada = "'.$tipo.'"
                         ORDER BY OrdenCompra DESC, FechaCompra DESC;');
+        */
         return Response::json($resultados);
 
     }

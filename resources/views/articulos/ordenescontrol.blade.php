@@ -45,6 +45,14 @@
                                 <td>
                                     <input id='tipo_sin_procesar' onclick="tipoConsulta('sin_procesar')" type="checkbox">
                                 </td>
+                                <td>
+                                    Fecha Inicio
+                                    <input type="date" class="form-control" placeholder="Fecha" id="FechaInicio" required="required">
+                                </td>
+                                <td>
+                                    Fecha Fin
+                                    <input type="date" class="form-control" placeholder="Fecha" id="FechaFin" required="required">
+                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -57,6 +65,10 @@
                         </table>
                     </div>
                     <div class="panel-body">
+                        <div id="example-table"></div>
+                    </div>
+                    <div class="panel-body">
+                        <button id="download-xlsx" type="button" class="btn btn-primary">Bajar xlsx</button>
                         <div id="example-table"></div>
                     </div>
                 </div>
@@ -138,6 +150,7 @@
 
    <link rel="stylesheet" href="../../js/tabulador/tabulator.css">
    <script type="text/javascript" src="../../js/tabulador/tabulator.js"></script>
+   <script type="text/javascript" src="../../js/tabulador/xlsx.full.min.js"></script>
 
    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css">
    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.6/integration/font-awesome/dataTables.fontAwesome.css">
@@ -326,8 +339,9 @@
                                 return "<i class='fas fa-check'></i>"; // Ícono de tilde (check)
                             }
                         }
-                    }
-
+                    },
+                    {title: "Proveedor", field: "Proveedor", headerFilter:"input", sortable: true, width: 85},
+                    {title:"PreOrigen", field:"PrecioArgen", sortable: true, width: 85 }
                 ],
            rowFormatter:function(row){
                var data = row.getData();
@@ -375,25 +389,28 @@
        }
        function llenarTabla(tipo) {
            nroOrden = document.getElementById('nroOrden').value
+           var fechaInicio = document.getElementById("FechaInicio").value;
+           var fechaFin = document.getElementById("FechaFin").value;
+           console.log(fechaInicio)
            //Consulta por orden de Compras
            if (tipo == 0) {
                $("#example-table").tabulator("setData", '/ordenescomprasconsulta?nroOrden=' + nroOrden);
            }
            //Consulta todas las ordenes
            if(tipo == 1){
-               $("#example-table").tabulator("setData", '/ordenescomprasconsulta/todas');
+               $("#example-table").tabulator("setData", '/ordenescomprasconsulta/todas?' + 'FechaInicio=' + fechaInicio + '&FechaFin=' + fechaFin);
            }
            //Consulta ordenControlada = 1 Confirmadas
            if(tipo == 2){
-               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 1);
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 1 + '&FechaInicio=' + fechaInicio + '&FechaFin=' + fechaFin);
            }
            //Consulta ordenControlada = 2 Incompletas
            if(tipo == 3){
-               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 2);
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 2 + '&FechaInicio=' + fechaInicio + '&FechaFin=' + fechaFin);
            }
            //Consulta ordenControlada = 0 Sin Procesar
            if(tipo == 4){
-               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 0);
+               $("#example-table").tabulator("setData", '/ordenesconsultasEspecificas?tipo=' + 0 + '&FechaInicio=' + fechaInicio + '&FechaFin=' + fechaFin);
            }
        }
        $(window).resize(function () {
@@ -538,5 +555,11 @@
                }
            }
        }
+       // Evento para descargar la tabla en formato Excel
+       $("#download-xlsx").click(function(){
+           $("#example-table").tabulator("download", "xlsx", "OrdenesCompras.xlsx", {
+               sheetName:"ReporteFinanciera"
+           });
+       });
     </script>
 @stop
