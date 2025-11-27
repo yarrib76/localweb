@@ -473,4 +473,6 @@ Route::group(['prefix' => 'api'],
         Route::get('/getCantNoti', 'Api\Notificaciones@getCantNoti');
         Route::get('/marcarLeido', 'Api\Notificaciones@marcarComoLeido');
 
+        /*Consulta Predictor Machine Learning*/
+        Route::post('/getMachineLearning', 'Api\GetMachineLearning@consultaPredictor');
     });

@@ -47,9 +47,11 @@
                                 <th>TotalStock</th>
                                 <th>PrecioVenta</th>
                                 <th>Imagen</th>
+                                <th>IA</th>
                             </tr>
                             </thead>
                             <tbody>
+                                <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
                                 <td>Sin Informacion</td>
@@ -89,6 +91,14 @@
             height: 50%;
             overflow-y: auto;
         }
+        #modalMachineLearning {
+            background-color: #c5fee9;
+            margin: auto;
+            padding: 20px;
+            width: 50%;
+            height: 50%;
+            overflow-y: auto;
+        }
         #LocalName {
             margin-top: 10px;
             margin-bottom: 100px;
@@ -96,6 +106,69 @@
             margin-left: 500px;
             color: #00bcd4;
         }
+
+        .ml-wrapper {
+            position: relative;          /* referencia para la lista flotante */
+        }
+
+        .ml-dropdown {
+            border: 1px solid #ccc;
+            padding: 8px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .ml-arrow {
+            font-size: 14px;
+        }
+
+        .ml-list {
+            position: absolute;          /* flotante */
+            top: 100%;                   /* justo debajo del dropdown */
+            left: 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            background: white;
+            margin-top: 3px;
+            display: none;
+            max-height: 180px;
+            overflow-y: auto;
+            border-radius: 4px;
+            z-index: 9999;               /* para que quede por encima de todo */
+        }
+
+        .ml-item {
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .ml-item:hover {
+            background: #eee;
+        }
+
+        .ml-item.selected {
+            background: #2d7df4;
+            color: white;
+        }
+
+        /* Botón X de cierre */
+        .closeML {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .closeML:hover,
+        .closeML:focus {
+            color: black;
+        }
+
     </style>
     <div id="myModal" class="modal">
         <!-- Modal content -->
@@ -110,6 +183,81 @@
             <img id="imagen">
         </div>
     </div>
+
+    <div id="modalMachineLearning" class="modal">
+        <span class="closeML">&times;</span>
+
+        <div class="modal-content-ML">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 10px;">
+                <h5 id="tituloSKU" style="margin: 0;"></h5>
+                <h5 id="detalle" style="margin: 0; color: #555;"></h5>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: flex-end;">
+
+                <div>
+                    <label for="selectAnio">Año:</label>
+                    <select id="selectAnio" class="form-control">
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                    </select>
+                </div>
+
+                <div style="min-width: 200px;">
+                    <label>Mes/es:</label>
+
+                    <!-- Contenedor relativo -->
+                    <div class="ml-wrapper">
+                        <!-- Caja que se ve cerrada -->
+                        <div id="mesDropdown" class="ml-dropdown">
+                            <div class="ml-selected" id="mlSelectedText">Seleccionar meses</div>
+                            <div class="ml-arrow">&#9662;</div>
+                        </div>
+
+                        <!-- Lista flotante -->
+                        <div id="mesList" class="ml-list"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <button id="btnProcesarML"
+                            class="btn btn-info"
+                            type="button"
+                            onclick="procesarMachineLearning()">
+                        <i class="bi bi-gear-fill"></i>
+                    </button>
+                </div>
+                <div>
+                    <h5>Stock</h5><input id="stock_actual" disabled="true"  style="width: 50px;">
+                </div>
+                <div>
+                    <h5>Demanda</h5><input id="demanda_total_horizonte" disabled="true"  style="width: 50px;">
+                </div>
+                <div>
+                    <h5>Comprar</h5><input id="compra_sugerida_total" disabled="true"  style="width: 50px;">
+                </div>
+            </div>
+            <div class="panel-body">
+                <table id="tablaMachineLerning" class="table table-striped table-bordered records_list">
+                    <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Prediccion_ventas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td>Sin Informacion</td>
+                    <td>Sin Informacion</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 
     <div id="myModalError" class="modal">
         <!-- Modal content -->
@@ -140,11 +288,15 @@
 <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 <!-- DataTables -->
 <script type="text/javascript">
     var modalError = document.getElementById('myModalError');
     var proveedor;
     var web = 'NO';
+    let skuML = null;
+    let totalStockML = null;
     $(document).ready ( function(){
         $.ajax({
             type: 'get',
@@ -203,13 +355,22 @@
                         if (json['TotalStock'] < 10 ){
                             colorCelda = '#FF0000'
                         }else colorCelda = 'FFFFFF'
-                        table.append("<tr><td>" + json['Articulo'] + "</td><td>"
+                        table.append(
+                                "<tr><td>" + json['Articulo'] + "</td><td>"
                                 + json['Detalle'] + "</td><td>"
                                 + json['ProveedorSKU'] + "</td><td>"
-                                + json['TotalVendido'] + "</td><td bgcolor=" + colorCelda + ">"
+                                + json['TotalVendido'] + "</td><td bgcolor='" + colorCelda + "'>"
                                 + json['TotalStock'] + "</td><td>"
                                 + json['PrecioVenta'] + "</td><td>"
-                                + '<img src= ' + json['imagessrc'] + " " + 'height="52" width="52" onclick=verImagen(' + "'" + json['imagessrc']+ "'" + ')>' + "</td>");
+                                + '<img src="' + json['imagessrc'] + '" height="52" width="52" onclick="verImagen(\'' + json['imagessrc'] + '\')">'
+                                + "</td><td>"
+                                + '<button class="btn btn-info" onclick="machineLearning(\''
+                                + json['Articulo'] + '\', \'' + json['Detalle'] + '\', \'' + json['TotalStock'] + '\')">'
+                                + '<i class="bi bi-gear-fill"></i>'
+                                + '</button>'
+                                + "</td></tr>"
+                        );
+
                     });
                     table.append("</tr>")
                     table.append("</tbody>")
@@ -290,6 +451,231 @@
         image.style.width = '494px';
         image.style.height = '450px';
     }
+
+    // === ABRIR MODAL Y CARGAR DATOS ===
+    function machineLearning(sku, detalle, totalStock) {
+        // Primero limpiar de todo
+        limpiarModalMachineLearning();
+
+        totalStockML = totalStock;
+        skuML = sku;  // guardamos el SKU para usarlo al procesar
+        // Setear texto del título
+        document.getElementById("tituloSKU").textContent = "SKU A PREDECIR: " + sku;
+        document.getElementById("detalle").textContent   = detalle;
+
+        // Mostrar modal
+        var modalMachineLearning = document.getElementById('modalMachineLearning');
+        modalMachineLearning.style.display = "block";
+    }
+
+
+    // === CERRAR MODAL (X y click fuera) ===
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var modalMachineLearning = document.getElementById('modalMachineLearning');
+        var spanClose = document.querySelector("#modalMachineLearning .closeML");
+
+        // Cerrar al hacer clic en la X
+        if (spanClose) {
+            spanClose.addEventListener("click", function () {
+                modalMachineLearning.style.display = "none";
+            });
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril",
+            "Mayo", "Junio", "Julio", "Agosto",
+            "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        const mesList = document.getElementById("mesList");
+        const dropdown = document.getElementById("mesDropdown");
+        const selectedText = document.getElementById("mlSelectedText");
+
+        // Crear meses
+        meses.forEach(function(mes, i) {
+            const div = document.createElement("div");
+            div.classList.add("ml-item");
+            div.dataset.value = i + 1;
+            div.textContent = mes;
+
+            // Selección/des-selección
+            div.addEventListener("click", function (e) {
+                e.stopPropagation(); // evitar cerrar al hacer clic
+
+                this.classList.toggle("selected");
+                actualizarTextoResumen();
+            });
+
+            mesList.appendChild(div);
+        });
+
+        // Abrir/cerrar dropdown
+        dropdown.addEventListener("click", function () {
+            mesList.style.display =
+                    mesList.style.display === "block" ? "none" : "block";
+        });
+
+        // Cerrar al hacer clic afuera
+        document.addEventListener("click", function (e) {
+            if (!dropdown.contains(e.target) && !mesList.contains(e.target)) {
+                mesList.style.display = "none";
+            }
+        });
+
+        function actualizarTextoResumen() {
+            const seleccionados = Array.from(
+                    document.querySelectorAll(".ml-item.selected")
+            ).map(function (el) {
+                        return el.textContent;
+                    });  // <-- acá va el ;
+
+            if (seleccionados.length === 0) {
+                selectedText.textContent = "Seleccionar meses";
+            } else {
+                selectedText.textContent = seleccionados.join(", ");
+            }
+        }
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const select = document.getElementById("selectAnio");
+        const currentYear = new Date().getFullYear();
+
+        // Si el año actual existe en la lista, lo selecciona
+        if ([2025, 2026, 2027, 2028, 2029, 2030].includes(currentYear)) {
+            select.value = currentYear;
+        } else {
+            // Si no, por defecto selecciona 2025
+            select.value = "2025";
+        }
+    });
+
+    function procesarMachineLearning() {
+        if (!skuML) {
+            alert("No se encontró el SKU para predecir.");
+            return;
+        }
+
+        const anio = parseInt(document.getElementById("selectAnio").value, 10);
+
+        const mesesSeleccionados = Array.from(
+                document.querySelectorAll(".ml-item.selected")
+        ).map(function (el) {
+                    return parseInt(el.dataset.value, 10);  // 1..12
+                });
+
+        if (mesesSeleccionados.length === 0) {
+            alert("Seleccioná al menos un mes.");
+            return;
+        }
+
+        const periodos = mesesSeleccionados.map(function (mes) {
+            return { anio: anio, mes: mes };
+        });
+
+        const payload = {
+            sku: skuML,
+            periodos: periodos
+        };
+
+        console.log("JSON que se envía a Laravel:", payload);
+
+        $.ajax({
+            url: 'api/getMachineLearning',   // 👉 tu ruta Laravel
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(payload),
+            success: function (data) {
+                console.log('Respuesta de Laravel / FastAPI:', data);
+
+                // seguridad básica
+                if (!data || !data.resultados || data.resultados.length === 0) {
+                    alert("El predictor no devolvió resultados.");
+                    return;
+                }
+
+                var res0 = data.resultados[0]; // tomo el primero como resumen
+
+                // Completar inputs del modal
+                $('#stock_actual').val(totalStockML);
+                $('#demanda_total_horizonte').val(res0.demanda_total_horizonte);
+                $('#compra_sugerida_total').val(res0.demanda_total_horizonte - totalStockML);
+
+                // Y de paso llenamos la tabla:
+                completarTablaPredicciones(data.resultados);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error llamando a getMachineLearning:', textStatus, errorThrown);
+                console.error('Respuesta del servidor:', jqXHR.responseText);
+                alert('Ocurrió un error consultando al predictor.');
+            }
+        });
+        function completarTablaPredicciones(resultados) {
+            var mesesNombres = [
+                "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+                "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+            ];
+
+            var $tbody = $('#tablaMachineLerning tbody');
+            $tbody.empty(); // limpio "Sin Información"
+
+            resultados.forEach(function (item) {
+                var nombreMes = mesesNombres[item.mes - 1] || item.mes;
+
+                var fila = '<tr>' +
+                        '<td>' + nombreMes + ' ' + item.anio + '</td>' +
+                        '<td>' + item.prediccion_ventas_mes + '</td>' +
+                        '</tr>';
+
+                $tbody.append(fila);
+            });
+        }
+    }
+
+    function limpiarModalMachineLearning() {
+
+        // Limpiar textos del encabezado
+        $("#tituloSKU").text("");
+        $("#detalle").text("");
+
+        // Limpiar inputs de resumen
+        $("#stock_actual").val("");
+        $("#demanda_total_horizonte").val("");
+        $("#compra_sugerida_total").val("");
+
+        // Limpiar selección del año (volver al primero)
+        $("#selectAnio").val("2025");
+
+        // Limpiar meses seleccionados
+        $("#mesList .ml-item").removeClass("selected");
+
+        // Restaurar texto del dropdown
+        $("#mlSelectedText").text("Seleccionar meses");
+
+        // Ocultar menú de meses si quedó abierto
+        $("#mesList").hide();
+
+        // Limpiar tabla de resultados
+        let tbody = $("#tablaMachineLerning tbody");
+        tbody.empty();
+        tbody.append(
+                '<tr>' +
+                '<td>Sin Información</td>' +
+                '<td>Sin Información</td>' +
+                '</tr>'
+        );
+
+        // Resetear variable global del SKU
+        skuML = null;
+        totalStockML = null;
+    }
+
+
 </script>
 
     <style>
