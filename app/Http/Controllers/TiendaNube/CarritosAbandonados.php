@@ -24,6 +24,7 @@ class CarritosAbandonados extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('role:Gerencia,Caja,Ventas');
     }
 
     public function index()

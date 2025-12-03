@@ -21,6 +21,11 @@ use TiendaNube\Auth;
 
 class GetArticulosTiendaNube extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:Gerencia');
+    }
     public function inbox (){
         return view('tiendanube.bajadatransformarticulos');
     }
