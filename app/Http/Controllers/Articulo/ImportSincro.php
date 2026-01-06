@@ -16,7 +16,7 @@ class ImportSincro extends Controller
         $this->middleware('auth');
         $this->middleware('role:Gerencia');
     }
-    
+
     public function index()
     {
         return view('sincroarticulos.reporte');

@@ -70,6 +70,8 @@
     @include('facturaweb.listaclientes')
     @include('facturaweb.listapedidos')
     @include('facturaweb.formcliente')
+    @include('facturaweb.calculadora')
+
     <script>
 
     </script>

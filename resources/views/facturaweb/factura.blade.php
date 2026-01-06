@@ -113,6 +113,8 @@
                                     <input type="number" id="totalDescuento" min="0" disabled="true" style="width: 120px">
                                     <h4>Efectivo</h4>
                                     <input type="number" id="efectivo" min="0" disabled="true" style="width: 120px">
+                                    <h4>Calculadora</h4>
+                                    <i id="myBtnCalculadora" class="fas fa-calculator fa-2x text-primary"></i>
                                 </td>
                             </tr>
                         </table>
